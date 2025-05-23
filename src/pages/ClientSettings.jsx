@@ -1,0 +1,128 @@
+// src/pages/ClientSettings.jsx
+import { useEffect, useState } from "react";
+import axios from "axios";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+export default function ClientSettings({ user, onLogout }) {
+  const [settings, setSettings] = useState({
+    notificationsEnabled: true,
+    role: "",
+    status: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+    fetchSettings();
+  }, [user.email]);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/profile", {
+        params: { email: user.email },
+      });
+      setSettings({
+        notificationsEnabled: res.data.notificationsEnabled,
+        role: res.data.role,
+        status: res.data.status,
+      });
+    } catch (err) {
+      console.error("Failed to fetch settings:", err);
+    }
+  };
+
+  const handleToggleNotifications = async () => {
+    try {
+      await axios.put("http://localhost:5000/api/profile/toggle-notifications", {
+        email: user.email,
+      });
+      setSettings((prev) => ({
+        ...prev,
+        notificationsEnabled: !prev.notificationsEnabled,
+      }));
+    } catch (err) {
+      console.error("Toggle error:", err);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!newPassword || newPassword.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await axios.put("http://localhost:5000/api/profile/change-password", {
+        email: user.email,
+        newPassword,
+      });
+      alert("Password updated.");
+      setNewPassword("");
+    } catch (err) {
+      alert("Failed to update password.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4">
+      <div
+        className="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-10 md:p-14"
+        data-aos="fade-up"
+      >
+        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins">
+          Settings
+        </h1>
+
+        <div className="space-y-10 font-manrope">
+          {/* Account Info */}
+          <section className="bg-gray-50 p-6 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Account Info</h2>
+            <p className="mb-2">
+              <strong>Role:</strong> {settings.role}
+            </p>
+            <p>
+              <strong>Status:</strong> {settings.status}
+            </p>
+          </section>
+
+          {/* Notifications */}
+          <section className="bg-gray-50 p-6 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Notifications</h2>
+            <label className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                checked={settings.notificationsEnabled}
+                onChange={handleToggleNotifications}
+                className="accent-yellow-500 w-5 h-5"
+              />
+              <span>Enable email notifications</span>
+            </label>
+          </section>
+
+          {/* Change Password */}
+          <section className="bg-gray-50 p-6 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Change Password</h2>
+            <input
+              type="password"
+              placeholder="New password"
+              className="w-full border border-gray-300 rounded px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <button
+              className="bg-yellow-400 text-white font-semibold px-6 py-2 rounded hover:bg-yellow-500 disabled:opacity-60"
+              onClick={handleChangePassword}
+              disabled={loading}
+            >
+              {loading ? "Updating..." : "Update Password"}
+            </button>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
