@@ -23,7 +23,7 @@ import ClientSettings from "./pages/ClientSettings";
 import ClientLayout from "./components/dashboard/ClientLayout";
 
 // SHARED
-import Payments from "./pages/payments";
+import Payments from "./pages/Payments";
 
 // SURVEYOR PAGES
 import SurveyorDashboard from "./pages/SurveyorDashboard";
