@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Link } from "react-router-dom";
 
 export default function AdminSignup() {
   const [form, setForm] = useState({
@@ -27,7 +28,7 @@ export default function AdminSignup() {
     setMessage("");
     setIsSubmitting(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/admin-signup", form);
+      const res = await axios.post("http://localhost:5000/api/admin/signup", form); // ✅ updated endpoint
       setMessage(res.data.message || "Signup successful!");
     } catch (err) {
       setMessage(err.response?.data?.message || "Signup failed.");
@@ -123,7 +124,14 @@ export default function AdminSignup() {
           <p className="mt-4 text-sm text-center font-manrope text-red-600">{message}</p>
         )}
 
-        <p className="mt-8 text-center text-sm text-gray-500 font-manrope">
+        <p className="mt-6 text-center text-sm text-[#0a1b3d] font-manrope">
+          Already have an account?{" "}
+          <Link to="/admin/login" className="text-yellow-500 font-semibold hover:underline">
+            <strong>Login</strong>
+          </Link>
+        </p>
+
+        <p className="mt-6 text-center text-sm text-gray-500 font-manrope">
           © 2025 Surveyor-on-Demand Ltd. All rights reserved.
         </p>
       </div>

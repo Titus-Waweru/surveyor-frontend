@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import loginIllustration from "../assets/my_app.png"; // ✅ Ensure this exists
@@ -53,7 +53,7 @@ export default function AdminLogin({ setUser }) {
           />
 
           <h1 className="text-3xl font-bold mb-2 font-poppins text-center">
-            Surveyor on Demand Admins.
+            LandLink Admins.
           </h1>
           <p className="text-sm text-yellow-100 text-center font-manrope mb-4">
             <strong>Admin Dashboard </strong>
@@ -120,6 +120,13 @@ export default function AdminLogin({ setUser }) {
               {error}
             </p>
           )}
+
+          <p className="mt-6 text-center text-sm text-[#0a1b3d] font-manrope">
+            Don't have an account?{" "}
+            <Link to="/admin/signup" className="text-yellow-500 font-semibold hover:underline">
+              <strong>Sign up</strong>
+            </Link>
+          </p>
         </div>
       </div>
 

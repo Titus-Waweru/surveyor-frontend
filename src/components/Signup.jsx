@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { motion } from "framer-motion"; // ✅ Added for animation
+import { motion } from "framer-motion";
 
 const signupSchema = z.object({
   name: z.string().min(4, "Name must be at least 4 characters"),
@@ -24,21 +24,43 @@ export default function Signup() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: { role: "" },
   });
 
   const role = watch("role");
+  const idCard = watch("idCard");
+  const certificate = watch("certificate");
+  const iskNumber = watch("iskNumber");
 
   const onSubmit = async (data) => {
     try {
-      if (role === "surveyor") {
-        const formData = new FormData();
-        for (const key in data) {
-          if (key === "idCard" || key === "certificate") continue;
-          formData.append(key, data[key]);
+      // Enforce required surveyor fields on the client side
+      if (data.role === "surveyor") {
+        if (!iskNumber?.trim()) {
+          setError("iskNumber", { message: "ISK number is required for surveyors" });
+          return;
         }
+
+        if (!idCard?.[0]) {
+          setError("idCard", { message: "ID card upload is required for surveyors" });
+          return;
+        }
+
+        if (!certificate?.[0]) {
+          setError("certificate", { message: "Certificate upload is required for surveyors" });
+          return;
+        }
+      }
+
+      if (data.role === "surveyor") {
+        const formData = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+          if (key === "idCard" || key === "certificate") return;
+          formData.append(key, value);
+        });
 
         if (data.idCard?.[0]) formData.append("idCard", data.idCard[0]);
         if (data.certificate?.[0]) formData.append("certificate", data.certificate[0]);
@@ -128,8 +150,10 @@ export default function Signup() {
               <p className="text-red-600 mt-1 text-sm">{errors.password.message}</p>
             )}
             <p className="text-sm text-gray-500 mt-1">
-              <em>Use a strong password with at least 6 characters, including a mix of letters,
-              numbers, and symbols.</em>
+              <em>
+                Use a strong password with at least 6 characters, including a mix of letters,
+                numbers, and symbols.
+              </em>
             </p>
           </div>
 
@@ -158,7 +182,7 @@ export default function Signup() {
 
               <div>
                 <label htmlFor="iskNumber" className="block mb-2 font-medium text-gray-700">
-                  <b>ISK Number (Optional)</b>
+                  <b>ISK Number</b>
                 </label>
                 <input
                   id="iskNumber"
@@ -167,11 +191,14 @@ export default function Signup() {
                   placeholder="ISK Number"
                   className="input"
                 />
+                {errors.iskNumber && (
+                  <p className="text-red-600 mt-1 text-sm">{errors.iskNumber.message}</p>
+                )}
               </div>
 
               <div>
                 <label htmlFor="idCard" className="block mb-2 font-medium text-gray-700">
-                  <b>Upload ID Card</b> <span className="text-xs text-gray-500">(jpg, png, pdf, jpeg)</span>
+                  <b>Upload ID Card</b> <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
                 </label>
                 <input
                   id="idCard"
@@ -180,6 +207,9 @@ export default function Signup() {
                   accept=".pdf,.jpg,.jpeg,.png"
                   className="input file:cursor-pointer"
                 />
+                {errors.idCard && (
+                  <p className="text-red-600 mt-1 text-sm">{errors.idCard.message}</p>
+                )}
               </div>
 
               <div>
@@ -193,6 +223,9 @@ export default function Signup() {
                   accept=".pdf,.jpg,.jpeg,.png"
                   className="input file:cursor-pointer"
                 />
+                {errors.certificate && (
+                  <p className="text-red-600 mt-1 text-sm">{errors.certificate.message}</p>
+                )}
               </div>
             </fieldset>
           )}

@@ -45,16 +45,16 @@ export default function Login({ onLogin }) {
         {/* Left Side: Illustration + Info */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
           <img
-            src={loginIllustration}
-            alt="Login Visual"
-            className="w-1/2 max-w-[160px] rounded-xl shadow-lg mb-6"
-          />
+  src="/assets/logo.png"
+  alt="LandLink Logo"
+  className="h-[90px] w-auto max-w-[220px] object-contain"
+/>
 
           <h1 className="text-3xl font-bold mb-2 font-poppins text-center">
-            Surveyor on Demand Platform
+            LandLink  Platform
           </h1>
           <p className="text-sm text-yellow-100 text-center font-manrope mb-4">
-           <b>MOTTO:</b> Simplifying surveys. Empowering decisions. We are the best in Kenya.
+           <b>MOTTO:</b> "Survey Services at Your Fingertips."
           </p>
           <ul className="text-sm text-yellow-100 font-manrope list-disc list-inside text-center space-y-1">
             <li>Secure and reliable access</li>

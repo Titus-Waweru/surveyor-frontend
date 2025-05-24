@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function SurveyorSettings({ user, onLogout }) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
 
   const handleToggleNotifications = () => {
     setNotificationsEnabled((prev) => !prev);
@@ -29,43 +35,49 @@ export default function SurveyorSettings({ user, onLogout }) {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6 text-indigo-700">Surveyor Settings</h1>
+    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
+      <div
+        className="w-full max-w-2xl bg-white shadow-xl rounded-3xl p-10 md:p-12 font-manrope"
+        data-aos="fade-up"
+      >
+        <h1 className="text-3xl font-bold text-yellow-600 mb-8 text-center font-poppins">
+          Surveyor Settings
+        </h1>
 
-      <div className="space-y-6">
+        <div className="space-y-8">
+          {/* Notifications Toggle */}
+          <section className="bg-yellow-50 p-6 rounded-xl shadow-sm">
+            <h2 className="text-lg font-semibold mb-4 text-gray-800">Notifications</h2>
+            <label className="flex items-center space-x-3 text-gray-700">
+              <input
+                type="checkbox"
+                checked={notificationsEnabled}
+                onChange={handleToggleNotifications}
+                className="accent-yellow-500 w-5 h-5"
+              />
+              <span>Enable email notifications</span>
+            </label>
+          </section>
 
-        {/* Notifications Toggle */}
-        <section className="bg-gray-50 p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-3">Notifications</h2>
-          <label className="flex items-center space-x-3">
+          {/* Password Change */}
+          <section className="bg-yellow-50 p-6 rounded-xl shadow-sm">
+            <h2 className="text-lg font-semibold mb-4 text-gray-800">Change Password</h2>
             <input
-              type="checkbox"
-              checked={notificationsEnabled}
-              onChange={handleToggleNotifications}
-              className="accent-indigo-600 w-5 h-5"
+              type="password"
+              placeholder="New password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 mb-4"
             />
-            <span>Enable email notifications</span>
-          </label>
-        </section>
-
-        {/* Password Change */}
-        <section className="bg-gray-50 p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-3">Change Password</h2>
-          <input
-            type="password"
-            placeholder="New password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="input w-full mb-3"
-          />
-          <button
-            onClick={handleChangePassword}
-            disabled={loading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-          >
-            {loading ? "Saving..." : "Save New Password"}
-          </button>
-        </section>
+            <button
+              onClick={handleChangePassword}
+              disabled={loading}
+              className="bg-yellow-400 text-white font-semibold px-5 py-2 rounded hover:bg-yellow-500 transition"
+            >
+              {loading ? "Saving..." : "Save New Password"}
+            </button>
+          </section>
+        </div>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import "aos/dist/aos.css";
 export default function Payments({ user }) {
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("paystack");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [payments, setPayments] = useState([]);
@@ -22,38 +23,58 @@ export default function Payments({ user }) {
         console.error("Failed to fetch payments", err);
       }
     }
+
     if (user?.email) fetchPayments();
   }, [user]);
 
   const handlePayment = async (e) => {
     e.preventDefault();
+    setMessage(null);
+
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       setMessage({ type: "error", text: "Please enter a valid amount" });
       return;
     }
 
+    if (paymentMethod === "mpesa" && (!phone || !/^254\d{9}$/.test(phone))) {
+      setMessage({ type: "error", text: "Enter a valid Kenyan phone number starting with 254" });
+      return;
+    }
+
     setLoading(true);
-    setMessage(null);
 
     try {
-      const paymentData = {
-        email: user.email,
-        amount: Number(amount) * 100,
-        method: paymentMethod,
-      };
+      let res;
 
-      const res = await axios.post("/api/payments/initiate", paymentData);
+      if (paymentMethod === "mpesa") {
+        res = await axios.post("/api/payments/mpesa", {
+          phone,
+          amount: Number(amount),
+        });
 
-      if (res.data?.paymentUrl) {
-        window.location.href = res.data.paymentUrl;
+        if (res.data?.success) {
+          setMessage({ type: "success", text: "STK Push sent. Complete payment on your phone." });
+        } else {
+          setMessage({ type: "error", text: "Failed to initiate M-Pesa payment" });
+        }
       } else {
-        setMessage({ type: "error", text: "Failed to initiate payment" });
+        // ✅ FIXED: This matches your backend route in server.js
+        res = await axios.post("/api/payment/initiate", {
+          email: user.email,
+          amount: Number(amount),
+        });
+
+        if (res.data?.url) {
+          window.location.href = res.data.url;
+        } else {
+          setMessage({ type: "error", text: "Failed to initiate Paystack payment" });
+        }
       }
     } catch (error) {
       console.error(error);
       setMessage({
         type: "error",
-        text: error.response?.data?.message || "Payment initiation failed",
+        text: error.response?.data?.error || "Payment initiation failed",
       });
     } finally {
       setLoading(false);
@@ -91,7 +112,7 @@ export default function Payments({ user }) {
               type="number"
               id="amount"
               min="1"
-              step="0.01"
+              step="100"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -111,9 +132,26 @@ export default function Payments({ user }) {
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               <option value="paystack">Paystack</option>
-              <option value="mpesa">Mpesa (Coming soon)</option>
+              <option value="mpesa">Mpesa</option>
             </select>
           </div>
+
+          {paymentMethod === "mpesa" && (
+            <div>
+              <label className="block font-medium mb-1" htmlFor="phone">
+                M-Pesa Phone Number (Format: 2547XXXXXXXX)
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                placeholder="e.g. 254712345678"
+                required={paymentMethod === "mpesa"}
+              />
+            </div>
+          )}
 
           <button
             type="submit"

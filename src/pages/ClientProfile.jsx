@@ -1,4 +1,3 @@
-// src/pages/ClientProfile.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
@@ -12,12 +11,12 @@ export default function ClientProfile({ user }) {
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-    fetchProfile();
-  }, [user.email]);
+    if (user?.email) fetchProfile();
+  }, [user?.email]);
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/dashboard/client/profile", {
+      const res = await axios.get("http://localhost:5000/api/profile", {
         params: { email: user.email },
       });
       setProfile(res.data);
@@ -26,12 +25,14 @@ export default function ClientProfile({ user }) {
         phoneNumber: res.data.phoneNumber || "",
       });
     } catch (err) {
-      console.error("Profile fetch error:", err);
+      console.error("❌ Profile fetch error:", err);
+      alert("Failed to load profile. Please try again.");
     }
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append("email", user.email);
     formData.append("name", form.name);
@@ -40,12 +41,12 @@ export default function ClientProfile({ user }) {
 
     setLoading(true);
     try {
-      const res = await axios.put("http://localhost:5000/api/dashboard/client/profile", formData);
+      const res = await axios.put("http://localhost:5000/api/profile", formData);
       alert("✅ Profile updated successfully.");
       setProfile(res.data.user);
     } catch (err) {
-      console.error("Update error:", err);
-      alert("❌ Failed to update profile.");
+      console.error("❌ Update error:", err);
+      alert("Failed to update profile. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -63,6 +64,7 @@ export default function ClientProfile({ user }) {
 
         {profile ? (
           <form onSubmit={handleUpdate} className="space-y-6 font-manrope">
+            {/* Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
               <input
@@ -73,6 +75,7 @@ export default function ClientProfile({ user }) {
               />
             </div>
 
+            {/* Phone Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
               <input
@@ -83,6 +86,7 @@ export default function ClientProfile({ user }) {
               />
             </div>
 
+            {/* Profile Image Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
               {profile.profileImageUrl && (
@@ -104,10 +108,11 @@ export default function ClientProfile({ user }) {
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded shadow disabled:opacity-60"
+              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded shadow disabled:opacity-60 transition duration-200"
             >
               {loading ? "Updating..." : "Update Profile"}
             </button>

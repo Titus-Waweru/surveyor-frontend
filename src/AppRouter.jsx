@@ -41,11 +41,27 @@ import AdminLogin from "./admin/AdminLogin";
 import AdminSignup from "./admin/AdminSignup";
 import AdminAuth from "./pages/AdminAuth";
 
-// PRIVATE ROUTE
+// LANDING PAGE & BOOK DEMO
+import LandingPage from "./pages/LandingPage";
+import BookDemo from "./pages/BookDemo";
+
+function getDefaultDashboard(role) {
+  switch (role) {
+    case "client":
+      return "/client/overview";
+    case "surveyor":
+      return "/surveyor/overview";
+    case "admin":
+      return "/admin/overview";
+    default:
+      return "/login";
+  }
+}
+
 function PrivateRoute({ user, role, children }) {
   if (!user) return <Navigate to="/login" replace />;
   if (role && user.role !== role)
-    return <Navigate to={`/${user.role}/dashboard`} replace />;
+    return <Navigate to={getDefaultDashboard(user.role)} replace />;
   return children;
 }
 
@@ -65,14 +81,10 @@ function AppRoutes({ user, setUser }) {
       localStorage.setItem("token", loggedInUser.token);
       localStorage.setItem("user", JSON.stringify(loggedInUser));
       setUser(loggedInUser);
-      navigate(`/${loggedInUser.role}/dashboard`);
+      navigate(getDefaultDashboard(loggedInUser.role));
     } catch (error) {
       console.error("Login error:", error);
-      alert(
-        error.response?.data?.message ||
-          error.message ||
-          "Login failed. Please try again."
-      );
+      alert(error.response?.data?.message || error.message || "Login failed. Please try again.");
     }
   }
 
@@ -81,9 +93,7 @@ function AppRoutes({ user, setUser }) {
       const config = {
         headers: {
           "Content-Type":
-            signupData instanceof FormData
-              ? "multipart/form-data"
-              : "application/json",
+            signupData instanceof FormData ? "multipart/form-data" : "application/json",
         },
       };
       const response = await axios.post("/api/auth/signup", signupData, config);
@@ -93,11 +103,7 @@ function AppRoutes({ user, setUser }) {
       navigate("/verify-otp");
     } catch (error) {
       console.error("Signup error:", error);
-      alert(
-        error.response?.data?.message ||
-          error.message ||
-          "Signup failed. Please try again."
-      );
+      alert(error.response?.data?.message || error.message || "Signup failed. Please try again.");
     }
   }
 
@@ -116,17 +122,17 @@ function AppRoutes({ user, setUser }) {
 
   return (
     <Routes>
-      {/* === AUTH === */}
+      {/* AUTH */}
       <Route path="/login" element={<Login onLogin={handleLogin} />} />
       <Route path="/signup" element={<Signup onSignup={handleSignup} />} />
       <Route path="/verify-otp" element={<VerifyOTP />} />
 
-      {/* === ADMIN AUTH === */}
+      {/* ADMIN AUTH */}
       <Route path="/admin/auth" element={<AdminAuth setUser={setUser} />} />
       <Route path="/admin/login" element={<AdminLogin setUser={setUser} />} />
       <Route path="/admin/signup" element={<AdminSignup />} />
 
-      {/* === CLIENT DASHBOARD === */}
+      {/* CLIENT DASHBOARD */}
       <Route
         path="/client"
         element={
@@ -144,7 +150,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="settings" element={<ClientSettings user={user} />} />
       </Route>
 
-      {/* === SURVEYOR DASHBOARD === */}
+      {/* SURVEYOR DASHBOARD */}
       <Route
         path="/surveyor"
         element={
@@ -153,14 +159,14 @@ function AppRoutes({ user, setUser }) {
           </PrivateRoute>
         }
       >
-        <Route index element={<Navigate to="dashboard" />} />
-        <Route path="dashboard" element={<SurveyorDashboard user={user} />} />
+        <Route index element={<Navigate to="overview" />} />
+        <Route path="overview" element={<SurveyorDashboard user={user} />} />
         <Route path="payments" element={<Payments user={user} />} />
         <Route path="profile" element={<SurveyorProfile user={user} />} />
         <Route path="settings" element={<SurveyorSettings user={user} />} />
       </Route>
 
-      {/* === ADMIN DASHBOARD === */}
+      {/* ADMIN DASHBOARD */}
       <Route
         path="/admin"
         element={
@@ -176,23 +182,14 @@ function AppRoutes({ user, setUser }) {
         <Route path="settings" element={<AdminSettings />} />
       </Route>
 
-      {/* === DEFAULT REDIRECT === */}
+      {/* LANDING PAGE & BOOK DEMO */}
       <Route
         path="/"
         element={
-          <Navigate
-            to={
-              user?.role === "surveyor"
-                ? "/surveyor/dashboard"
-                : user?.role === "client"
-                ? "/client/overview"
-                : user?.role === "admin"
-                ? "/admin/overview"
-                : "/login"
-            }
-          />
+          user ? <Navigate to={getDefaultDashboard(user.role)} replace /> : <LandingPage />
         }
       />
+      <Route path="/book-demo" element={<BookDemo />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

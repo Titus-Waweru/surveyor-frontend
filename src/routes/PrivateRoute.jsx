@@ -6,7 +6,7 @@ const getDefaultDashboard = (role) => {
     case "client":
       return "/client/overview";
     case "surveyor":
-      return "/surveyor/dashboard";
+      return "/surveyor/overview";
     case "admin":
       return "/admin/overview";
     default:
