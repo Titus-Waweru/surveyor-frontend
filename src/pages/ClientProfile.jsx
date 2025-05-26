@@ -89,13 +89,23 @@ export default function ClientProfile({ user }) {
             {/* Profile Image Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+
+              {/* Smaller profile image preview */}
               {profile.profileImageUrl && (
                 <img
-                  src={`http://localhost:5000${profile.profileImageUrl}`}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full mb-4 border shadow"
-                />
+  src={`http://localhost:5000${profile.profileImageUrl}`}
+  alt="Profile"
+  className="rounded-full border shadow-sm mb-3"
+  style={{
+    width: "60px",
+    height: "60px",
+    objectFit: "cover",
+  }}
+/>
+
+
               )}
+
               <input
                 type="file"
                 accept="image/*"

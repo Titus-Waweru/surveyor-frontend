@@ -5,7 +5,6 @@ import {
   Route,
   Navigate,
   useNavigate,
-  Outlet,
 } from "react-router-dom";
 import axios from "axios";
 
@@ -122,7 +121,7 @@ function AppRoutes({ user, setUser }) {
 
   return (
     <Routes>
-      {/* AUTH */}
+      {/* AUTH ROUTES */}
       <Route path="/login" element={<Login onLogin={handleLogin} />} />
       <Route path="/signup" element={<Signup onSignup={handleSignup} />} />
       <Route path="/verify-otp" element={<VerifyOTP />} />
@@ -132,7 +131,7 @@ function AppRoutes({ user, setUser }) {
       <Route path="/admin/login" element={<AdminLogin setUser={setUser} />} />
       <Route path="/admin/signup" element={<AdminSignup />} />
 
-      {/* CLIENT DASHBOARD */}
+      {/* CLIENT DASHBOARD ROUTES */}
       <Route
         path="/client"
         element={
@@ -150,7 +149,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="settings" element={<ClientSettings user={user} />} />
       </Route>
 
-      {/* SURVEYOR DASHBOARD */}
+      {/* SURVEYOR DASHBOARD ROUTES */}
       <Route
         path="/surveyor"
         element={
@@ -166,7 +165,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="settings" element={<SurveyorSettings user={user} />} />
       </Route>
 
-      {/* ADMIN DASHBOARD */}
+      {/* ADMIN DASHBOARD ROUTES */}
       <Route
         path="/admin"
         element={
@@ -182,7 +181,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="settings" element={<AdminSettings />} />
       </Route>
 
-      {/* LANDING PAGE & BOOK DEMO */}
+      {/* PUBLIC PAGES */}
       <Route
         path="/"
         element={

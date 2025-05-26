@@ -1,4 +1,4 @@
-// src/pages/Payments.jsx
+// src/pages/Payment.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AOS from "aos";

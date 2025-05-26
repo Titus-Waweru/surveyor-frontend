@@ -5,9 +5,8 @@ import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
-import loginIllustration from "../assets/my_app.png"; // ✅ Ensure this image exists
+import logo from "../assets/logo.png"; // ✅ Optional: better bundling than /assets/logo.png
 
-// Validation schema
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -37,24 +36,23 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10 font-manrope">
       <div
-        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
         data-aos="fade-up"
+        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
       >
-        {/* Left Side: Illustration + Info */}
+        {/* Left Section: Branding / Info */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
           <img
-  src="/assets/logo.png"
-  alt="LandLink Logo"
-  className="h-[90px] w-auto max-w-[220px] object-contain"
-/>
-
-          <h1 className="text-3xl font-bold mb-2 font-poppins text-center">
-            LandLink  Platform
+            src={logo}
+            alt="LandLink Logo"
+            className="h-[100px] w-auto max-w-[220px] object-contain mb-6"
+          />
+          <h1 className="text-3xl font-bold font-poppins mb-2 text-center">
+            LandLink Platform
           </h1>
-          <p className="text-sm text-yellow-100 text-center font-manrope mb-4">
-           <b>MOTTO:</b> "Survey Services at Your Fingertips."
+          <p className="text-sm text-yellow-100 font-manrope text-center mb-4">
+            <strong>MOTTO:</strong> “Survey Services at Your Fingertips.”
           </p>
           <ul className="text-sm text-yellow-100 font-manrope list-disc list-inside text-center space-y-1">
             <li>Secure and reliable access</li>
@@ -64,67 +62,73 @@ export default function Login({ onLogin }) {
           </ul>
         </div>
 
-        {/* Right Side: Login Form */}
-        <div className="p-10 md:p-14">
-          <h1 className="text-3xl font-bold text-yellow-600 mb-4 font-poppins">
-            Login
-          </h1>
-          <b className="text-sm text-gray-600 mb-6 font-manrope">
+        {/* Right Section: Login Form */}
+        <div className="p-10 md:p-14 bg-white">
+          <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">Login</h2>
+          <p className="text-sm text-gray-600 mb-6 font-manrope">
             Welcome back! Please enter your credentials to access your dashboard.
-          </b>
+          </p>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5 font-manrope">
+            {/* Email Field */}
             <div>
-              <label htmlFor="email" className="text-sm text-gray-700 block mb-1 font-medium">
-                <i>Email Address</i>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address
               </label>
               <input
                 id="email"
-                {...register("email")}
                 type="email"
-                autoComplete="email"
                 placeholder="you@example.com"
+                autoComplete="email"
+                {...register("email")}
                 className="input"
+                aria-invalid={!!errors.email}
+                aria-describedby="email-error"
               />
               {errors.email && (
-                <p className="text-red-600 mt-1 text-sm" role="alert">
+                <p id="email-error" className="text-red-600 mt-1 text-sm" role="alert">
                   {errors.email.message}
                 </p>
               )}
             </div>
 
+            {/* Password Field */}
             <div>
-              <label htmlFor="password" className="text-sm text-gray-700 block mb-1 font-medium">
-                <i>Password</i>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
               </label>
               <input
                 id="password"
-                {...register("password")}
                 type="password"
-                autoComplete="current-password"
                 placeholder="********"
+                autoComplete="current-password"
+                {...register("password")}
                 className="input"
+                aria-invalid={!!errors.password}
+                aria-describedby="password-error"
               />
               {errors.password && (
-                <p className="text-red-600 mt-1 text-sm" role="alert">
+                <p id="password-error" className="text-red-600 mt-1 text-sm" role="alert">
                   {errors.password.message}
                 </p>
               )}
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-lg transition disabled:opacity-50"
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 rounded-lg transition duration-300 disabled:opacity-50"
             >
               {isSubmitting ? "Logging in..." : "Login"}
             </button>
           </form>
 
+          {/* Link to Signup */}
           <p className="text-center mt-6 text-sm text-gray-600">
             Don’t have an account?{" "}
-            <Link to="/signup" className="text-yellow-600 hover:underline font-medium">
-              <strong>Sign up here</strong>
+            <Link to="/signup" className="text-yellow-600 hover:underline font-semibold">
+              Sign up here
             </Link>
           </p>
         </div>

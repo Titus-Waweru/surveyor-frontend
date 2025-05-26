@@ -34,12 +34,7 @@ export default function SurveyorLayout({ user, onLogout }) {
             </Link>
           ))}
 
-          <button
-            onClick={onLogout}
-            className="mt-6 px-4 py-2 text-sm text-red-600 hover:underline"
-          >
-            Logout
-          </button>
+          {/* Logout button removed from sidebar */}
         </nav>
 
         <div className="p-4 text-xs text-gray-600 border-t border-[#cfd8dc] font-manrope">
