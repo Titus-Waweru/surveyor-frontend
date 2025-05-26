@@ -67,13 +67,17 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
 
-  axios.defaults.baseURL = "http://localhost:5000";
+  // ✅ Use environment variable instead of localhost
+  axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const token = localStorage.getItem("token");
-  if (token) axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
 
   async function handleLogin(credentials) {
     try {
-      const response = await axios.post("/api/auth/login", credentials);
+      const response = await axios.post("/auth/login", credentials);
       const loggedInUser = response.data;
       if (!loggedInUser?.email) throw new Error("Login failed");
 
@@ -95,7 +99,7 @@ function AppRoutes({ user, setUser }) {
             signupData instanceof FormData ? "multipart/form-data" : "application/json",
         },
       };
-      const response = await axios.post("/api/auth/signup", signupData, config);
+      const response = await axios.post("/auth/signup", signupData, config);
       if (!response.data) throw new Error("Signup failed");
 
       alert("Signup successful! Please check your email and verify your OTP.");
@@ -108,7 +112,7 @@ function AppRoutes({ user, setUser }) {
 
   async function handleLogout() {
     try {
-      await axios.post("/api/auth/logout");
+      await axios.post("/auth/logout");
     } catch (error) {
       console.warn("Server logout failed, continuing with client logout.");
     } finally {
