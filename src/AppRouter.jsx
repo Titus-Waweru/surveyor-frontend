@@ -67,8 +67,9 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
 
-  // ✅ Use environment variable instead of localhost
-  axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  // ✅ Correct axios baseURL for both local & production
+  axios.defaults.baseURL =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api";
 
   const token = localStorage.getItem("token");
   if (token) {
@@ -87,7 +88,9 @@ function AppRoutes({ user, setUser }) {
       navigate(getDefaultDashboard(loggedInUser.role));
     } catch (error) {
       console.error("Login error:", error);
-      alert(error.response?.data?.message || error.message || "Login failed. Please try again.");
+      alert(
+        error.response?.data?.message || error.message || "Login failed. Please try again."
+      );
     }
   }
 
@@ -106,7 +109,9 @@ function AppRoutes({ user, setUser }) {
       navigate("/verify-otp");
     } catch (error) {
       console.error("Signup error:", error);
-      alert(error.response?.data?.message || error.message || "Signup failed. Please try again.");
+      alert(
+        error.response?.data?.message || error.message || "Signup failed. Please try again."
+      );
     }
   }
 
