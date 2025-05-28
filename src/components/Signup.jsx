@@ -37,7 +37,8 @@ export default function Signup() {
 
   const onSubmit = async (data) => {
     try {
-      // Validate surveyor-specific fields
+      const apiUrl = `${import.meta.env.VITE_API_URL}/auth/signup`;
+
       if (data.role === "surveyor") {
         if (!iskNumber?.trim()) {
           setError("iskNumber", { message: "ISK number is required for surveyors" });
@@ -52,7 +53,6 @@ export default function Signup() {
           return;
         }
 
-        // Submit form data as multipart/form-data for file upload
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("email", data.email);
@@ -62,12 +62,11 @@ export default function Signup() {
         formData.append("idCard", data.idCard[0]);
         formData.append("certificate", data.certificate[0]);
 
-        await axios.post("http://localhost:5000/api/auth/signup", formData, {
+        await axios.post(apiUrl, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        // Simple JSON for clients
-        await axios.post("http://localhost:5000/api/auth/signup", {
+        await axios.post(apiUrl, {
           name: data.name,
           email: data.email,
           password: data.password,
