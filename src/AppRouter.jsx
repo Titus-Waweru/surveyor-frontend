@@ -6,7 +6,7 @@ import {
   Navigate,
   useNavigate,
 } from "react-router-dom";
-import axios from "axios";
+import API from "./utils/axios";
 
 // AUTH PAGES
 import Login from "./components/Login";
@@ -67,10 +67,6 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
 
-  // ✅ Set axios baseURL
-  axios.defaults.baseURL =
-    import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
   // ✅ Rehydrate user + token from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -78,20 +74,19 @@ function AppRoutes({ user, setUser }) {
 
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
-      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+      // Token already applied via API interceptor
     }
   }, []);
 
   async function handleLogin(credentials) {
     try {
-      const response = await axios.post("/auth/login", credentials);
+      const response = await API.post("/auth/login", credentials);
       const loggedInUser = response.data;
 
       if (!loggedInUser?.email) throw new Error("Login failed");
 
       localStorage.setItem("token", loggedInUser.token);
       localStorage.setItem("user", JSON.stringify(loggedInUser));
-      axios.defaults.headers.common["Authorization"] = `Bearer ${loggedInUser.token}`;
       setUser(loggedInUser);
       navigate(getDefaultDashboard(loggedInUser.role));
     } catch (error) {
@@ -114,7 +109,7 @@ function AppRoutes({ user, setUser }) {
               : "application/json",
         },
       };
-      const response = await axios.post("/auth/signup", signupData, config);
+      const response = await API.post("/auth/signup", signupData, config);
       if (!response.data) throw new Error("Signup failed");
 
       alert("Signup successful! Please check your email and verify your OTP.");
@@ -131,7 +126,7 @@ function AppRoutes({ user, setUser }) {
 
   async function handleLogout() {
     try {
-      await axios.post("/auth/logout");
+      await API.post("/auth/logout");
     } catch (error) {
       console.warn("Server logout failed, continuing with client logout.");
     } finally {
@@ -208,7 +203,11 @@ function AppRoutes({ user, setUser }) {
       <Route
         path="/"
         element={
-          user ? <Navigate to={getDefaultDashboard(user.role)} replace /> : <LandingPage />
+          user ? (
+            <Navigate to={getDefaultDashboard(user.role)} replace />
+          ) : (
+            <LandingPage />
+          )
         }
       />
       <Route path="/book-demo" element={<BookDemo />} />
