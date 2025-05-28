@@ -58,7 +58,7 @@ export default function VerifyOTP() {
     }
 
     try {
-      const res = await axios.post(`${baseURL}/api/auth/verify-otp`, {
+      const res = await axios.post(`${baseURL}/auth/verify-otp`, {
         email,
         otp,
       });
@@ -77,7 +77,7 @@ export default function VerifyOTP() {
   const handleResend = async () => {
     setResending(true);
     try {
-      await axios.post(`${baseURL}/api/auth/resend-otp`, { email });
+      await axios.post(`${baseURL}/auth/resend-otp`, { email });
       setOtpDigits(["", "", "", "", "", ""]);
       setSecondsLeft(180);
     } catch (err) {

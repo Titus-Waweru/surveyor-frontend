@@ -7,7 +7,7 @@ const API = axios.create({
   },
 });
 
-// Add auth token to every request if available
+// Attach token to every request if available
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -16,7 +16,7 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-// Optional: Handle 401 errors globally (e.g., redirect to login)
+// Handle unauthorized errors globally
 API.interceptors.response.use(
   (response) => response,
   (error) => {
