@@ -5,6 +5,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import loginIllustration from "../assets/my_app.png";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function AdminLogin({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +24,7 @@ export default function AdminLogin({ setUser }) {
     setIsSubmitting(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post(`${API}/auth/login`, {
         email: email.trim(),
         password: password.trim(),
       });

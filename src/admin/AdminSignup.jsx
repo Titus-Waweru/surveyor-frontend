@@ -4,6 +4,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Link } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function AdminSignup() {
   const [form, setForm] = useState({
     name: "",
@@ -27,8 +29,9 @@ export default function AdminSignup() {
     e.preventDefault();
     setMessage("");
     setIsSubmitting(true);
+
     try {
-      const res = await axios.post("http://localhost:5000/api/admin/signup", form); // ✅ updated endpoint
+      const res = await axios.post(`${API}/admin/signup`, form);
       setMessage(res.data.message || "Signup successful!");
     } catch (err) {
       setMessage(err.response?.data?.message || "Signup failed.");
