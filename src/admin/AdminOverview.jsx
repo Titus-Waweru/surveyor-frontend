@@ -17,9 +17,9 @@ export default function AdminOverview() {
   const fetchData = async () => {
     try {
       const [pendingRes, bookingsRes, surveyorsRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/admin/pending-surveyors"),
-        axios.get("http://localhost:5000/api/admin/bookings/all"),
-        axios.get("http://localhost:5000/api/admin/users/surveyors"),
+        axios.get("https://your-backend.onrender.com/api/admin/pending-surveyors"),
+        axios.get("https://your-backend.onrender.com/api/admin/bookings/all"),
+        axios.get("https://your-backend.onrender.com/api/admin/users/surveyors"),
       ]);
       setPendingSurveyors(pendingRes.data);
       setBookings(bookingsRes.data);
@@ -33,7 +33,7 @@ export default function AdminOverview() {
 
   const handleApproval = async (id, action) => {
     try {
-      await axios.patch(`http://localhost:5000/api/admin/${action}/${id}`);
+      await axios.patch(`https://your-backend.onrender.com/api/admin/${action}/${id}`);
       fetchData();
     } catch (err) {
       console.error("Approval error:", err);
@@ -42,9 +42,10 @@ export default function AdminOverview() {
 
   const handleAssignment = async (bookingId, surveyorId) => {
     try {
-      await axios.patch(`http://localhost:5000/api/admin/bookings/${bookingId}/assign`, {
-        surveyorId,
-      });
+      await axios.patch(
+        `https://your-backend.onrender.com/api/admin/bookings/${bookingId}/assign`,
+        { surveyorId }
+      );
       fetchData();
     } catch (err) {
       console.error("Assignment error:", err);
@@ -52,13 +53,13 @@ export default function AdminOverview() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] px-4 py-10 flex items-start justify-center font-manrope">
       <div
-        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-10 md:p-14"
+        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-8 md:p-12"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold text-yellow-600 text-center mb-8 font-poppins">
-          <strong>Admin Overview</strong>
+        <h1 className="text-3xl font-bold text-yellow-600 text-center mb-10 font-poppins">
+          Admin Dashboard Overview
         </h1>
 
         {loading ? (
@@ -67,17 +68,19 @@ export default function AdminOverview() {
           <>
             {/* Pending Surveyors */}
             <section className="mb-12">
-              <h2 className="text-2xl font-semibold mb-5 text-gray-800">Pending Surveyor Approvals</h2>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Pending Surveyor Approvals
+              </h2>
               {pendingSurveyors.length === 0 ? (
                 <p className="text-gray-500">No pending surveyors.</p>
               ) : (
-                <div className="overflow-x-auto rounded-xl border shadow-sm">
+                <div className="overflow-x-auto border rounded-xl shadow-sm">
                   <table className="min-w-full text-sm text-left border-collapse">
                     <thead className="bg-gray-100 text-gray-700 font-semibold">
                       <tr>
                         <th className="px-4 py-3">Name</th>
                         <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">ISK</th>
+                        <th className="px-4 py-3">ISK Number</th>
                         <th className="px-4 py-3">ID Card</th>
                         <th className="px-4 py-3">Certificate</th>
                         <th className="px-4 py-3">Actions</th>
@@ -90,14 +93,38 @@ export default function AdminOverview() {
                           <td className="px-4 py-3">{s.email}</td>
                           <td className="px-4 py-3">{s.iskNumber}</td>
                           <td className="px-4 py-3">
-                            <a href={`http://localhost:5000${s.idCardUrl}`} target="_blank" rel="noreferrer" className="text-indigo-600 underline">View</a>
+                            <a
+                              href={`https://your-backend.onrender.com${s.idCardUrl}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-indigo-600 underline"
+                            >
+                              View
+                            </a>
                           </td>
                           <td className="px-4 py-3">
-                            <a href={`http://localhost:5000${s.certUrl}`} target="_blank" rel="noreferrer" className="text-indigo-600 underline">View</a>
+                            <a
+                              href={`https://your-backend.onrender.com${s.certUrl}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-indigo-600 underline"
+                            >
+                              View
+                            </a>
                           </td>
                           <td className="px-4 py-3 space-x-2">
-                            <button onClick={() => handleApproval(s.id, "approve")} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md transition">Approve</button>
-                            <button onClick={() => handleApproval(s.id, "reject")} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md transition">Reject</button>
+                            <button
+                              onClick={() => handleApproval(s.id, "approve")}
+                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md transition"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => handleApproval(s.id, "reject")}
+                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md transition"
+                            >
+                              Reject
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -109,16 +136,18 @@ export default function AdminOverview() {
 
             {/* Bookings */}
             <section>
-              <h2 className="text-2xl font-semibold mb-5 text-gray-800">All Bookings from Customers</h2>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                All Bookings from Clients
+              </h2>
               {bookings.length === 0 ? (
                 <p className="text-gray-500">No bookings found.</p>
               ) : (
-                <div className="overflow-x-auto rounded-xl border shadow-sm">
+                <div className="overflow-x-auto border rounded-xl shadow-sm">
                   <table className="min-w-full text-sm text-left border-collapse">
                     <thead className="bg-gray-100 text-gray-700 font-semibold">
                       <tr>
                         <th className="px-4 py-3">Client</th>
-                        <th className="px-4 py-3">Type</th>
+                        <th className="px-4 py-3">Survey Type</th>
                         <th className="px-4 py-3">Location</th>
                         <th className="px-4 py-3">Status</th>
                         <th className="px-4 py-3">Assign Surveyor</th>
@@ -130,10 +159,10 @@ export default function AdminOverview() {
                           <td className="px-4 py-3">{b.user?.name || "N/A"}</td>
                           <td className="px-4 py-3">{b.surveyType}</td>
                           <td className="px-4 py-3">{b.location}</td>
-                          <td className="px-4 py-3">{b.status}</td>
+                          <td className="px-4 py-3 capitalize">{b.status}</td>
                           <td className="px-4 py-3">
                             <select
-                              className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                              className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                               value={b.assignedSurveyorId || ""}
                               onChange={(e) => handleAssignment(b.id, parseInt(e.target.value))}
                             >

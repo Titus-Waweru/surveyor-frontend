@@ -118,7 +118,7 @@ export default function LandingPage() {
             <p className="text-gray-700 italic">
               "It cut our booking time in half and made reporting automatic."
             </p>
-            <p className="mt-4 font-semibold text-gray-800">— Titus Waweru, Site Manager</p>
+            <p className="mt-4 font-semibold text-gray-800">— Titus Waweru.,  LandLink CEO</p>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow">
             <p className="text-gray-700 italic">

@@ -3,6 +3,8 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+const baseUrl = import.meta.env.VITE_API_URL;
+
 export default function AdminBookings() {
   const [bookings, setBookings] = useState([]);
   const [surveyors, setSurveyors] = useState([]);
@@ -16,8 +18,8 @@ export default function AdminBookings() {
   const fetchData = async () => {
     try {
       const [bookingRes, surveyorRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/admin/bookings/all"),
-        axios.get("http://localhost:5000/api/admin/users/surveyors"),
+        axios.get(`${baseUrl}/admin/bookings/all`),
+        axios.get(`${baseUrl}/admin/users/surveyors`),
       ]);
       setBookings(bookingRes.data);
       setSurveyors(surveyorRes.data);
@@ -29,7 +31,7 @@ export default function AdminBookings() {
 
   const handleAssign = async (bookingId, surveyorId) => {
     try {
-      await axios.patch(`http://localhost:5000/api/admin/bookings/${bookingId}/assign`, {
+      await axios.patch(`${baseUrl}/admin/bookings/${bookingId}/assign`, {
         surveyorId,
       });
       fetchData();

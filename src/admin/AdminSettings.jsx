@@ -3,6 +3,8 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+const baseUrl = import.meta.env.VITE_API_URL;
+
 export default function AdminSettings() {
   const [adminId, setAdminId] = useState(null);
   const [newPassword, setNewPassword] = useState("");
@@ -22,7 +24,7 @@ export default function AdminSettings() {
 
   const fetchNotificationPref = async (id) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/admin/profile/${id}`);
+      const res = await axios.get(`${baseUrl}/admin/profile/${id}`);
       setNotificationPref(res.data.notificationsEnabled ?? true);
     } catch (err) {
       console.error("Failed to fetch notification preference");
@@ -37,7 +39,7 @@ export default function AdminSettings() {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/admin/update-password/${adminId}`, {
+      await axios.put(`${baseUrl}/admin/update-password/${adminId}`, {
         password: newPassword,
       });
       setStatus("✅ Password updated successfully!");
@@ -54,7 +56,7 @@ export default function AdminSettings() {
     setNotificationPref(updatedPref);
 
     try {
-      await axios.put(`http://localhost:5000/api/admin/notification/${adminId}`, {
+      await axios.put(`${baseUrl}/admin/notification/${adminId}`, {
         notificationsEnabled: updatedPref,
       });
     } catch (err) {
@@ -69,7 +71,7 @@ export default function AdminSettings() {
       confirm("⚠️ Are you sure you want to delete your account? This action cannot be undone.")
     ) {
       try {
-        await axios.delete(`http://localhost:5000/api/admin/delete/${adminId}`);
+        await axios.delete(`${baseUrl}/admin/delete/${adminId}`);
         alert("Your account has been deleted.");
         localStorage.removeItem("user");
         window.location.href = "/login";
