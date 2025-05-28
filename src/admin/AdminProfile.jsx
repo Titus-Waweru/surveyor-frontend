@@ -3,6 +3,8 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+const baseUrl = import.meta.env.VITE_API_URL;
+
 export default function AdminProfile() {
   const [admin, setAdmin] = useState({
     id: "",
@@ -30,10 +32,11 @@ export default function AdminProfile() {
         return;
       }
 
-      const res = await axios.get(`http://localhost:5000/api/admin/profile-by-email?email=${email}`);
+      const res = await axios.get(`${baseUrl}/admin/profile-by-email?email=${email}`);
       setAdmin(res.data);
       if (res.data.profileImageUrl) {
-        setImagePreview(`http://localhost:5000${res.data.profileImageUrl}`);
+        const isAbsolute = res.data.profileImageUrl.startsWith("http");
+        setImagePreview(isAbsolute ? res.data.profileImageUrl : `${baseUrl}${res.data.profileImageUrl}`);
       }
     } catch (err) {
       console.error("Error fetching profile:", err);
@@ -67,7 +70,7 @@ export default function AdminProfile() {
     if (imageFile) formData.append("profileImage", imageFile);
 
     try {
-      await axios.put(`http://localhost:5000/api/admin/profile/${admin.id}`, formData, {
+      await axios.put(`${baseUrl}/admin/profile/${admin.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setStatus("✅ Profile updated successfully!");
@@ -80,10 +83,7 @@ export default function AdminProfile() {
 
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10 font-manrope">
-      <div
-        className="w-full max-w-4xl bg-white shadow-xl rounded-3xl p-10 md:p-14"
-        data-aos="fade-up"
-      >
+      <div className="w-full max-w-4xl bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
         <h1 className="text-3xl font-bold text-yellow-600 text-center mb-8 font-poppins">
           <strong>Admin Profile</strong>
         </h1>
