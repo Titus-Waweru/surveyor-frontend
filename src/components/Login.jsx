@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
-import logo from "../assets/logo.png"; // ✅ Optional: better bundling than /assets/logo.png
+import { motion, AnimatePresence } from "framer-motion";
+import logo from "../assets/logo.png";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -41,7 +42,7 @@ export default function Login({ onLogin }) {
         data-aos="fade-up"
         className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
       >
-        {/* Left Section: Branding / Info */}
+        {/* Left Section */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
           <img
             src={logo}
@@ -62,7 +63,7 @@ export default function Login({ onLogin }) {
           </ul>
         </div>
 
-        {/* Right Section: Login Form */}
+        {/* Right Section */}
         <div className="p-10 md:p-14 bg-white">
           <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">Login</h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
@@ -85,11 +86,20 @@ export default function Login({ onLogin }) {
                 aria-invalid={!!errors.email}
                 aria-describedby="email-error"
               />
-              {errors.email && (
-                <p id="email-error" className="text-red-600 mt-1 text-sm" role="alert">
-                  {errors.email.message}
-                </p>
-              )}
+              <AnimatePresence>
+                {errors.email && (
+                  <motion.p
+                    id="email-error"
+                    className="text-red-600 mt-1 text-sm"
+                    role="alert"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                  >
+                    {errors.email.message}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Password Field */}
@@ -107,11 +117,20 @@ export default function Login({ onLogin }) {
                 aria-invalid={!!errors.password}
                 aria-describedby="password-error"
               />
-              {errors.password && (
-                <p id="password-error" className="text-red-600 mt-1 text-sm" role="alert">
-                  {errors.password.message}
-                </p>
-              )}
+              <AnimatePresence>
+                {errors.password && (
+                  <motion.p
+                    id="password-error"
+                    className="text-red-600 mt-1 text-sm"
+                    role="alert"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                  >
+                    {errors.password.message}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Submit Button */}
@@ -124,7 +143,7 @@ export default function Login({ onLogin }) {
             </button>
           </form>
 
-          {/* Link to Signup */}
+          {/* Signup Link */}
           <p className="text-center mt-6 text-sm text-gray-600">
             Don’t have an account?{" "}
             <Link to="/signup" className="text-yellow-600 hover:underline font-semibold">
