@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../utils/axios"; // ✅ import the configured Axios instance
 import OverviewCards from "../components/dashboard/OverviewCards.jsx";
 import BookingsTable from "../components/dashboard/BookingsTable.jsx";
 import BookingForm from "../components/dashboard/BookingForm.jsx";
@@ -14,9 +14,7 @@ export default function ClientDashboard({ user }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/bookings?userEmail=${encodeURIComponent(user.email)}`
-      );
+      const res = await API.get(`/bookings?userEmail=${encodeURIComponent(user.email)}`); // ✅ no need for full URL
       setBookings(res.data);
     } catch (err) {
       console.error("Error fetching bookings:", err);
@@ -34,29 +32,24 @@ export default function ClientDashboard({ user }) {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-10 animate-fade-in font-manrope">
-      {/* Greeting Header */}
       <header className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">
           Welcome, {user?.name?.split(" ")[0] || "User"} 👋
         </h1>
       </header>
 
-      {/* Overview Cards */}
       <OverviewCards bookings={bookings} loading={loading} error={error} />
 
-      {/* Booking Map */}
       <section className="bg-white rounded-2xl shadow-lg p-6">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Active Bookings Map</h2>
         <BookingMap bookings={bookings} />
       </section>
 
-      {/* Booking Form */}
       <section className="bg-white rounded-2xl shadow-lg p-6">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Book a Service</h2>
         <BookingForm userEmail={user.email} onNewBooking={fetchBookings} />
       </section>
 
-      {/* Recent Bookings Table */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold text-gray-700">Recent Bookings</h2>
         {loading ? (

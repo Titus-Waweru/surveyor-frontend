@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import API from "../utils/axios"; // ✅ import your configured Axios instance
 
 const SurveyorDashboard = () => {
   const [surveyorData, setSurveyorData] = useState(null);
@@ -19,19 +20,8 @@ const SurveyorDashboard = () => {
       const email = user?.email;
       if (!email) throw new Error("User email not found. Please log in.");
 
-      const url = `/api/surveyor/dashboard?email=${encodeURIComponent(email)}`;
-      const response = await fetch(url, {
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        const errorBody = await response.text();
-        throw new Error(`HTTP error! ${response.status} - ${errorBody}`);
-      }
-
-      const data = await response.json();
-      setSurveyorData(data);
+      const res = await API.get(`/surveyor/dashboard?email=${encodeURIComponent(email)}`);
+      setSurveyorData(res.data);
     } catch (err) {
       setError(err.message || "Failed to fetch surveyor data.");
     } finally {
@@ -42,21 +32,10 @@ const SurveyorDashboard = () => {
   const updateBookingStatus = async (bookingId, payload) => {
     setUpdatingBookingId(bookingId);
     try {
-      const response = await fetch(`/api/surveyor/bookings/${bookingId}/status`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorBody = await response.text();
-        throw new Error(`Failed to update booking: ${errorBody}`);
-      }
-
+      await API.patch(`/surveyor/bookings/${bookingId}/status`, payload);
       await fetchSurveyorData();
     } catch (err) {
-      alert(err.message || "Failed to update booking.");
+      alert(err.response?.data?.message || err.message || "Failed to update booking.");
     } finally {
       setUpdatingBookingId(null);
     }
@@ -71,10 +50,7 @@ const SurveyorDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
-      <div
-        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-10 md:p-14"
-        data-aos="fade-up"
-      >
+      <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
         <h1 className="text-3xl font-bold text-blue-700 text-center mb-6 font-poppins">
           Welcome, {surveyorData.surveyorName}
         </h1>
