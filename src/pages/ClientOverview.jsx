@@ -1,6 +1,5 @@
 // src/pages/ClientOverview.jsx
 import { useEffect, useState } from "react";
-import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -13,21 +12,46 @@ export default function ClientOverview({ user }) {
     AOS.init({ duration: 1000 });
     async function fetchBookings() {
       try {
-        const res = await axios.get(`http://localhost:5000/api/bookings?userEmail=${user.email}`);
-        setBookings(res.data);
+        const response = await fetch(`/api/bookings?userEmail=${encodeURIComponent(user.email)}`, {
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`HTTP ${response.status} - ${errText}`);
+        }
+
+        const data = await response.json();
+        setBookings(data);
       } catch (err) {
         setError("Failed to fetch bookings.");
       } finally {
         setLoading(false);
       }
     }
-    fetchBookings();
+
+    if (user?.email) fetchBookings();
   }, [user.email]);
 
   const total = bookings.length;
-  const pending = bookings.filter(b => b.status === "Pending").length;
-  const completed = bookings.filter(b => b.status === "Completed").length;
-  const inProgress = bookings.filter(b => b.status === "In Progress").length;
+  const pending = bookings.filter(b => b.status?.toLowerCase() === "pending").length;
+  const completed = bookings.filter(b => b.status?.toLowerCase() === "completed").length;
+  const inProgress = bookings.filter(b => b.status?.toLowerCase() === "in progress").length;
+
+  if (loading)
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
+        Loading client overview...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
+        {error}
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
@@ -36,13 +60,11 @@ export default function ClientOverview({ user }) {
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold text-yellow-600 text-center mb-6 font-poppins">
-          <strong>Client Overview</strong>
+          Client Overview
         </h1>
 
-        {loading ? (
-          <p className="text-center text-sm text-gray-600 font-manrope">Loading overview...</p>
-        ) : error ? (
-          <p className="text-center text-sm text-red-600 font-manrope">{error}</p>
+        {total === 0 ? (
+          <p className="text-center text-gray-600 font-manrope">No bookings found.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-manrope">
             <StatCard label="Total Bookings" value={total} color="blue" />
