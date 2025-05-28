@@ -8,11 +8,12 @@ export default function VerifyOTP() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [resending, setResending] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(180); // 3 minutes
+  const [secondsLeft, setSecondsLeft] = useState(180);
   const navigate = useNavigate();
   const inputRefs = useRef([]);
 
   const email = localStorage.getItem("pendingEmail");
+  const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!email) navigate("/signup");
@@ -57,7 +58,7 @@ export default function VerifyOTP() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+      const res = await axios.post(`${baseURL}/api/auth/verify-otp`, {
         email,
         otp,
       });
@@ -76,7 +77,7 @@ export default function VerifyOTP() {
   const handleResend = async () => {
     setResending(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/resend-otp", { email });
+      await axios.post(`${baseURL}/api/auth/resend-otp`, { email });
       setOtpDigits(["", "", "", "", "", ""]);
       setSecondsLeft(180);
     } catch (err) {
@@ -86,9 +87,7 @@ export default function VerifyOTP() {
   };
 
   const formatTime = (s) => {
-    const m = Math.floor(s / 60)
-      .toString()
-      .padStart(2, "0");
+    const m = Math.floor(s / 60).toString().padStart(2, "0");
     const sec = (s % 60).toString().padStart(2, "0");
     return `${m}:${sec}`;
   };
