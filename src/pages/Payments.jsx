@@ -13,19 +13,28 @@ export default function Payments({ user }) {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
-    AOS.init({ duration: 1000 });
+    if (user?.email) {
+      AOS.init({ duration: 1000 });
 
-    async function fetchPayments() {
-      try {
-        const res = await axios.get(`/api/payments?email=${user.email}`);
-        setPayments(res.data.payments || []);
-      } catch (err) {
-        console.error("Failed to fetch payments", err);
+      async function fetchPayments() {
+        try {
+          const res = await axios.get(`/api/payments?email=${user.email}`);
+          setPayments(res.data.payments || []);
+        } catch (err) {
+          console.error("Failed to fetch payments", err);
+        }
       }
-    }
 
-    if (user?.email) fetchPayments();
-  }, [user]);
+      fetchPayments();
+    }
+  }, [user?.email]);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -58,7 +67,6 @@ export default function Payments({ user }) {
           setMessage({ type: "error", text: "Failed to initiate M-Pesa payment" });
         }
       } else {
-        // ✅ FIXED: This matches your backend route in server.js
         res = await axios.post("/api/payment/initiate", {
           email: user.email,
           amount: Number(amount),
@@ -74,7 +82,7 @@ export default function Payments({ user }) {
       console.error(error);
       setMessage({
         type: "error",
-        text: error.response?.data?.error || "Payment initiation failed",
+        text: error.response?.data?.error || "Payment initiation failed. Try again.",
       });
     } finally {
       setLoading(false);
@@ -93,7 +101,8 @@ export default function Payments({ user }) {
 
         {message && (
           <div
-            className={`mb-4 px-4 py-2 rounded font-manrope text-center ${
+            aria-live="polite"
+            className={`mb-6 px-4 py-2 rounded font-manrope text-center ${
               message.type === "error"
                 ? "bg-red-100 text-red-700"
                 : "bg-green-100 text-green-700"
@@ -148,7 +157,7 @@ export default function Payments({ user }) {
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 placeholder="e.g. 254712345678"
-                required={paymentMethod === "mpesa"}
+                required
               />
             </div>
           )}
@@ -184,7 +193,7 @@ export default function Payments({ user }) {
                         {new Date(p.createdAt).toLocaleString()}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {(p.amount / 100).toFixed(2)}
+                        {(p.amount / (p.method === "paystack" ? 100 : 1)).toFixed(2)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2 capitalize">{p.method}</td>
                       <td className="border border-gray-300 px-4 py-2">

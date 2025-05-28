@@ -3,6 +3,8 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 export default function ClientProfile({ user }) {
   const [profile, setProfile] = useState(null);
   const [form, setForm] = useState({ name: "", phoneNumber: "" });
@@ -16,7 +18,7 @@ export default function ClientProfile({ user }) {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/profile", {
+      const res = await axios.get(`${API_BASE_URL}/profile`, {
         params: { email: user.email },
       });
       setProfile(res.data);
@@ -41,7 +43,7 @@ export default function ClientProfile({ user }) {
 
     setLoading(true);
     try {
-      const res = await axios.put("http://localhost:5000/api/profile", formData);
+      const res = await axios.put(`${API_BASE_URL}/profile`, formData);
       alert("✅ Profile updated successfully.");
       setProfile(res.data.user);
     } catch (err) {
@@ -89,23 +91,18 @@ export default function ClientProfile({ user }) {
             {/* Profile Image Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
-
-              {/* Smaller profile image preview */}
               {profile.profileImageUrl && (
                 <img
-  src={`http://localhost:5000${profile.profileImageUrl}`}
-  alt="Profile"
-  className="rounded-full border shadow-sm mb-3"
-  style={{
-    width: "60px",
-    height: "60px",
-    objectFit: "cover",
-  }}
-/>
-
-
+                  src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
+                  alt="Profile"
+                  className="rounded-full border shadow-sm mb-3"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "cover",
+                  }}
+                />
               )}
-
               <input
                 type="file"
                 accept="image/*"

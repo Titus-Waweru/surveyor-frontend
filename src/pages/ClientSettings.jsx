@@ -1,8 +1,9 @@
-// src/pages/ClientSettings.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export default function ClientSettings({ user, onLogout }) {
   const [settings, setSettings] = useState({
@@ -15,12 +16,12 @@ export default function ClientSettings({ user, onLogout }) {
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-    fetchSettings();
-  }, [user.email]);
+    if (user?.email) fetchSettings();
+  }, [user?.email]);
 
   const fetchSettings = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/profile", {
+      const res = await axios.get(`${API_BASE_URL}/profile`, {
         params: { email: user.email },
       });
       setSettings({
@@ -30,12 +31,13 @@ export default function ClientSettings({ user, onLogout }) {
       });
     } catch (err) {
       console.error("Failed to fetch settings:", err);
+      alert("Failed to load settings.");
     }
   };
 
   const handleToggleNotifications = async () => {
     try {
-      await axios.put("http://localhost:5000/api/profile/toggle-notifications", {
+      await axios.put(`${API_BASE_URL}/profile/toggle-notifications`, {
         email: user.email,
       });
       setSettings((prev) => ({
@@ -44,6 +46,7 @@ export default function ClientSettings({ user, onLogout }) {
       }));
     } catch (err) {
       console.error("Toggle error:", err);
+      alert("Failed to update notification settings.");
     }
   };
 
@@ -54,14 +57,15 @@ export default function ClientSettings({ user, onLogout }) {
     }
     setLoading(true);
     try {
-      await axios.put("http://localhost:5000/api/profile/change-password", {
+      await axios.put(`${API_BASE_URL}/profile/change-password`, {
         email: user.email,
         newPassword,
       });
-      alert("Password updated.");
+      alert("✅ Password updated.");
       setNewPassword("");
     } catch (err) {
-      alert("Failed to update password.");
+      alert("❌ Failed to update password.");
+      console.error("Password update error:", err);
     } finally {
       setLoading(false);
     }
