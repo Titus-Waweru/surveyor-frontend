@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -67,29 +67,39 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
 
-  // ✅ Correct axios baseURL for both local & production
+  // ✅ Set axios baseURL
   axios.defaults.baseURL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api";
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-  const token = localStorage.getItem("token");
-  if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  }
+  // ✅ Rehydrate user + token from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+    }
+  }, []);
 
   async function handleLogin(credentials) {
     try {
       const response = await axios.post("/auth/login", credentials);
       const loggedInUser = response.data;
+
       if (!loggedInUser?.email) throw new Error("Login failed");
 
       localStorage.setItem("token", loggedInUser.token);
       localStorage.setItem("user", JSON.stringify(loggedInUser));
+      axios.defaults.headers.common["Authorization"] = `Bearer ${loggedInUser.token}`;
       setUser(loggedInUser);
       navigate(getDefaultDashboard(loggedInUser.role));
     } catch (error) {
       console.error("Login error:", error);
       alert(
-        error.response?.data?.message || error.message || "Login failed. Please try again."
+        error.response?.data?.message ||
+          error.message ||
+          "Login failed. Please try again."
       );
     }
   }
@@ -99,7 +109,9 @@ function AppRoutes({ user, setUser }) {
       const config = {
         headers: {
           "Content-Type":
-            signupData instanceof FormData ? "multipart/form-data" : "application/json",
+            signupData instanceof FormData
+              ? "multipart/form-data"
+              : "application/json",
         },
       };
       const response = await axios.post("/auth/signup", signupData, config);
@@ -110,7 +122,9 @@ function AppRoutes({ user, setUser }) {
     } catch (error) {
       console.error("Signup error:", error);
       alert(
-        error.response?.data?.message || error.message || "Signup failed. Please try again."
+        error.response?.data?.message ||
+          error.message ||
+          "Signup failed. Please try again."
       );
     }
   }
