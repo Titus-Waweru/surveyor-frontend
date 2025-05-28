@@ -3,7 +3,8 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-const baseUrl = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL;
+const BASE = API.replace("/api", ""); // For future use if needed
 
 export default function AdminBookings() {
   const [bookings, setBookings] = useState([]);
@@ -18,8 +19,8 @@ export default function AdminBookings() {
   const fetchData = async () => {
     try {
       const [bookingRes, surveyorRes] = await Promise.all([
-        axios.get(`${baseUrl}/admin/bookings/all`),
-        axios.get(`${baseUrl}/admin/users/surveyors`),
+        axios.get(`${API}/admin/bookings/all`),
+        axios.get(`${API}/admin/users/surveyors`),
       ]);
       setBookings(bookingRes.data);
       setSurveyors(surveyorRes.data);
@@ -31,7 +32,7 @@ export default function AdminBookings() {
 
   const handleAssign = async (bookingId, surveyorId) => {
     try {
-      await axios.patch(`${baseUrl}/admin/bookings/${bookingId}/assign`, {
+      await axios.patch(`${API}/admin/bookings/${bookingId}/assign`, {
         surveyorId,
       });
       fetchData();
@@ -47,38 +48,35 @@ export default function AdminBookings() {
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold font-poppins text-yellow-600 text-center mb-8">
-          <strong>All Bookings</strong>
+          All Bookings
         </h1>
 
         {status && (
           <p className="text-red-500 text-sm mb-4 text-center">{status}</p>
         )}
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm border border-gray-200 rounded-md">
-            <thead className="bg-gray-100 text-gray-700">
+        <div className="overflow-x-auto border rounded-xl shadow-sm">
+          <table className="min-w-full text-sm text-left border-collapse">
+            <thead className="bg-gray-100 text-gray-700 font-semibold">
               <tr>
-                <th className="p-4 text-left">Client</th>
-                <th className="p-4 text-left">Survey Type</th>
-                <th className="p-4 text-left">Location</th>
-                <th className="p-4 text-left">Preferred Date</th>
-                <th className="p-4 text-left">Status</th>
-                <th className="p-4 text-left">Assign Surveyor</th>
+                <th className="px-4 py-3">Client</th>
+                <th className="px-4 py-3">Survey Type</th>
+                <th className="px-4 py-3">Location</th>
+                <th className="px-4 py-3">Preferred Date</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Assign Surveyor</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-200">
               {bookings.map((b) => (
-                <tr
-                  key={b.id}
-                  className="border-t border-gray-200 hover:bg-gray-50 text-gray-700"
-                >
-                  <td className="p-4">{b.user?.name || "N/A"}</td>
-                  <td className="p-4">{b.surveyType}</td>
-                  <td className="p-4">{b.location}</td>
-                  <td className="p-4">
+                <tr key={b.id}>
+                  <td className="px-4 py-3">{b.user?.name || "N/A"}</td>
+                  <td className="px-4 py-3">{b.surveyType}</td>
+                  <td className="px-4 py-3">{b.location}</td>
+                  <td className="px-4 py-3">
                     {new Date(b.preferredDate).toLocaleDateString()}
                   </td>
-                  <td className="p-4">
+                  <td className="px-4 py-3">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
                         b.status === "Pending"
@@ -91,11 +89,13 @@ export default function AdminBookings() {
                       {b.status}
                     </span>
                   </td>
-                  <td className="p-4">
+                  <td className="px-4 py-3">
                     <select
-                      className="border border-gray-300 rounded-md px-3 py-1 shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                       value={b.assignedSurveyorId || ""}
-                      onChange={(e) => handleAssign(b.id, parseInt(e.target.value))}
+                      onChange={(e) =>
+                        handleAssign(b.id, parseInt(e.target.value))
+                      }
                     >
                       <option value="">-- Select --</option>
                       {surveyors.map((s) => (

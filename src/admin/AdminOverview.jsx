@@ -3,6 +3,9 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+const API = import.meta.env.VITE_API_URL;
+const BASE = API.replace("/api", ""); // Used for static file links
+
 export default function AdminOverview() {
   const [pendingSurveyors, setPendingSurveyors] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -17,9 +20,9 @@ export default function AdminOverview() {
   const fetchData = async () => {
     try {
       const [pendingRes, bookingsRes, surveyorsRes] = await Promise.all([
-        axios.get("https://your-backend.onrender.com/api/admin/pending-surveyors"),
-        axios.get("https://your-backend.onrender.com/api/admin/bookings/all"),
-        axios.get("https://your-backend.onrender.com/api/admin/users/surveyors"),
+        axios.get(`${API}/admin/pending-surveyors`),
+        axios.get(`${API}/admin/bookings/all`),
+        axios.get(`${API}/admin/users/surveyors`),
       ]);
       setPendingSurveyors(pendingRes.data);
       setBookings(bookingsRes.data);
@@ -33,7 +36,7 @@ export default function AdminOverview() {
 
   const handleApproval = async (id, action) => {
     try {
-      await axios.patch(`https://your-backend.onrender.com/api/admin/${action}/${id}`);
+      await axios.patch(`${API}/admin/${action}/${id}`);
       fetchData();
     } catch (err) {
       console.error("Approval error:", err);
@@ -42,10 +45,9 @@ export default function AdminOverview() {
 
   const handleAssignment = async (bookingId, surveyorId) => {
     try {
-      await axios.patch(
-        `https://your-backend.onrender.com/api/admin/bookings/${bookingId}/assign`,
-        { surveyorId }
-      );
+      await axios.patch(`${API}/admin/bookings/${bookingId}/assign`, {
+        surveyorId,
+      });
       fetchData();
     } catch (err) {
       console.error("Assignment error:", err);
@@ -63,7 +65,9 @@ export default function AdminOverview() {
         </h1>
 
         {loading ? (
-          <p className="text-center text-sm text-gray-600">Loading dashboard data...</p>
+          <p className="text-center text-sm text-gray-600">
+            Loading dashboard data...
+          </p>
         ) : (
           <>
             {/* Pending Surveyors */}
@@ -94,7 +98,7 @@ export default function AdminOverview() {
                           <td className="px-4 py-3">{s.iskNumber}</td>
                           <td className="px-4 py-3">
                             <a
-                              href={`https://your-backend.onrender.com${s.idCardUrl}`}
+                              href={`${BASE}${s.idCardUrl}`}
                               target="_blank"
                               rel="noreferrer"
                               className="text-indigo-600 underline"
@@ -104,7 +108,7 @@ export default function AdminOverview() {
                           </td>
                           <td className="px-4 py-3">
                             <a
-                              href={`https://your-backend.onrender.com${s.certUrl}`}
+                              href={`${BASE}${s.certUrl}`}
                               target="_blank"
                               rel="noreferrer"
                               className="text-indigo-600 underline"
@@ -164,7 +168,9 @@ export default function AdminOverview() {
                             <select
                               className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                               value={b.assignedSurveyorId || ""}
-                              onChange={(e) => handleAssignment(b.id, parseInt(e.target.value))}
+                              onChange={(e) =>
+                                handleAssignment(b.id, parseInt(e.target.value))
+                              }
                             >
                               <option value="">-- Select --</option>
                               {surveyors.map((s) => (

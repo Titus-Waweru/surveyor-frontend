@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import API from "../utils/axios"; // ✅ Use configured axios instance
 
 export default function SurveyorProfile({ user }) {
   const [profile, setProfile] = useState(null);
@@ -16,7 +16,7 @@ export default function SurveyorProfile({ user }) {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/profile", {
+      const res = await API.get("/profile", {
         params: { email: user.email },
       });
       setProfile(res.data);
@@ -41,7 +41,7 @@ export default function SurveyorProfile({ user }) {
 
     setLoading(true);
     try {
-      const res = await axios.put("http://localhost:5000/api/profile", payload);
+      const res = await API.put("/profile", payload);
       alert("✅ Profile updated.");
       setProfile(res.data.user);
     } catch (err) {
@@ -107,7 +107,7 @@ export default function SurveyorProfile({ user }) {
               <label className="block text-sm font-medium mb-2">Profile Image</label>
               {profile.profileImageUrl && (
                 <img
-                  src={`http://localhost:5000${profile.profileImageUrl}`}
+                  src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${profile.profileImageUrl}`}
                   alt="Profile"
                   className="rounded-full border shadow mb-3"
                   style={{ width: "60px", height: "60px", objectFit: "cover" }}
