@@ -16,8 +16,9 @@ export default function ClientBookings({ user }) {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/bookings?userEmail=${encodeURIComponent(user.email)}`
-      );
+  `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(user.email)}`
+);
+
       setBookings(res.data);
     } catch (err) {
       console.error("Fetch error:", err);
