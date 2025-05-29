@@ -25,10 +25,15 @@ export default function ClientOverview({ user }) {
 
     async function fetchBookings() {
       try {
-        const response = await fetch(`/api/bookings?userEmail=${encodeURIComponent(user.email)}`, {
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(
+            user.email
+          )}`,
+          {
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         if (!response.ok) {
           const errText = await response.text();
@@ -49,9 +54,15 @@ export default function ClientOverview({ user }) {
   }, [user.email]);
 
   const total = bookings.length;
-  const pending = bookings.filter(b => b.status?.toLowerCase() === "pending").length;
-  const completed = bookings.filter(b => b.status?.toLowerCase() === "completed").length;
-  const inProgress = bookings.filter(b => b.status?.toLowerCase() === "in progress").length;
+  const pending = bookings.filter(
+    (b) => b.status?.toLowerCase() === "pending"
+  ).length;
+  const completed = bookings.filter(
+    (b) => b.status?.toLowerCase() === "completed"
+  ).length;
+  const inProgress = bookings.filter(
+    (b) => b.status?.toLowerCase() === "in progress"
+  ).length;
 
   const chartData = [
     { name: "Pending", value: pending },
@@ -86,7 +97,9 @@ export default function ClientOverview({ user }) {
         </h1>
 
         {total === 0 ? (
-          <p className="text-center text-gray-600 font-manrope">No bookings found.</p>
+          <p className="text-center text-gray-600 font-manrope">
+            No bookings found.
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-manrope">
             <StatCard label="Total Bookings" value={total} color="blue" />
@@ -104,7 +117,9 @@ export default function ClientOverview({ user }) {
         >
           {/* Pie Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">Booking Distribution</h2>
+            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
+              Booking Distribution
+            </h2>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -115,7 +130,10 @@ export default function ClientOverview({ user }) {
                   label
                 >
                   {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Legend />
@@ -126,7 +144,9 @@ export default function ClientOverview({ user }) {
 
           {/* Bar Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">Booking Status Overview</h2>
+            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
+              Booking Status Overview
+            </h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData}>
                 <XAxis dataKey="name" />
@@ -134,7 +154,10 @@ export default function ClientOverview({ user }) {
                 <Tooltip />
                 <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                   {chartData.map((entry, index) => (
-                    <Cell key={`bar-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`bar-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Bar>
               </BarChart>
