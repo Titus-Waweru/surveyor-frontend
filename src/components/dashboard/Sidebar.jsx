@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-[#e3f2fd] text-[#0a1b3d] flex flex-col shadow-md">
       <div className="p-6 text-2xl font-extrabold tracking-wide border-b border-[#cfd8dc] font-poppins">
-        Surveyor<span className="text-yellow-500">.app</span>
+        LandLink<span className="text-yellow-500">.app</span>
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2 font-manrope">
@@ -56,7 +56,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="p-4 text-xs text-gray-600 border-t border-[#cfd8dc] font-manrope">
-        &copy; 2025 Surveyor App
+        &copy; 2025 LandLink Ltd
       </div>
     </aside>
   );
