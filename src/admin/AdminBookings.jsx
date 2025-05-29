@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import BookingMap from "../../components/dashboard/BookingMap";
+import BookingMap from "../components/dashboard/BookingMap";
+
 
 const API = import.meta.env.VITE_API_URL;
 const BASE = API.replace("/api", "");
