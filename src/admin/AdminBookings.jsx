@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import BookingMap from "../../components/dashboard/BookingMap";
 
 const API = import.meta.env.VITE_API_URL;
-const BASE = API.replace("/api", ""); // For future use if needed
+const BASE = API.replace("/api", "");
 
 export default function AdminBookings() {
   const [bookings, setBookings] = useState([]);
@@ -69,43 +70,56 @@ export default function AdminBookings() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {bookings.map((b) => (
-                <tr key={b.id}>
-                  <td className="px-4 py-3">{b.user?.name || "N/A"}</td>
-                  <td className="px-4 py-3">{b.surveyType}</td>
-                  <td className="px-4 py-3">{b.location}</td>
-                  <td className="px-4 py-3">
-                    {new Date(b.preferredDate).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        b.status === "Pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : b.status === "Completed"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {b.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <select
-                      className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                      value={b.assignedSurveyorId || ""}
-                      onChange={(e) =>
-                        handleAssign(b.id, parseInt(e.target.value))
-                      }
-                    >
-                      <option value="">-- Select --</option>
-                      {surveyors.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
+                <>
+                  <tr key={b.id}>
+                    <td className="px-4 py-3">{b.user?.name || "N/A"}</td>
+                    <td className="px-4 py-3">{b.surveyType}</td>
+                    <td className="px-4 py-3">{b.location}</td>
+                    <td className="px-4 py-3">
+                      {new Date(b.preferredDate).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          b.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : b.status === "Completed"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-blue-100 text-blue-700"
+                        }`}
+                      >
+                        {b.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        value={b.assignedSurveyorId || ""}
+                        onChange={(e) =>
+                          handleAssign(b.id, parseInt(e.target.value))
+                        }
+                      >
+                        <option value="">-- Select --</option>
+                        {surveyors.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+
+                  {b.latitude && b.longitude && (
+                    <tr key={`map-${b.id}`}>
+                      <td colSpan="6" className="px-4 py-3">
+                        <BookingMap
+                          latitude={b.latitude}
+                          longitude={b.longitude}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                </>
               ))}
             </tbody>
           </table>
