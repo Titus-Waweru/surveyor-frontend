@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { Menu } from "lucide-react";
 import Navbar from "./Navbar";
 
 export default function SurveyorLayout({ user, onLogout }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
   const navLinks = [
@@ -14,7 +17,11 @@ export default function SurveyorLayout({ user, onLogout }) {
   return (
     <div className="flex h-screen bg-[#f6f9fc]">
       {/* Sidebar */}
-      <aside className="w-40 sm:w-52 md:w-64 bg-[#e3f2fd] text-[#0a1b3d] shadow-md flex flex-col">
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-200 ease-in-out bg-[#e3f2fd] text-[#0a1b3d] shadow-md w-64 lg:relative lg:translate-x-0 lg:flex flex-col ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="p-4 sm:p-6 text-xl sm:text-2xl font-extrabold tracking-wide border-b border-[#cfd8dc] font-poppins">
           Surveyor<span className="text-yellow-500">.app</span>
         </div>
@@ -29,6 +36,7 @@ export default function SurveyorLayout({ user, onLogout }) {
                   ? "bg-yellow-400 text-[#0a1b3d] font-semibold shadow"
                   : "hover:bg-yellow-100 hover:text-[#0a1b3d] text-[#0a1b3d]"
               }`}
+              onClick={() => setIsSidebarOpen(false)} // close sidebar on nav click
             >
               {link.name}
             </Link>
@@ -40,8 +48,26 @@ export default function SurveyorLayout({ user, onLogout }) {
         </div>
       </aside>
 
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-30 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Topbar with hamburger on mobile */}
+        <div className="lg:hidden px-4 py-3 bg-white shadow-sm">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-gray-700"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+
         <Navbar user={user} onLogout={onLogout} />
         <main className="flex-1 overflow-y-auto p-6 bg-[#f6f9fc] font-manrope">
           <div className="bg-white rounded-xl shadow px-6 py-8">
