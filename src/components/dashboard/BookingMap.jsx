@@ -15,7 +15,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-export default function BookingMap({ onSelectLocation }) {
+export default function BookingMap({ onSelectLocation, latitude, longitude }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markerRef = useRef(null);
@@ -24,7 +24,7 @@ export default function BookingMap({ onSelectLocation }) {
     if (!mapRef.current) return;
 
     mapInstance.current = L.map(mapRef.current, {
-      center: [-1.2921, 36.8219], // Nairobi default
+      center: [latitude || -1.2921, longitude || 36.8219], // Default to Nairobi
       zoom: 7,
       scrollWheelZoom: true,
     });
@@ -33,21 +33,30 @@ export default function BookingMap({ onSelectLocation }) {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(mapInstance.current);
 
-    mapInstance.current.on("click", (e) => {
-      const { lat, lng } = e.latlng;
-      if (onSelectLocation) {
-        onSelectLocation({ latitude: lat, longitude: lng });
-      }
+    // Show existing marker if coordinates provided
+    if (latitude && longitude) {
+      markerRef.current = L.marker([latitude, longitude])
+        .addTo(mapInstance.current)
+        .bindPopup("Pinned Location")
+        .openPopup();
+    }
 
-      if (markerRef.current) {
-        markerRef.current.setLatLng([lat, lng]);
-      } else {
-        markerRef.current = L.marker([lat, lng])
-          .addTo(mapInstance.current)
-          .bindPopup("Selected Location")
-          .openPopup();
-      }
-    });
+    // Only allow setting new marker if onSelectLocation is provided (editable mode)
+    if (onSelectLocation) {
+      mapInstance.current.on("click", (e) => {
+        const { lat, lng } = e.latlng;
+        onSelectLocation({ latitude: lat, longitude: lng });
+
+        if (markerRef.current) {
+          markerRef.current.setLatLng([lat, lng]);
+        } else {
+          markerRef.current = L.marker([lat, lng])
+            .addTo(mapInstance.current)
+            .bindPopup("Selected Location")
+            .openPopup();
+        }
+      });
+    }
 
     setTimeout(() => {
       mapInstance.current.invalidateSize();
@@ -56,7 +65,7 @@ export default function BookingMap({ onSelectLocation }) {
     return () => {
       mapInstance.current.remove();
     };
-  }, [onSelectLocation]);
+  }, [latitude, longitude, onSelectLocation]);
 
   return (
     <div
