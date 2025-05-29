@@ -86,7 +86,7 @@ export default function VerifyOTP() {
   };
 
   return (
-    <div className="bg-[#fff6e5] min-h-screen flex items-center justify-center px-4 py-10 font-poppins">
+    <div className="bg-[#fff6e5] min-h-screen flex items-center justify-center px-4 py-10 sm:px-6 sm:py-12 font-poppins">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 sm:p-8 text-center">
         <h2 className="text-2xl sm:text-3xl font-semibold text-yellow-600 mb-4">Verify Your Email</h2>
         <p className="text-gray-700 mb-6 text-sm sm:text-base">
@@ -95,7 +95,7 @@ export default function VerifyOTP() {
         </p>
 
         <form onSubmit={handleVerify}>
-          <div className="flex justify-center gap-2 sm:gap-3 mb-5">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-5">
             {otpDigits.map((digit, i) => (
               <input
                 key={i}
@@ -105,7 +105,7 @@ export default function VerifyOTP() {
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 type="text"
                 maxLength="1"
-                className="w-10 h-12 sm:w-12 sm:h-14 text-xl sm:text-2xl text-center border border-gray-300 rounded-xl focus:outline-yellow-500"
+                className="w-10 h-12 text-xl text-center border border-gray-300 rounded-xl focus:outline-yellow-500 sm:w-12 sm:h-14 sm:text-2xl"
                 inputMode="numeric"
               />
             ))}

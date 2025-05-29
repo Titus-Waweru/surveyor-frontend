@@ -7,7 +7,9 @@ export default function ClientLayout({ user, onLogout }) {
   return (
     <div className="flex h-screen bg-gray-100 font-[Manrope]">
       {/* Sidebar */}
-      <Sidebar role="client" />
+      <div className="w-40 sm:w-52 md:w-64">
+        <Sidebar role="client" />
+      </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
