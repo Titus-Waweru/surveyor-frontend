@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import API from "../utils/axios"; // ✅ import your configured Axios instance
+import API from "../utils/axios";
+import BookingMap from "../components/dashboard/BookingMap"; // ✅ Import map
 
 const SurveyorDashboard = () => {
   const [surveyorData, setSurveyorData] = useState(null);
@@ -78,52 +79,66 @@ const SurveyorDashboard = () => {
                 </thead>
                 <tbody>
                   {surveyorData.recentBookings.map((booking, i) => (
-                    <tr key={booking.id} className="border-b">
-                      <td className="py-2 px-4">{i + 1}</td>
-                      <td className="py-2 px-4">{booking.location}</td>
-                      <td className="py-2 px-4">{booking.surveyType}</td>
-                      <td className="py-2 px-4">
-                        {new Date(booking.preferredDate).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </td>
-                      <td className="py-2 px-4 capitalize">{booking.status}</td>
-                      <td className="py-2 px-4 space-x-2">
-                        {booking.status === "pending" || booking.status === "rejected" ? (
-                          <>
-                            <button
+                    <React.Fragment key={booking.id}>
+                      <tr className="border-b">
+                        <td className="py-2 px-4">{i + 1}</td>
+                        <td className="py-2 px-4">{booking.location}</td>
+                        <td className="py-2 px-4">{booking.surveyType}</td>
+                        <td className="py-2 px-4">
+                          {new Date(booking.preferredDate).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </td>
+                        <td className="py-2 px-4 capitalize">{booking.status}</td>
+                        <td className="py-2 px-4 space-x-2">
+                          {booking.status === "pending" || booking.status === "rejected" ? (
+                            <>
+                              <button
+                                disabled={updatingBookingId === booking.id}
+                                onClick={() => updateBookingStatus(booking.id, { action: "accept" })}
+                                className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                              >
+                                Accept
+                              </button>
+                              <button
+                                disabled={updatingBookingId === booking.id}
+                                onClick={() => updateBookingStatus(booking.id, { action: "reject" })}
+                                className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
+                              >
+                                Reject
+                              </button>
+                            </>
+                          ) : booking.status !== "completed" ? (
+                            <select
                               disabled={updatingBookingId === booking.id}
-                              onClick={() => updateBookingStatus(booking.id, { action: "accept" })}
-                              className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                              value={booking.status}
+                              onChange={(e) =>
+                                updateBookingStatus(booking.id, { status: e.target.value })
+                              }
+                              className="border rounded px-2 py-1"
                             >
-                              Accept
-                            </button>
-                            <button
-                              disabled={updatingBookingId === booking.id}
-                              onClick={() => updateBookingStatus(booking.id, { action: "reject" })}
-                              className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
-                            >
-                              Reject
-                            </button>
-                          </>
-                        ) : booking.status !== "completed" ? (
-                          <select
-                            disabled={updatingBookingId === booking.id}
-                            value={booking.status}
-                            onChange={(e) =>
-                              updateBookingStatus(booking.id, { status: e.target.value })
-                            }
-                            className="border rounded px-2 py-1"
-                          >
-                            <option value="accepted">Accepted</option>
-                            <option value="in progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                          </select>
-                        ) : null}
-                      </td>
-                    </tr>
+                              <option value="accepted">Accepted</option>
+                              <option value="in progress">In Progress</option>
+                              <option value="completed">Completed</option>
+                            </select>
+                          ) : null}
+                        </td>
+                      </tr>
+
+                      {/* 🔍 Map row if coordinates exist */}
+                      {booking.latitude && booking.longitude && (
+                        <tr>
+                          <td colSpan="6" className="py-4">
+                            <BookingMap
+                              latitude={booking.latitude}
+                              longitude={booking.longitude}
+                            />
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
