@@ -1,5 +1,4 @@
-// src/layouts/AdminLayout.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Sidebar from "../components/dashboard/Sidebar";
@@ -7,18 +6,29 @@ import Sidebar from "../components/dashboard/Sidebar";
 export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Auto-collapse sidebar after 5 seconds
+  useEffect(() => {
+    let timeout;
+    if (isSidebarOpen) {
+      timeout = setTimeout(() => {
+        setIsSidebarOpen(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timeout);
+  }, [isSidebarOpen]);
+
   return (
-    <div className="flex h-screen bg-blue-50">
-      {/* Sidebar - hidden on small screens unless toggled */}
+    <div className="flex h-screen bg-blue-50 relative">
+      {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-200 ease-in-out bg-white shadow-md w-64 lg:relative lg:translate-x-0 lg:flex ${
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out bg-white shadow-md w-64 lg:relative lg:translate-x-0 lg:flex ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <Sidebar />
       </div>
 
-      {/* Overlay for mobile sidebar */}
+      {/* Overlay for mobile */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-30 lg:hidden"
@@ -26,17 +36,16 @@ export default function AdminLayout() {
         />
       )}
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="lg:hidden px-4 py-3 bg-white shadow-sm">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-gray-700"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
+      {/* Toggle Button - only on small screens */}
+      <button
+        onClick={() => setIsSidebarOpen((prev) => !prev)}
+        className="lg:hidden absolute top-4 left-4 z-50 bg-white p-2 rounded-full shadow hover:bg-yellow-100 transition"
+      >
+        <Menu className="w-5 h-5 text-yellow-600" />
+      </button>
 
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>

@@ -1,42 +1,52 @@
-// src/components/dashboard/ClientLayout.jsx
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 
 export default function ClientLayout({ user, onLogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Auto-close sidebar after 5 seconds
+  useEffect(() => {
+    let timeout;
+    if (isSidebarOpen) {
+      timeout = setTimeout(() => {
+        setIsSidebarOpen(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timeout);
+  }, [isSidebarOpen]);
+
   return (
-    <div className="flex h-screen bg-gray-100 font-[Manrope]">
-      {/* Sidebar - hidden on small screens unless toggled */}
+    <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
+      {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 transform bg-blue-100 transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 lg:flex ${
+        className={`fixed inset-y-0 left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } w-64`}
+        }`}
       >
         <Sidebar role="client" />
       </div>
 
-      {/* Overlay for sidebar when open on small screens */}
+      {/* Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black bg-opacity-30 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
-        ></div>
+        />
       )}
+
+      {/* Toggle button */}
+      <button
+        onClick={() => setIsSidebarOpen((prev) => !prev)}
+        className="lg:hidden absolute top-4 left-4 z-50 bg-white p-2 rounded-full shadow hover:bg-blue-100 transition"
+      >
+        <Menu className="w-5 h-5 text-blue-600" />
+      </button>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="lg:hidden px-4 py-3 bg-white shadow-sm">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-gray-700"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
         <Navbar user={user} onLogout={onLogout} />
         <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
           <div className="max-w-7xl mx-auto">

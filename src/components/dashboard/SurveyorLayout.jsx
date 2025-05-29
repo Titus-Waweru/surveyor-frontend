@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Navbar from "./Navbar";
@@ -6,6 +6,17 @@ import Navbar from "./Navbar";
 export default function SurveyorLayout({ user, onLogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+
+  // Auto-close sidebar after 5 seconds
+  useEffect(() => {
+    let timeout;
+    if (isSidebarOpen) {
+      timeout = setTimeout(() => {
+        setIsSidebarOpen(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timeout);
+  }, [isSidebarOpen]);
 
   const navLinks = [
     { name: "Dashboard", path: "/surveyor/dashboard" },
@@ -15,10 +26,10 @@ export default function SurveyorLayout({ user, onLogout }) {
   ];
 
   return (
-    <div className="flex h-screen bg-[#f6f9fc]">
+    <div className="flex h-screen bg-[#f6f9fc] relative">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-200 ease-in-out bg-[#e3f2fd] text-[#0a1b3d] shadow-md w-64 lg:relative lg:translate-x-0 lg:flex flex-col ${
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out bg-[#e3f2fd] text-[#0a1b3d] shadow-md w-64 lg:relative lg:translate-x-0 lg:flex flex-col ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -56,18 +67,16 @@ export default function SurveyorLayout({ user, onLogout }) {
         />
       )}
 
+      {/* Toggle Button */}
+      <button
+        onClick={() => setIsSidebarOpen((prev) => !prev)}
+        className="lg:hidden absolute top-4 left-4 z-50 bg-white p-2 rounded-full shadow hover:bg-yellow-100 transition"
+      >
+        <Menu className="w-5 h-5 text-yellow-600" />
+      </button>
+
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar with hamburger on mobile */}
-        <div className="lg:hidden px-4 py-3 bg-white shadow-sm">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-gray-700"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-
         <Navbar user={user} onLogout={onLogout} />
         <main className="flex-1 overflow-y-auto p-6 bg-[#f6f9fc] font-manrope">
           <div className="bg-white rounded-xl shadow px-6 py-8">
