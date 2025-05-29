@@ -41,31 +41,31 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     resolver: zodResolver(bookingSchema),
   });
 
-  const onSubmit = async (data) => {
-    if (!coords.latitude || !coords.longitude) {
-      setStatus({ type: "error", msg: "Please select a location on the map." });
-      return;
-    }
+ const onSubmit = async (data) => {
+  if (!coords.latitude || !coords.longitude) {
+    setStatus({ type: "error", msg: "Please select a location on the map." });
+    return;
+  }
 
-    try {
-      await axios.post("http://localhost:5000/api/bookings", {
-        ...data,
-        email: userEmail,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-      });
+  try {
+    await axios.post(`${import.meta.env.VITE_API_URL}/bookings`, {
+      ...data,
+      email: userEmail,
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    });
 
-      setStatus({ type: "success", msg: "Booking submitted successfully." });
-      reset();
-      setCoords({ latitude: null, longitude: null });
-      onNewBooking?.();
-    } catch (err) {
-      setStatus({
-        type: "error",
-        msg: err.response?.data?.message || "Failed to submit booking.",
-      });
-    }
-  };
+    setStatus({ type: "success", msg: "Booking submitted successfully." });
+    reset();
+    setCoords({ latitude: null, longitude: null });
+    onNewBooking?.();
+  } catch (err) {
+    setStatus({
+      type: "error",
+      msg: err.response?.data?.message || "Failed to submit booking.",
+    });
+  }
+};
 
   useEffect(() => {
     if (!mapRef.current) return;
