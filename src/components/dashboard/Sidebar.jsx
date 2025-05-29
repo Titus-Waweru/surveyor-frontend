@@ -1,4 +1,3 @@
-// src/components/dashboard/Sidebar.jsx
 import { NavLink, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
@@ -32,20 +31,20 @@ const Sidebar = () => {
     : [];
 
   return (
-    <aside className="w-64 bg-[#e3f2fd] text-[#0a1b3d] flex flex-col shadow-md">
-      <div className="p-6 text-2xl font-extrabold tracking-wide border-b border-[#cfd8dc] font-poppins">
+    <aside className="w-52 min-h-screen bg-[#e3f2fd] text-[#0a1b3d] flex flex-col shadow-md">
+      <div className="p-5 text-xl font-extrabold tracking-wide border-b border-[#cfd8dc] font-poppins">
         LandLink<span className="text-yellow-500">.app</span>
       </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-2 font-manrope">
+      <nav className="flex-1 px-3 py-5 space-y-2 font-manrope font-semibold">
         {links.map((link) => (
           <NavLink
             key={link.name}
             to={link.href}
             className={({ isActive }) =>
-              `block px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              `block px-4 py-2 rounded-md text-sm transition-all duration-200 ${
                 isActive
-                  ? "bg-yellow-400 text-[#0a1b3d] font-semibold shadow"
+                  ? "bg-yellow-400 text-[#0a1b3d] shadow font-bold"
                   : "hover:bg-yellow-100 hover:text-[#0a1b3d] text-[#0a1b3d]"
               }`
             }
