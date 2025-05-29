@@ -2,11 +2,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// ✅ Fix default marker icons using ESModule imports
+// ✅ Fix Leaflet default marker icons
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -28,6 +28,9 @@ const bookingSchema = z.object({
 export default function BookingForm({ userEmail, onNewBooking }) {
   const [status, setStatus] = useState(null);
   const [coords, setCoords] = useState({ latitude: null, longitude: null });
+  const mapRef = useRef(null);
+  const mapInstance = useRef(null);
+  const markerRef = useRef(null);
 
   const {
     register,
@@ -55,7 +58,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
       setStatus({ type: "success", msg: "Booking submitted successfully." });
       reset();
       setCoords({ latitude: null, longitude: null });
-      onNewBooking?.(); // Refresh booking list
+      onNewBooking?.();
     } catch (err) {
       setStatus({
         type: "error",
@@ -65,7 +68,9 @@ export default function BookingForm({ userEmail, onNewBooking }) {
   };
 
   useEffect(() => {
-    const map = L.map("booking-map", {
+    if (!mapRef.current) return;
+
+    mapInstance.current = L.map(mapRef.current, {
       center: [-1.2921, 36.8219],
       zoom: 7,
       scrollWheelZoom: true,
@@ -73,36 +78,38 @@ export default function BookingForm({ userEmail, onNewBooking }) {
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    }).addTo(mapInstance.current);
 
-    let marker;
-
-    map.on("click", (e) => {
+    mapInstance.current.on("click", (e) => {
       const { lat, lng } = e.latlng;
       setCoords({ latitude: lat, longitude: lng });
 
-      if (marker) marker.remove();
-
-      marker = L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup("Selected Location")
-        .openPopup();
+      if (markerRef.current) {
+        markerRef.current.setLatLng([lat, lng]);
+      } else {
+        markerRef.current = L.marker([lat, lng])
+          .addTo(mapInstance.current)
+          .bindPopup("Selected Location")
+          .openPopup();
+      }
     });
 
-    // Resize observer (fix for hidden map on page load)
     setTimeout(() => {
-      map.invalidateSize();
+      mapInstance.current.invalidateSize();
     }, 300);
 
-    return () => map.remove(); // Cleanup
+    return () => {
+      mapInstance.current.remove();
+    };
   }, []);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mt-8">
-      <h2 className="text-xl font-semibold mb-4 font-poppins text-yellow-600">Request a New Survey</h2>
+      <h2 className="text-xl font-semibold mb-4 font-poppins text-yellow-600">
+        Request a New Survey
+      </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 font-manrope">
-        {/* Location Text */}
         <div>
           <label className="block font-medium">Location Description</label>
           <input
@@ -113,7 +120,6 @@ export default function BookingForm({ userEmail, onNewBooking }) {
           {errors.location && <p className="text-red-600 text-sm">{errors.location.message}</p>}
         </div>
 
-        {/* Survey Type */}
         <div>
           <label className="block font-medium">Survey Type</label>
           <input
@@ -121,12 +127,9 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             className="w-full mt-1 p-2 border rounded"
             placeholder="e.g., Topographical, Boundary"
           />
-          {errors.surveyType && (
-            <p className="text-red-600 text-sm">{errors.surveyType.message}</p>
-          )}
+          {errors.surveyType && <p className="text-red-600 text-sm">{errors.surveyType.message}</p>}
         </div>
 
-        {/* Description */}
         <div>
           <label className="block font-medium">Description</label>
           <textarea
@@ -140,7 +143,6 @@ export default function BookingForm({ userEmail, onNewBooking }) {
           )}
         </div>
 
-        {/* Date */}
         <div>
           <label className="block font-medium">Preferred Date</label>
           <input
@@ -153,12 +155,12 @@ export default function BookingForm({ userEmail, onNewBooking }) {
           )}
         </div>
 
-        {/* Map Area */}
         <div>
           <h3 className="font-semibold mt-6 mb-2">Pin Your Location</h3>
           <div
-            id="booking-map"
-            className="h-64 w-full rounded shadow border"
+            ref={mapRef}
+            className="rounded shadow border"
+            style={{ height: "256px", width: "100%" }}
           ></div>
           <p className="text-sm text-gray-600 mt-1">
             Click on the map to pin the exact location of your property.
@@ -170,7 +172,6 @@ export default function BookingForm({ userEmail, onNewBooking }) {
           )}
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
@@ -179,7 +180,6 @@ export default function BookingForm({ userEmail, onNewBooking }) {
           {isSubmitting ? "Submitting..." : "Submit Request"}
         </button>
 
-        {/* Status Message */}
         {status && (
           <p
             className={`mt-4 font-medium text-sm ${
