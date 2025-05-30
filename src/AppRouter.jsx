@@ -1,3 +1,4 @@
+// AppRouter.jsx
 import React from "react";
 import {
   BrowserRouter,
@@ -44,6 +45,7 @@ import AdminAuth from "./pages/AdminAuth";
 import LandingPage from "./pages/LandingPage";
 import BookDemo from "./pages/BookDemo";
 
+// Helper: Return default dashboard path based on role
 function getDefaultDashboard(role) {
   switch (role) {
     case "client":
@@ -57,6 +59,7 @@ function getDefaultDashboard(role) {
   }
 }
 
+// PrivateRoute: Protect routes based on user and role
 function PrivateRoute({ user, role, children }) {
   if (!user) return <Navigate to="/login" replace />;
   if (role && user.role !== role)
@@ -67,6 +70,7 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
 
+  // Login handler: sends credentials, saves token & user, redirects
   async function handleLogin(credentials) {
     try {
       const response = await API.post("/auth/login", credentials);
@@ -74,16 +78,18 @@ function AppRoutes({ user, setUser }) {
 
       if (!loggedInUser?.email) throw new Error("Login failed");
 
+      // Build user object exactly as you need it
       const userObj = {
         id: loggedInUser.id || null,
         email: loggedInUser.email,
-        role: loggedInUser.role,
+        role: loggedInUser.role.toLowerCase(), // force lowercase for consistency
         token: loggedInUser.token,
       };
 
       localStorage.setItem("token", userObj.token);
       localStorage.setItem("user", JSON.stringify(userObj));
       setUser(userObj);
+
       navigate(getDefaultDashboard(userObj.role));
     } catch (error) {
       console.error("Login error:", error);
@@ -95,6 +101,7 @@ function AppRoutes({ user, setUser }) {
     }
   }
 
+  // Signup handler
   async function handleSignup(signupData) {
     try {
       const config = {
@@ -120,6 +127,7 @@ function AppRoutes({ user, setUser }) {
     }
   }
 
+  // Logout handler
   async function handleLogout() {
     try {
       await API.post("/auth/logout");
@@ -136,7 +144,16 @@ function AppRoutes({ user, setUser }) {
   return (
     <Routes>
       {/* AUTH ROUTES */}
-      <Route path="/login" element={<Login onLogin={handleLogin} />} />
+      <Route
+        path="/login"
+        element={
+          user ? (
+            <Navigate to={getDefaultDashboard(user.role)} replace />
+          ) : (
+            <Login onLogin={handleLogin} />
+          )
+        }
+      />
       <Route path="/signup" element={<Signup onSignup={handleSignup} />} />
       <Route path="/verify-otp" element={<VerifyOTP />} />
 
@@ -207,7 +224,7 @@ function AppRoutes({ user, setUser }) {
         }
       />
       <Route path="/book-demo" element={<BookDemo />} />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

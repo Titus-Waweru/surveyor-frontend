@@ -57,7 +57,7 @@ export default function Login() {
     }
 
     try {
-      // ❌ Clear old data
+      // Clear old data
       localStorage.removeItem("user");
       localStorage.removeItem("userRole");
       sessionStorage.removeItem("user");
@@ -86,7 +86,6 @@ export default function Login() {
       clearAttempts();
       const data = await response.json();
 
-      // ✅ Save user info
       const userPayload = {
         id: data.id,
         email: data.email,
@@ -101,21 +100,20 @@ export default function Login() {
         sessionStorage.setItem("user", JSON.stringify(userPayload));
       }
 
-      // ✅ Redirect based on role
+      // Redirect based on role — MATCH ROUTER PATHS HERE
       switch (data.role) {
         case "admin":
-          navigate("/admin/dashboard");
+          navigate("/admin/overview");
           break;
         case "surveyor":
-          navigate("/surveyor/dashboard");
+          navigate("/surveyor/overview");
           break;
         case "client":
-          navigate("/client/dashboard");
+          navigate("/client/overview");
           break;
         default:
           navigate("/");
       }
-
     } catch (err) {
       console.error("Login error:", err);
       alert(err.message || "Login failed.");
