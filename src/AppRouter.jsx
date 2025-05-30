@@ -135,18 +135,12 @@ function AppRoutes({ user, setUser }) {
     }
   }
 
-  // Logout handler
-  async function handleLogout() {
-    try {
-      await API.post("/auth/logout");
-    } catch (error) {
-      console.warn("Server logout failed, continuing with client logout.");
-    } finally {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      setUser(null);
-      navigate("/login", { replace: true });
-    }
+  // Logout handler - simplified, no backend call
+  function handleLogout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/login", { replace: true });
   }
 
   return (
