@@ -19,7 +19,8 @@ export default function LandingPage() {
             className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
           />
         </Link>
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="flex flex-wrap items-center space-x-4">
+
           <Link to="/" className="text-gray-700 font-medium hover:text-yellow-600 px-4 py-2">
             Home
           </Link>
