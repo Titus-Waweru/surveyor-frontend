@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // ✅ Correct named import
+import { jwtDecode } from "jwt-decode"; // ✅ named import
 import AppRouter from "./AppRouter.jsx";
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // <-- Add loading flag
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -11,21 +12,25 @@ export default function App() {
 
     if (token && storedUser) {
       try {
-        // Decode token to check expiration
-        jwtDecode(token);
-
-        // Parse user from localStorage
+        jwtDecode(token); // just to verify it's a valid token
         setUser(JSON.parse(storedUser));
       } catch (err) {
-        console.warn("Invalid token or user data. Clearing localStorage.");
+        console.warn("Invalid token or user data. Logging out.");
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        setUser(null);
       }
-    } else {
-      setUser(null);
     }
+
+    setLoading(false); // <-- We're done checking user
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-gray-600 text-lg">
+        Loading...
+      </div>
+    );
+  }
 
   return <AppRouter user={user} setUser={setUser} />;
 }
