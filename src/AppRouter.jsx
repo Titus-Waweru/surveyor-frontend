@@ -44,6 +44,11 @@ import AdminAuth from "./pages/AdminAuth";
 import LandingPage from "./pages/LandingPage";
 import BookDemo from "./pages/BookDemo";
 
+// NEW PAGES
+import Home from "./pages/Home";
+import ContactUs from "./pages/ContactUs";
+import News from "./pages/News";
+
 function getDefaultDashboard(role) {
   switch (role) {
     case "client":
@@ -213,6 +218,9 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
         }
       />
       <Route path="/book-demo" element={<BookDemo />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/contact" element={<ContactUs />} />
+      <Route path="/news" element={<News />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

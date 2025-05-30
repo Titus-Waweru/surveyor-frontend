@@ -19,7 +19,16 @@ export default function LandingPage() {
             className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
           />
         </Link>
-        <div className="space-x-4 hidden md:block">
+        <div className="hidden md:flex items-center space-x-6">
+          <Link to="/" className="text-gray-700 font-semibold hover:text-yellow-600">
+            Home
+          </Link>
+          <Link to="/news" className="text-gray-700 font-semibold hover:text-yellow-600">
+            News
+          </Link>
+          <Link to="/contact" className="text-gray-700 font-semibold hover:text-yellow-600">
+            Contact
+          </Link>
           <Link to="/signup">
             <button
               aria-label="Sign Up"
