@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // ✅ named import
+import jwtDecode from "jwt-decode";
 import AppRouter from "./AppRouter.jsx";
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // <-- Add loading flag
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -12,7 +12,7 @@ export default function App() {
 
     if (token && storedUser) {
       try {
-        jwtDecode(token); // just to verify it's a valid token
+        jwtDecode(token); // Verify token validity
         setUser(JSON.parse(storedUser));
       } catch (err) {
         console.warn("Invalid token or user data. Logging out.");
@@ -21,7 +21,7 @@ export default function App() {
       }
     }
 
-    setLoading(false); // <-- We're done checking user
+    setLoading(false);
   }, []);
 
   if (loading) {
