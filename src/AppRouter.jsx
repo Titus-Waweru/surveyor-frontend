@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   BrowserRouter,
   Routes,
@@ -67,16 +67,7 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
 
-  // ✅ Rehydrate user + token from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
-
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      // Token already applied via API interceptor
-    }
-  }, []);
+  // **Removed user rehydration here!** This happens only once in App.jsx
 
   async function handleLogin(credentials) {
     try {
@@ -85,10 +76,18 @@ function AppRoutes({ user, setUser }) {
 
       if (!loggedInUser?.email) throw new Error("Login failed");
 
-      localStorage.setItem("token", loggedInUser.token);
-      localStorage.setItem("user", JSON.stringify(loggedInUser));
-      setUser(loggedInUser);
-      navigate(getDefaultDashboard(loggedInUser.role));
+      // Extract only needed fields
+      const userObj = {
+        id: loggedInUser.id || null,
+        email: loggedInUser.email,
+        role: loggedInUser.role,
+        token: loggedInUser.token,
+      };
+
+      localStorage.setItem("token", userObj.token);
+      localStorage.setItem("user", JSON.stringify(userObj));
+      setUser(userObj);
+      navigate(getDefaultDashboard(userObj.role));
     } catch (error) {
       console.error("Login error:", error);
       alert(
