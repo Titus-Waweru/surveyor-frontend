@@ -32,23 +32,7 @@ export default function LandingPage() {
       News
     </Link>
 
-    {/* Auth Buttons */}
-    <Link to="/signup">
-      <button
-        aria-label="Sign Up"
-        className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded-2xl shadow"
-      >
-        Sign Up
-      </button>
-    </Link>
-    <Link to="/login">
-      <button
-        aria-label="Log In"
-        className="text-yellow-600 font-semibold px-6 py-2 rounded-2xl border border-yellow-500"
-      >
-        Log In
-      </button>
-    </Link>
+    
   </div>
 </header>
 
