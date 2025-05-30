@@ -69,14 +69,13 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser, onLogin, onLogout }) {
   const navigate = useNavigate();
 
-  // Navigate to dashboard when user changes (e.g., after login)
   useEffect(() => {
     if (user) {
       navigate(getDefaultDashboard(user.role));
     }
   }, [user, navigate]);
 
-  // Login handler: call API and then call onLogin prop to update state and localStorage
+  // Login handler: calls API then calls onLogin from props
   async function handleLogin(credentials) {
     try {
       const response = await API.post("/auth/login", credentials);
@@ -91,11 +90,10 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       };
       const token = loggedInUser.token;
 
-      // Call onLogin passed from App.jsx to update state and localStorage
+      // Update global state and localStorage via onLogin prop from App.jsx
       onLogin(userObj, token);
 
-      // Navigation happens in useEffect above
-
+      // Navigation happens automatically on user state change (useEffect above)
     } catch (error) {
       console.error("Login error:", error);
       alert(
@@ -106,7 +104,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
     }
   }
 
-  // Signup handler (no changes)
+  // Signup handler
   async function handleSignup(signupData) {
     try {
       const config = {
@@ -132,7 +130,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
     }
   }
 
-  // Logout handler - delegate logout to onLogout prop
+  // Logout handler
   function handleLogout() {
     if (onLogout) onLogout();
     navigate("/login", { replace: true });
@@ -147,7 +145,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
           user ? (
             <Navigate to={getDefaultDashboard(user.role)} replace />
           ) : (
-            <Login onLogin={handleLogin} />
+            <Login onSubmit={handleLogin} />
           )
         }
       />

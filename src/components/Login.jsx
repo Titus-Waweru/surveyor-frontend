@@ -16,8 +16,8 @@ const loginSchema = z.object({
 const MAX_ATTEMPTS = 5;
 const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
-export default function Login({ setUser }) {
-  // setUser is your state setter from App or parent component to track logged-in user
+export default function Login({ onSubmit }) {
+  // 'onSubmit' is passed from AppRouter and handles login API + state update
 
   const [isBlocked, setIsBlocked] = useState(false);
   const [retryAfter, setRetryAfter] = useState(0);
@@ -70,46 +70,18 @@ export default function Login({ setUser }) {
     localStorage.removeItem("loginAttempts");
   }
 
-  const onSubmit = async (formData) => {
+  // Wrapper for your onSubmit prop to handle blocking and attempt counting
+  const onSubmitWrapper = async (formData) => {
     if (isBlocked) {
       alert(`Too many attempts. Please wait ${retryAfter} seconds.`);
       return;
     }
-
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          email: formData.email.trim(),
-          password: formData.password.trim(),
-        }),
-      });
-
-      if (!res.ok) {
-        recordFailedAttempt();
-        checkLoginAttempts();
-
-        const errData = await res.json();
-        throw new Error(errData.message || "Login failed");
-      }
-
+      await onSubmit(formData); // call parent's onSubmit (AppRouter)
       clearAttempts();
-      const data = await res.json();
-
-      // Save token + user in localStorage like your existing flow
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data));
-
-      // Update parent/app state to logged in user to prevent auto logout
-      setUser({
-        id: data.id,
-        email: data.email,
-        role: data.role,
-        status: data.status,
-      });
     } catch (error) {
+      recordFailedAttempt();
+      checkLoginAttempts();
       alert(error.message || "Login failed");
     }
   };
@@ -151,7 +123,7 @@ export default function Login({ setUser }) {
           </p>
 
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmitWrapper)}
             noValidate
             className="space-y-5 font-manrope"
           >
