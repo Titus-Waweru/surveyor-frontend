@@ -79,35 +79,40 @@ function AppRoutes({ user, setUser }) {
 
   // Login handler: only sets user, navigation happens in useEffect above
   async function handleLogin(credentials) {
-    try {
-      const response = await API.post("/auth/login", credentials);
-      const loggedInUser = response.data;
+  try {
+    console.log("handleLogin called with credentials:", credentials);
+    const response = await API.post("/auth/login", credentials);
+    const loggedInUser = response.data;
 
-      if (!loggedInUser?.email) throw new Error("Login failed");
+    console.log("Login response data:", loggedInUser);
 
-      const userObj = {
-        id: loggedInUser.id || null,
-        email: loggedInUser.email,
-        role: loggedInUser.role.toLowerCase(),
-        token: loggedInUser.token,
-      };
+    if (!loggedInUser?.email) throw new Error("Login failed");
 
-      localStorage.setItem("token", userObj.token);
-      localStorage.setItem("user", JSON.stringify(userObj));
+    const userObj = {
+      id: loggedInUser.id || null,
+      email: loggedInUser.email,
+      role: loggedInUser.role.toLowerCase(),
+      token: loggedInUser.token,
+    };
 
-      setUser(userObj);
+    console.log("Storing userObj in localStorage:", userObj);
 
-      // No navigate here anymore!
+    localStorage.setItem("token", userObj.token);
+    localStorage.setItem("user", JSON.stringify(userObj));
 
-    } catch (error) {
-      console.error("Login error:", error);
-      alert(
-        error.response?.data?.message ||
-          error.message ||
-          "Login failed. Please try again."
-      );
-    }
+    setUser(userObj);
+
+    // No navigate here anymore!
+
+  } catch (error) {
+    console.error("Login error:", error);
+    alert(
+      error.response?.data?.message ||
+        error.message ||
+        "Login failed. Please try again."
+    );
   }
+}
 
   // Signup handler
   async function handleSignup(signupData) {
