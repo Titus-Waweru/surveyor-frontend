@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect, useState } from "react";
@@ -14,9 +14,20 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     AOS.init({ duration: 1000 });
-  }, []);
+
+    // Auto-redirect if already logged in
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("userRole");
+    if (token && role) {
+      if (role === "admin") navigate("/admin/dashboard");
+      else if (role === "surveyor") navigate("/surveyor/dashboard");
+      else navigate("/dashboard");
+    }
+  }, [navigate]);
 
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -67,7 +78,14 @@ export default function Login() {
       const data = await response.json();
       console.log("Login success:", data);
 
-      // Redirect or handle login success (e.g. navigate to dashboard)
+      // Save token and role
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userRole", data.role);
+
+      // Redirect based on role
+      if (data.role === "admin") navigate("/admin/dashboard");
+      else if (data.role === "surveyor") navigate("/surveyor/dashboard");
+      else navigate("/dashboard");
     } catch (err) {
       const newCount = record.count + 1;
       const newRecord = {
@@ -191,7 +209,7 @@ export default function Login() {
               </AnimatePresence>
             </div>
 
-            {/* Remember Me Checkbox */}
+            {/* Remember Me */}
             <div className="flex items-center">
               <input
                 type="checkbox"
