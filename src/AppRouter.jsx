@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -6,6 +6,7 @@ import {
   Navigate,
   useNavigate,
 } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import API from "./utils/axios";
 
 // AUTH PAGES
@@ -57,7 +58,8 @@ function getDefaultDashboard(role) {
   }
 }
 
-function PrivateRoute({ user, role, children }) {
+function PrivateRoute({ user, role, loading, children }) {
+  if (loading) return null; // ⏳ wait until user is resolved
   if (!user) return <Navigate to="/login" replace />;
   if (role && user.role !== role)
     return <Navigate to={getDefaultDashboard(user.role)} replace />;
@@ -66,8 +68,25 @@ function PrivateRoute({ user, role, children }) {
 
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  // **Removed user rehydration here!** This happens only once in App.jsx
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
+    if (token && storedUser) {
+      try {
+        jwtDecode(token);
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        console.warn("Invalid token. Logging out.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setUser(null);
+      }
+    }
+    setLoading(false);
+  }, [setUser]);
 
   async function handleLogin(credentials) {
     try {
@@ -76,7 +95,6 @@ function AppRoutes({ user, setUser }) {
 
       if (!loggedInUser?.email) throw new Error("Login failed");
 
-      // Extract only needed fields
       const userObj = {
         id: loggedInUser.id || null,
         email: loggedInUser.email,
@@ -152,7 +170,7 @@ function AppRoutes({ user, setUser }) {
       <Route
         path="/client"
         element={
-          <PrivateRoute user={user} role="client">
+          <PrivateRoute user={user} role="client" loading={loading}>
             <ClientLayout user={user} onLogout={handleLogout} />
           </PrivateRoute>
         }
@@ -170,7 +188,7 @@ function AppRoutes({ user, setUser }) {
       <Route
         path="/surveyor"
         element={
-          <PrivateRoute user={user} role="surveyor">
+          <PrivateRoute user={user} role="surveyor" loading={loading}>
             <SurveyorLayout user={user} onLogout={handleLogout} />
           </PrivateRoute>
         }
@@ -186,7 +204,7 @@ function AppRoutes({ user, setUser }) {
       <Route
         path="/admin"
         element={
-          <PrivateRoute user={user} role="admin">
+          <PrivateRoute user={user} role="admin" loading={loading}>
             <AdminLayout />
           </PrivateRoute>
         }
@@ -198,11 +216,11 @@ function AppRoutes({ user, setUser }) {
         <Route path="settings" element={<AdminSettings />} />
       </Route>
 
-      {/* PUBLIC PAGES */}
+      {/* PUBLIC ROUTES */}
       <Route
         path="/"
         element={
-          user ? (
+          loading ? null : user ? (
             <Navigate to={getDefaultDashboard(user.role)} replace />
           ) : (
             <LandingPage />
