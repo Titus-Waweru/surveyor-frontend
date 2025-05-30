@@ -19,15 +19,15 @@ export default function LandingPage() {
             className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
           />
         </Link>
-        <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-gray-700 font-semibold hover:text-yellow-600">
+        <div className="hidden md:flex items-center space-x-4">
+          <Link to="/" className="text-gray-700 font-medium hover:text-yellow-600 px-4 py-2">
             Home
           </Link>
-          <Link to="/news" className="text-gray-700 font-semibold hover:text-yellow-600">
-            News
+          <Link to="/contact" className="text-gray-700 font-medium hover:text-yellow-600 px-4 py-2">
+            Contact Us
           </Link>
-          <Link to="/contact" className="text-gray-700 font-semibold hover:text-yellow-600">
-            Contact
+          <Link to="/news" className="text-gray-700 font-medium hover:text-yellow-600 px-4 py-2">
+            News
           </Link>
           <Link to="/signup">
             <button
@@ -127,7 +127,7 @@ export default function LandingPage() {
             <p className="text-gray-700 italic">
               "It cut our booking time in half and made reporting automatic."
             </p>
-            <p className="mt-4 font-semibold text-gray-800">— Titus Waweru.,  LandLink CEO</p>
+            <p className="mt-4 font-semibold text-gray-800">— Titus Waweru., LandLink CEO</p>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow">
             <p className="text-gray-700 italic">
