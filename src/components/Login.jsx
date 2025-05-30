@@ -11,11 +11,10 @@ import logo from "../assets/logo.png";
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  rememberMe: z.any().transform(val => val === true || val === "on"),
 });
 
 const MAX_ATTEMPTS = 5;
-const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const ATTEMPT_WINDOW_MS = 10 * 60 * 1000;
 
 export default function Login() {
   const navigate = useNavigate();
@@ -57,10 +56,8 @@ export default function Login() {
     }
 
     try {
-      // Clear old data
-      localStorage.removeItem("user");
-      localStorage.removeItem("userRole");
-      sessionStorage.removeItem("user");
+      localStorage.clear();
+      sessionStorage.clear();
 
       await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
         method: "POST",
@@ -93,23 +90,18 @@ export default function Login() {
         status: data.status,
       };
 
-      if (formData.rememberMe) {
-        localStorage.setItem("user", JSON.stringify(userPayload));
-        localStorage.setItem("userRole", data.role);
-      } else {
-        sessionStorage.setItem("user", JSON.stringify(userPayload));
-      }
+      // Always store in sessionStorage
+      sessionStorage.setItem("user", JSON.stringify(userPayload));
 
-      // Redirect based on role — MATCH ROUTER PATHS HERE
       switch (data.role) {
         case "admin":
-          navigate("/admin/overview");
+          navigate("/admin/dashboard");
           break;
         case "surveyor":
-          navigate("/surveyor/overview");
+          navigate("/surveyor/dashboard");
           break;
         case "client":
-          navigate("/client/overview");
+          navigate("/client/dashboard");
           break;
         default:
           navigate("/");
@@ -217,16 +209,8 @@ export default function Login() {
               </AnimatePresence>
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center space-x-2 text-sm text-gray-700">
-                <input
-                  type="checkbox"
-                  {...register("rememberMe")}
-                  className="form-checkbox rounded text-yellow-500 focus:ring-yellow-400"
-                />
-                <span>Remember me</span>
-              </label>
+            {/* Forgot Password */}
+            <div className="flex justify-end">
               <Link to="/forgot-password" className="text-sm text-yellow-600 hover:underline font-medium">
                 Forgot password?
               </Link>
