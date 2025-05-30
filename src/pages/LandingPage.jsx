@@ -12,42 +12,46 @@ export default function LandingPage() {
     <div className="bg-[#fff6e5] min-h-screen font-poppins">
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-8 md:px-20 py-4 sm:py-6">
-        <Link to="/">
-          <img
-            src="/assets/logo.png"
-            alt="LandLink Logo"
-            className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
-          />
-        </Link>
-        <div className="flex flex-wrap items-center space-x-4">
+  <Link to="/">
+    <img
+      src="/assets/logo.png"
+      alt="LandLink Logo"
+      className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
+    />
+  </Link>
 
-          <Link to="/" className="text-gray-700 font-medium hover:text-yellow-600 px-4 py-2">
-            Home
-          </Link>
-          <Link to="/contact" className="text-gray-700 font-medium hover:text-yellow-600 px-4 py-2">
-            Contact Us
-          </Link>
-          <Link to="/news" className="text-gray-700 font-medium hover:text-yellow-600 px-4 py-2">
-            News
-          </Link>
-          <Link to="/signup">
-            <button
-              aria-label="Sign Up"
-              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded-2xl shadow"
-            >
-              Sign Up
-            </button>
-          </Link>
-          <Link to="/login">
-            <button
-              aria-label="Log In"
-              className="text-yellow-600 font-semibold px-6 py-2 rounded-2xl border border-yellow-500"
-            >
-              Log In
-            </button>
-          </Link>
-        </div>
-      </header>
+  <div className="flex flex-wrap items-center gap-4">
+    {/* Navigation Links */}
+    <Link to="/" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
+      Home
+    </Link>
+    <Link to="/contact" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
+      Contact Us
+    </Link>
+    <Link to="/news" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
+      News
+    </Link>
+
+    {/* Auth Buttons */}
+    <Link to="/signup">
+      <button
+        aria-label="Sign Up"
+        className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded-2xl shadow"
+      >
+        Sign Up
+      </button>
+    </Link>
+    <Link to="/login">
+      <button
+        aria-label="Log In"
+        className="text-yellow-600 font-semibold px-6 py-2 rounded-2xl border border-yellow-500"
+      >
+        Log In
+      </button>
+    </Link>
+  </div>
+</header>
+
 
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center justify-between px-4 sm:px-8 md:px-20 py-16 sm:py-20">
