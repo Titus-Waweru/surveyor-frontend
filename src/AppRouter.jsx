@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -44,7 +44,6 @@ import AdminAuth from "./pages/AdminAuth";
 import LandingPage from "./pages/LandingPage";
 import BookDemo from "./pages/BookDemo";
 
-// Helper: Return default dashboard path based on role
 function getDefaultDashboard(role) {
   switch (role) {
     case "client":
@@ -58,7 +57,6 @@ function getDefaultDashboard(role) {
   }
 }
 
-// PrivateRoute: Protect routes based on user and role
 function PrivateRoute({ user, role, children }) {
   if (!user) return <Navigate to="/login" replace />;
   if (role && user.role !== role)
@@ -68,15 +66,15 @@ function PrivateRoute({ user, role, children }) {
 
 function AppRoutes({ user, setUser, onLogin, onLogout }) {
   const navigate = useNavigate();
+  const initialRedirectDone = useRef(false);
 
-  // ✅ Only redirect to dashboard after login IF currently on "/"
   useEffect(() => {
-    if (user && window.location.pathname === "/") {
+    if (user && !initialRedirectDone.current) {
       navigate(getDefaultDashboard(user.role));
+      initialRedirectDone.current = true;
     }
   }, [user, navigate]);
 
-  // Login handler
   async function handleLogin(credentials) {
     try {
       const response = await API.post("/auth/login", credentials);
@@ -102,7 +100,6 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
     }
   }
 
-  // Signup handler
   async function handleSignup(signupData) {
     try {
       const config = {
@@ -128,7 +125,6 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
     }
   }
 
-  // Logout handler
   function handleLogout() {
     if (onLogout) onLogout();
     navigate("/login", { replace: true });
