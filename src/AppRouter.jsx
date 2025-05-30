@@ -1,5 +1,5 @@
 // AppRouter.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -70,7 +70,14 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser }) {
   const navigate = useNavigate();
 
-  // Login handler: sends credentials, saves token & user, redirects
+  // Navigate to dashboard when user changes (e.g., after login)
+  useEffect(() => {
+    if (user) {
+      navigate(getDefaultDashboard(user.role));
+    }
+  }, [user, navigate]);
+
+  // Login handler: only sets user, navigation happens in useEffect above
   async function handleLogin(credentials) {
     try {
       const response = await API.post("/auth/login", credentials);
@@ -78,19 +85,20 @@ function AppRoutes({ user, setUser }) {
 
       if (!loggedInUser?.email) throw new Error("Login failed");
 
-      // Build user object exactly as you need it
       const userObj = {
         id: loggedInUser.id || null,
         email: loggedInUser.email,
-        role: loggedInUser.role.toLowerCase(), // force lowercase for consistency
+        role: loggedInUser.role.toLowerCase(),
         token: loggedInUser.token,
       };
 
       localStorage.setItem("token", userObj.token);
       localStorage.setItem("user", JSON.stringify(userObj));
+
       setUser(userObj);
 
-      navigate(getDefaultDashboard(userObj.role));
+      // No navigate here anymore!
+
     } catch (error) {
       console.error("Login error:", error);
       alert(
