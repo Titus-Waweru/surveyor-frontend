@@ -8,10 +8,11 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
 
+// ✅ Updated schema to coerce checkbox input to boolean
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  rememberMe: z.boolean().optional(),
+  rememberMe: z.any().transform(val => val === true || val === "on"),
 });
 
 const MAX_ATTEMPTS = 5;
@@ -76,12 +77,12 @@ export default function Login() {
       clearAttempts(); // reset on success
       const data = await response.json();
 
-      // Only store role if "Remember Me" was checked
+      // ✅ Store user role only if "Remember Me" is checked
       if (formData.rememberMe) {
         localStorage.setItem("userRole", data.role);
       }
 
-      // Redirect user to their dashboard regardless of "Remember Me"
+      // ✅ Navigate to appropriate dashboard
       switch (data.role) {
         case "admin":
           navigate("/admin/dashboard");
