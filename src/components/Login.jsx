@@ -11,89 +11,91 @@ import logo from "../assets/logo.png";
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  rememberMe: z.boolean().optional(),
 });
+
+const MAX_ATTEMPTS = 5;
+const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
 export default function Login() {
   const navigate = useNavigate();
+  const [isBlocked, setIsBlocked] = useState(false);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
 
-    // Auto-redirect if already logged in
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("userRole");
-    if (token && role) {
-      if (role === "admin") navigate("/admin/dashboard");
-      else if (role === "surveyor") navigate("/surveyor/dashboard");
-      else navigate("/dashboard");
+    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
+    const now = Date.now();
+    const recentAttempts = attempts.filter(ts => now - ts < ATTEMPT_WINDOW_MS);
+    if (recentAttempts.length >= MAX_ATTEMPTS) {
+      setIsBlocked(true);
     }
-  }, [navigate]);
-
-  const [rememberMe, setRememberMe] = useState(false);
+  }, []);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: zodResolver(loginSchema) });
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const recordFailedAttempt = () => {
+    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
+    attempts.push(Date.now());
+    localStorage.setItem("loginAttempts", JSON.stringify(attempts));
+  };
+
+  const clearAttempts = () => {
+    localStorage.removeItem("loginAttempts");
+  };
 
   const onSubmit = async (formData) => {
-    const emailKey = `loginAttempts_${formData.email}`;
-    const record = JSON.parse(localStorage.getItem(emailKey)) || {
-      count: 0,
-      blockedUntil: null,
-    };
-
-    const now = Date.now();
-    if (record.blockedUntil && now < record.blockedUntil) {
-      alert("Too many failed attempts. Please try again after 24 hours.");
+    if (isBlocked) {
+      alert("Too many login attempts. Please try again later.");
       return;
     }
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            email: formData.email.trim(),
-            password: formData.password.trim(),
-            rememberMe,
-          }),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: formData.email.trim(),
+          password: formData.password.trim(),
+        }),
+      });
 
       if (!response.ok) {
+        recordFailedAttempt();
         const errData = await response.json();
         throw new Error(errData.message || "Login failed");
       }
 
-      // Reset login attempts on successful login
-      localStorage.removeItem(emailKey);
-
+      clearAttempts(); // reset on success
       const data = await response.json();
-      console.log("Login success:", data);
 
-      // Save token and role
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("userRole", data.role);
+      // Optional: persist role if "Remember Me"
+      if (formData.rememberMe) {
+        localStorage.setItem("userRole", data.role);
+      }
 
       // Redirect based on role
-      if (data.role === "admin") navigate("/admin/dashboard");
-      else if (data.role === "surveyor") navigate("/surveyor/dashboard");
-      else navigate("/dashboard");
+      switch (data.role) {
+        case "admin":
+          navigate("/admin/dashboard");
+          break;
+        case "surveyor":
+          navigate("/surveyor/dashboard");
+          break;
+        case "client":
+          navigate("/client/dashboard");
+          break;
+        default:
+          navigate("/");
+      }
     } catch (err) {
-      const newCount = record.count + 1;
-      const newRecord = {
-        count: newCount,
-        blockedUntil: newCount >= 7 ? now + 24 * 60 * 60 * 1000 : null,
-      };
-      localStorage.setItem(emailKey, JSON.stringify(newRecord));
-
       console.error("Login error:", err);
       alert(err.message || "Login failed.");
     }
@@ -128,25 +130,15 @@ export default function Login() {
 
         {/* Right Section */}
         <div className="p-10 md:p-14 bg-white">
-          <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">
-            Login
-          </h2>
+          <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">Login</h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
-            Welcome back! Please enter your credentials to access your
-            dashboard.
+            Welcome back! Please enter your credentials to access your dashboard.
           </p>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            className="space-y-5 font-manrope"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5 font-manrope">
             {/* Email Field */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
               </label>
               <input
@@ -177,10 +169,7 @@ export default function Login() {
 
             {/* Password Field */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
               <input
@@ -209,37 +198,35 @@ export default function Login() {
               </AnimatePresence>
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="mr-2"
-              />
-              <label htmlFor="rememberMe" className="text-sm text-gray-700">
-                Remember me
+            {/* Remember Me + Forgot */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center space-x-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  {...register("rememberMe")}
+                  className="form-checkbox rounded text-yellow-500 focus:ring-yellow-400"
+                />
+                <span>Remember me</span>
               </label>
+              <Link to="/forgot-password" className="text-sm text-yellow-600 hover:underline font-medium">
+                Forgot password?
+              </Link>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isBlocked}
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 rounded-lg transition duration-300 disabled:opacity-50"
             >
-              {isSubmitting ? "Logging in..." : "Login"}
+              {isSubmitting ? "Logging in..." : isBlocked ? "Blocked" : "Login"}
             </button>
           </form>
 
           {/* Signup Link */}
           <p className="text-center mt-6 text-sm text-gray-600">
             Don’t have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-yellow-600 hover:underline font-semibold"
-            >
+            <Link to="/signup" className="text-yellow-600 hover:underline font-semibold">
               Sign up here
             </Link>
           </p>
