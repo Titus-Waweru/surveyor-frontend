@@ -1,6 +1,5 @@
-// App.jsx
 import { useState, useEffect } from "react";
-import jwtDecode from "jwt-decode"; // default import
+import jwtDecode from "jwt-decode";
 import AppRouter from "./AppRouter.jsx";
 
 export default function App() {
@@ -13,16 +12,25 @@ export default function App() {
 
     if (token && storedUser) {
       try {
-        jwtDecode(token); // just to verify it's a valid token format
-        setUser(JSON.parse(storedUser));
+        const decoded = jwtDecode(token);
+
+        // Check if token is expired
+        if (decoded.exp * 1000 < Date.now()) {
+          throw new Error("Token expired");
+        }
+
+        const parsedUser = JSON.parse(storedUser);
+        parsedUser.role = parsedUser.role.toLowerCase(); // ensure role consistency
+
+        setUser(parsedUser);
       } catch (err) {
-        // If invalid token/user data, clear storage and reset user
-        console.warn("Invalid token or user data. Logging out.");
+        console.warn("Invalid or expired token. Logging out.");
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
       }
     }
+
     setLoading(false);
   }, []);
 
