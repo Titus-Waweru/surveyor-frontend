@@ -1,29 +1,27 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
 
-// Schema for validation
 const loginSchema = z.object({
-  email: z.string().email("Invalid email"),
+  email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-// Login attempt limits
 const MAX_ATTEMPTS = 5;
 const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
-export default function Login({ onLogin }) {
-  const navigate = useNavigate();
+export default function Login({ setUser }) {
+  // setUser is your state setter from App or parent component to track logged-in user
+
   const [isBlocked, setIsBlocked] = useState(false);
   const [retryAfter, setRetryAfter] = useState(0);
 
-  // Initialize AOS and check login attempts
   useEffect(() => {
     AOS.init({ duration: 1000 });
     checkLoginAttempts();
@@ -37,9 +35,10 @@ export default function Login({ onLogin }) {
     resolver: zodResolver(loginSchema),
   });
 
-  const checkLoginAttempts = () => {
+  function checkLoginAttempts() {
     const now = Date.now();
     const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
+    // filter out old attempts outside window
     const recent = attempts.filter((ts) => now - ts < ATTEMPT_WINDOW_MS);
 
     if (recent.length >= MAX_ATTEMPTS) {
@@ -47,7 +46,6 @@ export default function Login({ onLogin }) {
       setIsBlocked(true);
       setRetryAfter(Math.ceil(retryIn / 1000));
 
-      // Retry countdown
       const interval = setInterval(() => {
         setRetryAfter((prev) => {
           if (prev <= 1) {
@@ -60,31 +58,26 @@ export default function Login({ onLogin }) {
         });
       }, 1000);
     }
-  };
+  }
 
-  const recordFailedAttempt = () => {
+  function recordFailedAttempt() {
     const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
     attempts.push(Date.now());
     localStorage.setItem("loginAttempts", JSON.stringify(attempts));
-  };
+  }
 
-  const clearAttempts = () => {
+  function clearAttempts() {
     localStorage.removeItem("loginAttempts");
-  };
+  }
 
   const onSubmit = async (formData) => {
-    if (isBlocked) return alert("Too many login attempts. Please wait.");
+    if (isBlocked) {
+      alert(`Too many attempts. Please wait ${retryAfter} seconds.`);
+      return;
+    }
 
     try {
-      localStorage.clear();
-      sessionStorage.clear();
-
-      await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -94,43 +87,30 @@ export default function Login({ onLogin }) {
         }),
       });
 
-      if (!response.ok) {
+      if (!res.ok) {
         recordFailedAttempt();
         checkLoginAttempts();
-        const errData = await response.json();
+
+        const errData = await res.json();
         throw new Error(errData.message || "Login failed");
       }
 
       clearAttempts();
-      const data = await response.json();
+      const data = await res.json();
 
-      const userPayload = {
+      // Save token + user in localStorage like your existing flow
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
+
+      // Update parent/app state to logged in user to prevent auto logout
+      setUser({
         id: data.id,
         email: data.email,
         role: data.role,
         status: data.status,
-      };
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(userPayload));
-      onLogin(userPayload, data.token);
-
-      switch (data.role) {
-        case "admin":
-          navigate("/admin/dashboard");
-          break;
-        case "surveyor":
-          navigate("/surveyor/dashboard");
-          break;
-        case "client":
-          navigate("/client/dashboard");
-          break;
-        default:
-          navigate("/");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      alert(err.message || "Login failed.");
+      });
+    } catch (error) {
+      alert(error.message || "Login failed");
     }
   };
 
@@ -147,7 +127,9 @@ export default function Login({ onLogin }) {
             alt="LandLink Logo"
             className="h-[100px] w-auto max-w-[220px] object-contain mb-6"
           />
-          <h1 className="text-3xl font-bold font-poppins mb-2 text-center">LandLink Platform</h1>
+          <h1 className="text-3xl font-bold font-poppins mb-2 text-center">
+            LandLink Platform
+          </h1>
           <p className="text-sm text-yellow-100 font-manrope text-center mb-4">
             <strong>MOTTO:</strong> “Survey Services at Your Fingertips.”
           </p>
@@ -161,15 +143,24 @@ export default function Login({ onLogin }) {
 
         {/* Right Section - Login Form */}
         <div className="p-10 md:p-14 bg-white">
-          <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">Login</h2>
+          <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">
+            Login
+          </h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
             Welcome back! Please enter your credentials to access your dashboard.
           </p>
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5 font-manrope">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            className="space-y-5 font-manrope"
+          >
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email Address
               </label>
               <input
@@ -200,7 +191,10 @@ export default function Login({ onLogin }) {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <input
@@ -231,7 +225,10 @@ export default function Login({ onLogin }) {
 
             {/* Forgot Password */}
             <div className="flex justify-end">
-              <Link to="/forgot-password" className="text-sm text-yellow-600 hover:underline font-medium">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-yellow-600 hover:underline font-medium"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -253,7 +250,10 @@ export default function Login({ onLogin }) {
           {/* Signup Prompt */}
           <p className="text-center mt-6 text-sm text-gray-600">
             Don’t have an account?{" "}
-            <Link to="/signup" className="text-yellow-600 hover:underline font-semibold">
+            <Link
+              to="/signup"
+              className="text-yellow-600 hover:underline font-semibold"
+            >
               Sign up here
             </Link>
           </p>
