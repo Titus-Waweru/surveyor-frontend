@@ -1,6 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+
+function InfoAlert() {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) return null;
+
+  return (
+    <div
+      className="max-w-4xl mx-auto mb-8 p-5 rounded-xl bg-yellow-100 border-l-8 border-yellow-400 shadow-md cursor-pointer select-none"
+      data-aos="fade-down"
+      role="alert"
+      onClick={() => setVisible(false)}
+      title="Click to dismiss"
+    >
+      <strong className="text-yellow-800 font-bold block mb-1 text-lg">
+        Important Notice!
+      </strong>
+      <p className="text-yellow-900 leading-relaxed">
+        To book a service on LandLink, customers are required to pay a small booking fee upfront to secure their appointment.
+        <br />
+        <br />
+        Similarly, surveyors must also pay a nominal charge to connect with potential clients and maintain service quality.
+        <br />
+        <br />
+        <em className="font-semibold">Tap this box to dismiss this message.</em>
+      </p>
+    </div>
+  );
+}
 
 export default function News() {
   useEffect(() => {
@@ -9,6 +38,9 @@ export default function News() {
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
+      {/* Info Alert */}
+      <InfoAlert />
+
       {/* Page Header */}
       <div className="text-center mb-12" data-aos="fade-up">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Latest News & Updates</h1>
