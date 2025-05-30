@@ -1,4 +1,3 @@
-// AppRouter.jsx
 import React, { useEffect } from "react";
 import {
   BrowserRouter,
@@ -67,7 +66,7 @@ function PrivateRoute({ user, role, children }) {
   return children;
 }
 
-function AppRoutes({ user, setUser }) {
+function AppRoutes({ user, setUser, onLogin, onLogout }) {
   const navigate = useNavigate();
 
   // Navigate to dashboard when user changes (e.g., after login)
@@ -77,44 +76,37 @@ function AppRoutes({ user, setUser }) {
     }
   }, [user, navigate]);
 
-  // Login handler: only sets user, navigation happens in useEffect above
+  // Login handler: call API and then call onLogin prop to update state and localStorage
   async function handleLogin(credentials) {
-  try {
-    console.log("handleLogin called with credentials:", credentials);
-    const response = await API.post("/auth/login", credentials);
-    const loggedInUser = response.data;
+    try {
+      const response = await API.post("/auth/login", credentials);
+      const loggedInUser = response.data;
 
-    console.log("Login response data:", loggedInUser);
+      if (!loggedInUser?.email) throw new Error("Login failed");
 
-    if (!loggedInUser?.email) throw new Error("Login failed");
+      const userObj = {
+        id: loggedInUser.id || null,
+        email: loggedInUser.email,
+        role: loggedInUser.role.toLowerCase(),
+      };
+      const token = loggedInUser.token;
 
-    const userObj = {
-      id: loggedInUser.id || null,
-      email: loggedInUser.email,
-      role: loggedInUser.role.toLowerCase(),
-      token: loggedInUser.token,
-    };
+      // Call onLogin passed from App.jsx to update state and localStorage
+      onLogin(userObj, token);
 
-    console.log("Storing userObj in localStorage:", userObj);
+      // Navigation happens in useEffect above
 
-    localStorage.setItem("token", userObj.token);
-    localStorage.setItem("user", JSON.stringify(userObj));
-
-    setUser(userObj);
-
-    // No navigate here anymore!
-
-  } catch (error) {
-    console.error("Login error:", error);
-    alert(
-      error.response?.data?.message ||
-        error.message ||
-        "Login failed. Please try again."
-    );
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(
+        error.response?.data?.message ||
+          error.message ||
+          "Login failed. Please try again."
+      );
+    }
   }
-}
 
-  // Signup handler
+  // Signup handler (no changes)
   async function handleSignup(signupData) {
     try {
       const config = {
@@ -140,11 +132,9 @@ function AppRoutes({ user, setUser }) {
     }
   }
 
-  // Logout handler - simplified, no backend call
+  // Logout handler - delegate logout to onLogout prop
   function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
+    if (onLogout) onLogout();
     navigate("/login", { replace: true });
   }
 

@@ -17,14 +17,13 @@ export default function App() {
         const decoded = jwtDecode(token);
         console.log("Decoded JWT token:", decoded);
 
-        // Check if token is expired
         if (decoded.exp * 1000 < Date.now()) {
           console.warn("Token expired");
           throw new Error("Token expired");
         }
 
         const parsedUser = JSON.parse(storedUser);
-        parsedUser.role = parsedUser.role.toLowerCase(); // ensure role consistency
+        parsedUser.role = parsedUser.role.toLowerCase();
 
         console.log("Parsed user from localStorage:", parsedUser);
 
@@ -42,7 +41,19 @@ export default function App() {
     setLoading(false);
   }, []);
 
-  console.log("App.jsx render: current user:", user, "loading:", loading);
+  // << Add this function >>
+  const onLogin = (user, token) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    setUser(user);
+  };
+
+  // << Add this function >>
+  const onLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
   if (loading) {
     return (
@@ -52,5 +63,13 @@ export default function App() {
     );
   }
 
-  return <AppRouter user={user} setUser={setUser} />;
+  // Pass onLogin and onLogout to AppRouter
+  return (
+    <AppRouter 
+      user={user} 
+      setUser={setUser} 
+      onLogin={onLogin} 
+      onLogout={onLogout} 
+    />
+  );
 }
