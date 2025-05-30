@@ -14,23 +14,19 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-// Limit login attempts
+// Login attempt limits
 const MAX_ATTEMPTS = 5;
-const ATTEMPT_WINDOW_MS = 10 * 60 * 1000;
+const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate();
   const [isBlocked, setIsBlocked] = useState(false);
+  const [retryAfter, setRetryAfter] = useState(0);
 
+  // Initialize AOS and check login attempts
   useEffect(() => {
     AOS.init({ duration: 1000 });
-
-    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
-    const now = Date.now();
-    const recentAttempts = attempts.filter((ts) => now - ts < ATTEMPT_WINDOW_MS);
-    if (recentAttempts.length >= MAX_ATTEMPTS) {
-      setIsBlocked(true);
-    }
+    checkLoginAttempts();
   }, []);
 
   const {
@@ -40,6 +36,31 @@ export default function Login({ onLogin }) {
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
+
+  const checkLoginAttempts = () => {
+    const now = Date.now();
+    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
+    const recent = attempts.filter((ts) => now - ts < ATTEMPT_WINDOW_MS);
+
+    if (recent.length >= MAX_ATTEMPTS) {
+      const retryIn = ATTEMPT_WINDOW_MS - (now - recent[0]);
+      setIsBlocked(true);
+      setRetryAfter(Math.ceil(retryIn / 1000));
+
+      // Retry countdown
+      const interval = setInterval(() => {
+        setRetryAfter((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsBlocked(false);
+            localStorage.removeItem("loginAttempts");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+  };
 
   const recordFailedAttempt = () => {
     const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
@@ -52,10 +73,7 @@ export default function Login({ onLogin }) {
   };
 
   const onSubmit = async (formData) => {
-    if (isBlocked) {
-      alert("Too many login attempts. Please try again later.");
-      return;
-    }
+    if (isBlocked) return alert("Too many login attempts. Please wait.");
 
     try {
       localStorage.clear();
@@ -78,6 +96,7 @@ export default function Login({ onLogin }) {
 
       if (!response.ok) {
         recordFailedAttempt();
+        checkLoginAttempts();
         const errData = await response.json();
         throw new Error(errData.message || "Login failed");
       }
@@ -92,14 +111,10 @@ export default function Login({ onLogin }) {
         status: data.status,
       };
 
-      // ✅ Persist in localStorage for App.jsx to use
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(userPayload));
-
-      // ✅ Update app state via prop
       onLogin(userPayload, data.token);
 
-      // ✅ Redirect to dashboard
       switch (data.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -125,16 +140,14 @@ export default function Login({ onLogin }) {
         data-aos="fade-up"
         className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
       >
-        {/* Left Side */}
+        {/* Left Section */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
           <img
             src={logo}
             alt="LandLink Logo"
             className="h-[100px] w-auto max-w-[220px] object-contain mb-6"
           />
-          <h1 className="text-3xl font-bold font-poppins mb-2 text-center">
-            LandLink Platform
-          </h1>
+          <h1 className="text-3xl font-bold font-poppins mb-2 text-center">LandLink Platform</h1>
           <p className="text-sm text-yellow-100 font-manrope text-center mb-4">
             <strong>MOTTO:</strong> “Survey Services at Your Fingertips.”
           </p>
@@ -146,7 +159,7 @@ export default function Login({ onLogin }) {
           </ul>
         </div>
 
-        {/* Right Side */}
+        {/* Right Section - Login Form */}
         <div className="p-10 md:p-14 bg-white">
           <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">Login</h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
@@ -229,11 +242,15 @@ export default function Login({ onLogin }) {
               disabled={isSubmitting || isBlocked}
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 rounded-lg transition duration-300 disabled:opacity-50"
             >
-              {isSubmitting ? "Logging in..." : isBlocked ? "Blocked" : "Login"}
+              {isSubmitting
+                ? "Logging in..."
+                : isBlocked
+                ? `Try again in ${retryAfter}s`
+                : "Login"}
             </button>
           </form>
 
-          {/* Sign Up */}
+          {/* Signup Prompt */}
           <p className="text-center mt-6 text-sm text-gray-600">
             Don’t have an account?{" "}
             <Link to="/signup" className="text-yellow-600 hover:underline font-semibold">
