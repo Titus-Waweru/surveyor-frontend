@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import jwtDecode from "jwt-decode"; // ✅ correct import
+import { jwtDecode } from "jwt-decode"; // ✅ Correct named import
 import AppRouter from "./AppRouter.jsx";
 
 export default function App() {
@@ -11,7 +11,10 @@ export default function App() {
 
     if (token && storedUser) {
       try {
-        jwtDecode(token); // ✅ just checks structure
+        // Decode token to check expiration
+        jwtDecode(token);
+
+        // Parse user from localStorage
         setUser(JSON.parse(storedUser));
       } catch (err) {
         console.warn("Invalid token or user data. Clearing localStorage.");
