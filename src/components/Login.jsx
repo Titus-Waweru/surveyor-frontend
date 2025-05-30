@@ -52,55 +52,61 @@ export default function Login() {
   };
 
   const onSubmit = async (formData) => {
-    if (isBlocked) {
-      alert("Too many login attempts. Please try again later.");
-      return;
+  if (isBlocked) {
+    alert("Too many login attempts. Please try again later.");
+    return;
+  }
+
+  try {
+    // ✅ Clear old session & local userRole before new login
+    localStorage.removeItem("userRole");
+    await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        email: formData.email.trim(),
+        password: formData.password.trim(),
+      }),
+    });
+
+    if (!response.ok) {
+      recordFailedAttempt();
+      const errData = await response.json();
+      throw new Error(errData.message || "Login failed");
     }
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          email: formData.email.trim(),
-          password: formData.password.trim(),
-        }),
-      });
+    clearAttempts();
+    const data = await response.json();
 
-      if (!response.ok) {
-        recordFailedAttempt();
-        const errData = await response.json();
-        throw new Error(errData.message || "Login failed");
-      }
-
-      clearAttempts(); // reset on success
-      const data = await response.json();
-
-      // ✅ Store user role only if "Remember Me" is checked
-      if (formData.rememberMe) {
-        localStorage.setItem("userRole", data.role);
-      }
-
-      // ✅ Navigate to appropriate dashboard
-      switch (data.role) {
-        case "admin":
-          navigate("/admin/dashboard");
-          break;
-        case "surveyor":
-          navigate("/surveyor/dashboard");
-          break;
-        case "client":
-          navigate("/client/dashboard");
-          break;
-        default:
-          navigate("/");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      alert(err.message || "Login failed.");
+    if (formData.rememberMe) {
+      localStorage.setItem("userRole", data.role);
     }
-  };
+
+    switch (data.role) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "surveyor":
+        navigate("/surveyor/dashboard");
+        break;
+      case "client":
+        navigate("/client/dashboard");
+        break;
+      default:
+        navigate("/");
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    alert(err.message || "Login failed.");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10 font-manrope">
