@@ -22,7 +22,7 @@ export default function LandingPage() {
 
   <div className="flex flex-wrap items-center gap-4">
     {/* Navigation Links */}
-    <Link to="/" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
+    <Link to="/home" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
       Home
     </Link>
     <Link to="/contact" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
