@@ -8,15 +8,17 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
 
+// Schema for validation
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+// Limit login attempts
 const MAX_ATTEMPTS = 5;
 const ATTEMPT_WINDOW_MS = 10 * 60 * 1000;
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const navigate = useNavigate();
   const [isBlocked, setIsBlocked] = useState(false);
 
@@ -25,7 +27,7 @@ export default function Login() {
 
     const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
     const now = Date.now();
-    const recentAttempts = attempts.filter(ts => now - ts < ATTEMPT_WINDOW_MS);
+    const recentAttempts = attempts.filter((ts) => now - ts < ATTEMPT_WINDOW_MS);
     if (recentAttempts.length >= MAX_ATTEMPTS) {
       setIsBlocked(true);
     }
@@ -90,9 +92,14 @@ export default function Login() {
         status: data.status,
       };
 
-      // Always store in sessionStorage
-      sessionStorage.setItem("user", JSON.stringify(userPayload));
+      // ✅ Persist in localStorage for App.jsx to use
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(userPayload));
 
+      // ✅ Update app state via prop
+      onLogin(userPayload, data.token);
+
+      // ✅ Redirect to dashboard
       switch (data.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -118,7 +125,7 @@ export default function Login() {
         data-aos="fade-up"
         className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
       >
-        {/* Left Section */}
+        {/* Left Side */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
           <img
             src={logo}
@@ -139,7 +146,7 @@ export default function Login() {
           </ul>
         </div>
 
-        {/* Right Section */}
+        {/* Right Side */}
         <div className="p-10 md:p-14 bg-white">
           <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">Login</h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
