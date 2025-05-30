@@ -1,38 +1,103 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  rememberMe: z.boolean().optional(),
 });
 
-export default function Login({ onLogin }) {
+const MAX_ATTEMPTS = 5;
+const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+
+export default function Login() {
+  const navigate = useNavigate();
+  const [isBlocked, setIsBlocked] = useState(false);
+
   useEffect(() => {
     AOS.init({ duration: 1000 });
+
+    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
+    const now = Date.now();
+    const recentAttempts = attempts.filter(ts => now - ts < ATTEMPT_WINDOW_MS);
+    if (recentAttempts.length >= MAX_ATTEMPTS) {
+      setIsBlocked(true);
+    }
   }, []);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: zodResolver(loginSchema) });
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const recordFailedAttempt = () => {
+    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
+    attempts.push(Date.now());
+    localStorage.setItem("loginAttempts", JSON.stringify(attempts));
+  };
+
+  const clearAttempts = () => {
+    localStorage.removeItem("loginAttempts");
+  };
 
   const onSubmit = async (formData) => {
+    if (isBlocked) {
+      alert("Too many login attempts. Please try again later.");
+      return;
+    }
+
     try {
-      await onLogin({
-        email: formData.email.trim(),
-        password: formData.password.trim(),
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: formData.email.trim(),
+          password: formData.password.trim(),
+        }),
       });
+
+      if (!response.ok) {
+        recordFailedAttempt();
+        const errData = await response.json();
+        throw new Error(errData.message || "Login failed");
+      }
+
+      clearAttempts(); // reset on success
+      const data = await response.json();
+
+      // Optional: persist role if "Remember Me"
+      if (formData.rememberMe) {
+        localStorage.setItem("userRole", data.role);
+      }
+
+      // Redirect based on role
+      switch (data.role) {
+        case "admin":
+          navigate("/admin/dashboard");
+          break;
+        case "surveyor":
+          navigate("/surveyor/dashboard");
+          break;
+        case "client":
+          navigate("/client/dashboard");
+          break;
+        default:
+          navigate("/");
+      }
     } catch (err) {
-      console.error("Login error:", err.response?.data);
-      alert(err.response?.data?.message || "Login failed.");
+      console.error("Login error:", err);
+      alert(err.message || "Login failed.");
     }
   };
 
@@ -133,13 +198,28 @@ export default function Login({ onLogin }) {
               </AnimatePresence>
             </div>
 
+            {/* Remember Me + Forgot */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center space-x-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  {...register("rememberMe")}
+                  className="form-checkbox rounded text-yellow-500 focus:ring-yellow-400"
+                />
+                <span>Remember me</span>
+              </label>
+              <Link to="/forgot-password" className="text-sm text-yellow-600 hover:underline font-medium">
+                Forgot password?
+              </Link>
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isBlocked}
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 rounded-lg transition duration-300 disabled:opacity-50"
             >
-              {isSubmitting ? "Logging in..." : "Login"}
+              {isSubmitting ? "Logging in..." : isBlocked ? "Blocked" : "Login"}
             </button>
           </form>
 
