@@ -76,12 +76,12 @@ export default function Login() {
       clearAttempts(); // reset on success
       const data = await response.json();
 
-      // Optional: persist role if "Remember Me"
+      // Only store role if "Remember Me" was checked
       if (formData.rememberMe) {
         localStorage.setItem("userRole", data.role);
       }
 
-      // Redirect based on role
+      // Redirect user to their dashboard regardless of "Remember Me"
       switch (data.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -136,7 +136,7 @@ export default function Login() {
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5 font-manrope">
-            {/* Email Field */}
+            {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
@@ -167,7 +167,7 @@ export default function Login() {
               </AnimatePresence>
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -198,7 +198,7 @@ export default function Login() {
               </AnimatePresence>
             </div>
 
-            {/* Remember Me + Forgot */}
+            {/* Remember Me + Forgot Password */}
             <div className="flex items-center justify-between">
               <label className="flex items-center space-x-2 text-sm text-gray-700">
                 <input
@@ -213,7 +213,7 @@ export default function Login() {
               </Link>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting || isBlocked}
@@ -223,7 +223,7 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Signup Link */}
+          {/* Sign Up */}
           <p className="text-center mt-6 text-sm text-gray-600">
             Don’t have an account?{" "}
             <Link to="/signup" className="text-yellow-600 hover:underline font-semibold">
