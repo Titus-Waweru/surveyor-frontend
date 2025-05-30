@@ -69,13 +69,14 @@ function PrivateRoute({ user, role, children }) {
 function AppRoutes({ user, setUser, onLogin, onLogout }) {
   const navigate = useNavigate();
 
+  // ✅ Only redirect to dashboard after login IF currently on "/"
   useEffect(() => {
-    if (user) {
+    if (user && window.location.pathname === "/") {
       navigate(getDefaultDashboard(user.role));
     }
   }, [user, navigate]);
 
-  // Login handler: calls API then calls onLogin from props
+  // Login handler
   async function handleLogin(credentials) {
     try {
       const response = await API.post("/auth/login", credentials);
@@ -90,10 +91,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       };
       const token = loggedInUser.token;
 
-      // Update global state and localStorage via onLogin prop from App.jsx
       onLogin(userObj, token);
-
-      // Navigation happens automatically on user state change (useEffect above)
     } catch (error) {
       console.error("Login error:", error);
       alert(
