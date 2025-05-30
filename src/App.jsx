@@ -11,13 +11,13 @@ export default function App() {
 
     if (token && storedUser) {
       try {
-        // Validate token (optional)
-        jwtDecode(token); // You can verify it's valid without resetting anything
+        // Decode to check token structure/validity (doesn't verify signature, but useful for expiration checks)
+        jwtDecode(token);
 
-        // Restore full user from storage
+        // Parse full user from localStorage
         setUser(JSON.parse(storedUser));
       } catch (err) {
-        console.warn("Invalid token, clearing session.");
+        console.warn("Invalid token or user data. Clearing localStorage.");
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
