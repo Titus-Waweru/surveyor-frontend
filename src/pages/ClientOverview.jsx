@@ -1,186 +1,189 @@
-// src/pages/ClientOverview.jsx
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts";
+import API from "../utils/axios";
+import BookingMap from "../components/dashboard/BookingMap";
 
-export default function ClientOverview({ user }) {
-  const [bookings, setBookings] = useState([]);
+const SurveyorDashboard = () => {
+  const [surveyorData, setSurveyorData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [updatingBookingId, setUpdatingBookingId] = useState(null);
+
+  // Map toggle state with localStorage persistence
+  const [showMap, setShowMap] = useState(() => {
+    const saved = localStorage.getItem("showMap");
+    return saved === "true";
+  });
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
+    fetchSurveyorData();
+  }, []);
 
-    async function fetchBookings() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(
-            user.email
-          )}`,
-          {
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+  useEffect(() => {
+    localStorage.setItem("showMap", showMap);
+  }, [showMap]);
 
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(`HTTP ${response.status} - ${errText}`);
-        }
+  const fetchSurveyorData = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const email = user?.email;
+      if (!email) throw new Error("User email not found. Please log in.");
 
-        const data = await response.json();
-        setBookings(data);
-      } catch (err) {
-        console.error("Fetch error:", err);
-        setError("Failed to fetch bookings.");
-      } finally {
-        setLoading(false);
-      }
+      const res = await API.get(`/surveyor/dashboard?email=${encodeURIComponent(email)}`);
+      setSurveyorData(res.data);
+    } catch (err) {
+      setError(err.message || "Failed to fetch surveyor data.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (user?.email) fetchBookings();
-  }, [user.email]);
-
-  const total = bookings.length;
-  const pending = bookings.filter(
-    (b) => b.status?.toLowerCase() === "pending"
-  ).length;
-  const completed = bookings.filter(
-    (b) => b.status?.toLowerCase() === "completed"
-  ).length;
-  const inProgress = bookings.filter(
-    (b) => b.status?.toLowerCase() === "in progress"
-  ).length;
-
-  const chartData = [
-    { name: "Pending", value: pending },
-    { name: "In Progress", value: inProgress },
-    { name: "Completed", value: completed },
-  ];
-
-  const COLORS = ["#facc15", "#a78bfa", "#4ade80"];
+  const updateBookingStatus = async (bookingId, payload) => {
+    setUpdatingBookingId(bookingId);
+    try {
+      await API.patch(`/surveyor/bookings/${bookingId}/status`, payload);
+      await fetchSurveyorData();
+    } catch (err) {
+      alert(err.response?.data?.message || err.message || "Failed to update booking.");
+    } finally {
+      setUpdatingBookingId(null);
+    }
+  };
 
   if (loading)
-    return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
-        Loading client overview...
-      </div>
-    );
-
+    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">Loading surveyor dashboard...</div>;
   if (error)
-    return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
-        {error}
-      </div>
-    );
+    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">{error}</div>;
+  if (!surveyorData)
+    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">No surveyor data found.</div>;
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center justify-center px-4 py-10 space-y-10">
-      <div
-        className="w-full max-w-4xl bg-white shadow-xl rounded-3xl p-10 md:p-14"
-        data-aos="fade-up"
-      >
-        <h1 className="text-3xl font-bold text-yellow-600 text-center mb-6 font-poppins">
-          Client Overview
+    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
+        <h1 className="text-3xl font-bold text-blue-700 text-center mb-6 font-poppins">
+          Welcome, {surveyorData.surveyorName}
         </h1>
 
-        {total === 0 ? (
-          <p className="text-center text-gray-600 font-manrope">
-            No bookings found.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-manrope">
-            <StatCard label="Total Bookings" value={total} color="blue" />
-            <StatCard label="Pending" value={pending} color="yellow" />
-            <StatCard label="In Progress" value={inProgress} color="purple" />
-            <StatCard label="Completed" value={completed} color="green" />
-          </div>
-        )}
-      </div>
-
-      {total > 0 && (
-        <div
-          className="w-full max-w-6xl grid md:grid-cols-2 gap-8 p-4"
-          data-aos="fade-up"
-        >
-          {/* Pie Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
-              Booking Distribution
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={100}
-                  label
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Legend />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Bar Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
-              Booking Status Overview
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`bar-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 font-manrope">
+          <StatCard title="Assigned Jobs" value={surveyorData.totalAssigned} color="blue" />
+          <StatCard title="Completed" value={surveyorData.completedCount} color="green" />
+          <StatCard title="Pending" value={surveyorData.pendingCount} color="yellow" />
         </div>
-      )}
+
+        <div className="bg-white rounded-xl shadow p-6 font-manrope">
+          <h2 className="text-xl font-semibold mb-3 text-indigo-700">Recent Bookings</h2>
+
+          {/* ✅ Map toggle button */}
+          <button
+            onClick={() => setShowMap((prev) => !prev)}
+            className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-manrope"
+          >
+            {showMap ? "Hide Map" : "Show Map"}
+          </button>
+
+          {surveyorData.recentBookings?.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm text-left">
+                <thead>
+                  <tr className="bg-gray-100 text-gray-700">
+                    <th className="py-2 px-4">#</th>
+                    <th className="py-2 px-4">Location</th>
+                    <th className="py-2 px-4">Survey Type</th>
+                    <th className="py-2 px-4">Preferred Date</th>
+                    <th className="py-2 px-4">Status</th>
+                    <th className="py-2 px-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {surveyorData.recentBookings.map((booking, i) => (
+                    <React.Fragment key={booking.id}>
+                      <tr className="border-b">
+                        <td className="py-2 px-4">{i + 1}</td>
+                        <td className="py-2 px-4">{booking.location}</td>
+                        <td className="py-2 px-4">{booking.surveyType}</td>
+                        <td className="py-2 px-4">
+                          {new Date(booking.preferredDate).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </td>
+                        <td className="py-2 px-4 capitalize">{booking.status}</td>
+                        <td className="py-2 px-4 space-x-2">
+                          {booking.status === "pending" || booking.status === "rejected" ? (
+                            <>
+                              <button
+                                disabled={updatingBookingId === booking.id}
+                                onClick={() => updateBookingStatus(booking.id, { action: "accept" })}
+                                className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                              >
+                                Accept
+                              </button>
+                              <button
+                                disabled={updatingBookingId === booking.id}
+                                onClick={() => updateBookingStatus(booking.id, { action: "reject" })}
+                                className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
+                              >
+                                Reject
+                              </button>
+                            </>
+                          ) : booking.status !== "completed" ? (
+                            <select
+                              disabled={updatingBookingId === booking.id}
+                              value={booking.status}
+                              onChange={(e) =>
+                                updateBookingStatus(booking.id, { status: e.target.value })
+                              }
+                              className="border rounded px-2 py-1"
+                            >
+                              <option value="accepted">Accepted</option>
+                              <option value="in progress">In Progress</option>
+                              <option value="completed">Completed</option>
+                            </select>
+                          ) : null}
+                        </td>
+                      </tr>
+
+                      {/* ✅ Map row if coordinates exist and showMap is true */}
+                      {showMap && booking.latitude && booking.longitude && (
+                        <tr>
+                          <td colSpan="6" className="py-4">
+                            <BookingMap
+                              latitude={booking.latitude}
+                              longitude={booking.longitude}
+                            />
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-gray-600">No recent bookings available.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-function StatCard({ label, value, color }) {
+const StatCard = ({ title, value, color }) => {
   const colorMap = {
     blue: "bg-blue-100 text-blue-700",
-    yellow: "bg-yellow-100 text-yellow-700",
     green: "bg-green-100 text-green-700",
-    purple: "bg-purple-100 text-purple-700",
+    yellow: "bg-yellow-100 text-yellow-700",
   };
 
   return (
     <div className={`p-6 rounded-xl shadow text-center ${colorMap[color]}`}>
-      <h3 className="text-sm font-medium mb-1">{label}</h3>
+      <h3 className="text-sm font-medium mb-1">{title}</h3>
       <p className="text-2xl font-bold">{value}</p>
     </div>
   );
-}
+};
+
+export default SurveyorDashboard;
