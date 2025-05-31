@@ -11,6 +11,7 @@ export default function AdminOverview() {
   const [pendingSurveyors, setPendingSurveyors] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [surveyors, setSurveyors] = useState([]);
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showMaps, setShowMaps] = useState(
     localStorage.getItem("adminShowMaps") === "false" ? false : true
@@ -23,14 +24,16 @@ export default function AdminOverview() {
 
   const fetchData = async () => {
     try {
-      const [pendingRes, bookingsRes, surveyorsRes] = await Promise.all([
+      const [pendingRes, bookingsRes, surveyorsRes, clientsRes] = await Promise.all([
         axios.get(`${API}/admin/pending-surveyors`),
         axios.get(`${API}/admin/bookings/all`),
         axios.get(`${API}/admin/users/surveyors`),
+        axios.get(`${API}/admin/users/clients`),
       ]);
       setPendingSurveyors(pendingRes.data);
       setBookings(bookingsRes.data);
       setSurveyors(surveyorsRes.data);
+      setClients(clientsRes.data);
     } catch (err) {
       console.error("Fetch failed", err);
     } finally {
@@ -179,11 +182,9 @@ export default function AdminOverview() {
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {bookings.map((b) => (
-                        <>
-                          <tr key={b.id}>
-                            <td className="px-4 py-3">
-                              {b.user?.name || "N/A"}
-                            </td>
+                        <tbody key={b.id}>
+                          <tr>
+                            <td className="px-4 py-3">{b.user?.name || "N/A"}</td>
                             <td className="px-4 py-3">{b.surveyType}</td>
                             <td className="px-4 py-3">{b.location}</td>
                             <td className="px-4 py-3 capitalize">{b.status}</td>
@@ -208,19 +209,74 @@ export default function AdminOverview() {
                           {showMaps && b.latitude && b.longitude && (
                             <tr key={`map-${b.id}`}>
                               <td colSpan="5" className="px-4 py-3">
-                                <BookingMap
-                                  latitude={b.latitude}
-                                  longitude={b.longitude}
-                                />
+                                <BookingMap latitude={b.latitude} longitude={b.longitude} />
                               </td>
                             </tr>
                           )}
-                        </>
+                        </tbody>
                       ))}
                     </tbody>
                   </table>
                 </div>
               )}
+            </section>
+
+            {/* Users Table Section */}
+            <section className="mt-12">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+                All Users
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Clients Table */}
+                <div className="border rounded-xl shadow-sm overflow-x-auto">
+                  <h3 className="text-xl font-semibold text-gray-700 bg-gray-100 px-4 py-3 border-b">
+                    Clients
+                  </h3>
+                  <table className="min-w-full text-sm text-left border-collapse">
+                    <thead className="bg-gray-50 text-gray-700 font-semibold">
+                      <tr>
+                        <th className="px-4 py-3">Name</th>
+                        <th className="px-4 py-3">Email</th>
+                        <th className="px-4 py-3">Phone</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {clients.map((client) => (
+                        <tr key={client.id}>
+                          <td className="px-4 py-3">{client.name}</td>
+                          <td className="px-4 py-3">{client.email}</td>
+                          <td className="px-4 py-3">{client.phone || "N/A"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Surveyors Table */}
+                <div className="border rounded-xl shadow-sm overflow-x-auto">
+                  <h3 className="text-xl font-semibold text-gray-700 bg-gray-100 px-4 py-3 border-b">
+                    Surveyors
+                  </h3>
+                  <table className="min-w-full text-sm text-left border-collapse">
+                    <thead className="bg-gray-50 text-gray-700 font-semibold">
+                      <tr>
+                        <th className="px-4 py-3">Name</th>
+                        <th className="px-4 py-3">Email</th>
+                        <th className="px-4 py-3">ISK Number</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {surveyors.map((s) => (
+                        <tr key={s.id}>
+                          <td className="px-4 py-3">{s.name}</td>
+                          <td className="px-4 py-3">{s.email}</td>
+                          <td className="px-4 py-3">{s.iskNumber}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </section>
           </>
         )}
