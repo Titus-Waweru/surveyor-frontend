@@ -5,17 +5,26 @@ import "aos/dist/aos.css";
 import BookingMap from "../components/dashboard/BookingMap";
 
 const API = import.meta.env.VITE_API_URL;
-const BASE = API.replace("/api", "");
 
 export default function AdminBookings() {
   const [bookings, setBookings] = useState([]);
   const [surveyors, setSurveyors] = useState([]);
   const [status, setStatus] = useState("");
 
+  // 🔄 Persistent map toggle (just like Client)
+  const [showMaps, setShowMaps] = useState(() => {
+    const saved = localStorage.getItem("adminShowMaps");
+    return saved === "true"; // default to false if not set
+  });
+
   useEffect(() => {
     AOS.init({ duration: 1000 });
     fetchData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("adminShowMaps", showMaps);
+  }, [showMaps]);
 
   const fetchData = async () => {
     try {
@@ -36,7 +45,7 @@ export default function AdminBookings() {
       await axios.patch(`${API}/admin/bookings/${bookingId}/assign`, {
         surveyorId,
       });
-      fetchData();
+      fetchData(); // refresh after assigning
     } catch (err) {
       console.error("Assignment error:", err);
     }
@@ -56,6 +65,16 @@ export default function AdminBookings() {
           <p className="text-red-500 text-sm mb-4 text-center">{status}</p>
         )}
 
+        {/* ✅ Persistent Map Toggle Button */}
+        <div className="text-center mb-4">
+          <button
+            onClick={() => setShowMaps((prev) => !prev)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-all"
+          >
+            {showMaps ? "Hide Maps" : "Show Maps"}
+          </button>
+        </div>
+
         <div className="overflow-x-auto border rounded-xl shadow-sm">
           <table className="min-w-full text-sm text-left border-collapse">
             <thead className="bg-gray-100 text-gray-700 font-semibold">
@@ -70,8 +89,8 @@ export default function AdminBookings() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {bookings.map((b) => (
-                <>
-                  <tr key={b.id}>
+                <Fragment key={b.id}>
+                  <tr>
                     <td className="px-4 py-3">{b.user?.name || "N/A"}</td>
                     <td className="px-4 py-3">{b.surveyType}</td>
                     <td className="px-4 py-3">{b.location}</td>
@@ -109,17 +128,15 @@ export default function AdminBookings() {
                     </td>
                   </tr>
 
-                  {b.latitude && b.longitude && (
-                    <tr key={`map-${b.id}`}>
+                  {/* ✅ Show Map Row Below Booking */}
+                  {showMaps && b.latitude && b.longitude && (
+                    <tr>
                       <td colSpan="6" className="px-4 py-3">
-                        <BookingMap
-                          latitude={b.latitude}
-                          longitude={b.longitude}
-                        />
+                        <BookingMap latitude={b.latitude} longitude={b.longitude} />
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>
@@ -128,3 +145,6 @@ export default function AdminBookings() {
     </div>
   );
 }
+
+// ✅ Required import for Fragment shorthand
+import { Fragment } from "react";

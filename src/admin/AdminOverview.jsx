@@ -12,6 +12,9 @@ export default function AdminOverview() {
   const [bookings, setBookings] = useState([]);
   const [surveyors, setSurveyors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showMaps, setShowMaps] = useState(
+    localStorage.getItem("adminShowMaps") === "false" ? false : true
+  );
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -53,6 +56,12 @@ export default function AdminOverview() {
     } catch (err) {
       console.error("Assignment error:", err);
     }
+  };
+
+  const toggleShowMaps = () => {
+    const newValue = !showMaps;
+    setShowMaps(newValue);
+    localStorage.setItem("adminShowMaps", newValue);
   };
 
   return (
@@ -144,6 +153,16 @@ export default function AdminOverview() {
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                 All Bookings from Clients
               </h2>
+
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={toggleShowMaps}
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition font-semibold"
+                >
+                  {showMaps ? "Hide Maps" : "Show Maps"}
+                </button>
+              </div>
+
               {bookings.length === 0 ? (
                 <p className="text-gray-500">No bookings found.</p>
               ) : (
@@ -186,7 +205,7 @@ export default function AdminOverview() {
                             </td>
                           </tr>
 
-                          {b.latitude && b.longitude && (
+                          {showMaps && b.latitude && b.longitude && (
                             <tr key={`map-${b.id}`}>
                               <td colSpan="5" className="px-4 py-3">
                                 <BookingMap
