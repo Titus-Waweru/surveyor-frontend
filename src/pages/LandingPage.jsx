@@ -21,20 +21,28 @@ export default function LandingPage() {
   </Link>
 
   <div className="flex flex-wrap items-center gap-4">
-    {/* Navigation Links */}
-    <Link to="/home" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
+    {/* Navigation Links with Book-a-Demo style */}
+    <Link
+      to="/home"
+      className="border border-yellow-400 text-yellow-500 font-semibold px-4 py-2 rounded-2xl"
+    >
       Home
     </Link>
-    <Link to="/contact" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
+    <Link
+      to="/contact"
+      className="border border-yellow-400 text-yellow-500 font-semibold px-4 py-2 rounded-2xl"
+    >
       Contact Us
     </Link>
-    <Link to="/news" className="text-yellow-600 border border-yellow-500 px-4 py-2 rounded-2xl font-semibold hover:bg-yellow-100 transition">
+    <Link
+      to="/news"
+      className="border border-yellow-400 text-yellow-500 font-semibold px-4 py-2 rounded-2xl"
+    >
       News
     </Link>
-
-    
   </div>
 </header>
+
 
 
       {/* Hero Section */}
