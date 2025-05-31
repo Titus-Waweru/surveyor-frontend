@@ -12,13 +12,27 @@ export default function ClientBookings({ user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 🔄 Persistent map toggle state using localStorage
+  const [showMap, setShowMap] = useState(() => {
+    const saved = localStorage.getItem("showMap");
+    return saved === "true";
+  });
+
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+    if (user?.email) fetchBookings();
+  }, [user?.email]);
+
+  useEffect(() => {
+    localStorage.setItem("showMap", showMap);
+  }, [showMap]);
+
   const fetchBookings = async () => {
     setLoading(true);
     try {
       const res = await axios.get(
-  `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(user.email)}`
-);
-
+        `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(user.email)}`
+      );
       setBookings(res.data);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -28,12 +42,6 @@ export default function ClientBookings({ user }) {
     }
   };
 
-  useEffect(() => {
-    AOS.init({ duration: 1000 });
-    if (user?.email) fetchBookings();
-  }, [user?.email]);
-
-  // Filter out bookings with valid coordinates
   const bookingsWithCoordinates = bookings.filter(
     (b) => b.latitude && b.longitude
   );
@@ -63,11 +71,25 @@ export default function ClientBookings({ user }) {
             </p>
           ) : (
             <>
-              {/* Map Section */}
+              {/* ✅ Map Toggle */}
               {bookingsWithCoordinates.length > 0 && (
                 <div className="mb-10">
-                  <h2 className="text-lg font-semibold text-gray-700 mb-2">Booking Locations</h2>
-                  <SurveyMap bookings={bookingsWithCoordinates} />
+                  <button
+                    onClick={() => setShowMap((prev) => !prev)}
+                    className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  >
+                    {showMap ? "Hide Map" : "Show Map"}
+                  </button>
+
+                  {/* ✅ Conditionally render map */}
+                  {showMap && (
+                    <>
+                      <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                        Booking Locations
+                      </h2>
+                      <SurveyMap bookings={bookingsWithCoordinates} />
+                    </>
+                  )}
                 </div>
               )}
 
