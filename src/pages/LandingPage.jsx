@@ -20,27 +20,26 @@ export default function LandingPage() {
     />
   </Link>
 
-  <div className="flex flex-wrap items-center gap-4">
-    {/* Navigation Links with Book-a-Demo style */}
+  <nav className="flex items-center">
     <Link
       to="/home"
-      className="border border-yellow-400 text-yellow-500 font-semibold px-4 py-2 rounded-2xl"
+      className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
     >
       Home
     </Link>
     <Link
       to="/contact"
-      className="border border-yellow-400 text-yellow-500 font-semibold px-4 py-2 rounded-2xl"
+      className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
     >
       Contact Us
     </Link>
     <Link
       to="/news"
-      className="border border-yellow-400 text-yellow-500 font-semibold px-4 py-2 rounded-2xl"
+      className="font-bold text-black px-6 py-2 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
     >
       News
     </Link>
-  </div>
+  </nav>
 </header>
 
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import loginIllustration from "../assets/my_app.png";
+import logo from "../assets/logo.png"; // <-- import the logo
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -52,11 +52,13 @@ export default function AdminLogin({ setUser }) {
         {/* Left Panel */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
           <img
-            src={loginIllustration}
-            alt="Admin Illustration"
-            className="w-1/2 max-w-[160px] rounded-xl shadow-lg mb-6"
+            src={logo}  // <-- updated here to use the logo
+            alt="LandLink Logo"
+            className="h-[100px] w-auto max-w-[220px] object-contain mb-6"
           />
-          <h1 className="text-3xl font-bold mb-2 font-poppins text-center">LandLink Admins</h1>
+          <h1 className="text-3xl font-bold mb-2 font-poppins text-center">
+            LandLink Admins
+          </h1>
           <p className="text-sm text-yellow-100 text-center font-manrope mb-4">
             <strong>Admin Dashboard Access</strong>
           </p>
@@ -70,14 +72,19 @@ export default function AdminLogin({ setUser }) {
 
         {/* Right Panel */}
         <div className="p-10 md:p-14">
-          <h2 className="text-3xl font-bold text-yellow-600 mb-4 font-poppins">Admin Login</h2>
+          <h2 className="text-3xl font-bold text-yellow-600 mb-4 font-poppins">
+            Admin Login
+          </h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
             Welcome back, admin. Please enter your credentials to proceed.
           </p>
 
           <form onSubmit={handleLogin} className="space-y-5 font-manrope" noValidate>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email Address
               </label>
               <input
@@ -93,7 +100,10 @@ export default function AdminLogin({ setUser }) {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <input
@@ -129,10 +139,7 @@ export default function AdminLogin({ setUser }) {
 
           <p className="mt-6 text-center text-sm text-[#0a1b3d] font-manrope">
             Don’t have an account?{" "}
-            <Link
-              to="/admin/signup"
-              className="text-yellow-500 font-semibold hover:underline"
-            >
+            <Link to="/admin/signup" className="text-yellow-500 font-semibold hover:underline">
               Sign up
             </Link>
           </p>
