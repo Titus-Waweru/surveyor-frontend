@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import API from "../utils/axios";
-import BookingMap from "../components/dashboard/BookingMap"; // ✅ Import map
+import BookingMap from "../components/dashboard/BookingMap";
 
 const SurveyorDashboard = () => {
   const [surveyorData, setSurveyorData] = useState(null);
@@ -10,13 +10,20 @@ const SurveyorDashboard = () => {
   const [error, setError] = useState(null);
   const [updatingBookingId, setUpdatingBookingId] = useState(null);
 
-  // NEW: state to toggle map visibility
-  const [showMap, setShowMap] = useState(true);
+  // Map toggle state with localStorage persistence
+  const [showMap, setShowMap] = useState(() => {
+    const saved = localStorage.getItem("showMap");
+    return saved === "true";
+  });
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
     fetchSurveyorData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("showMap", showMap);
+  }, [showMap]);
 
   const fetchSurveyorData = async () => {
     try {
@@ -46,23 +53,11 @@ const SurveyorDashboard = () => {
   };
 
   if (loading)
-    return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
-        Loading surveyor dashboard...
-      </div>
-    );
+    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">Loading surveyor dashboard...</div>;
   if (error)
-    return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
-        {error}
-      </div>
-    );
+    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">{error}</div>;
   if (!surveyorData)
-    return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
-        No surveyor data found.
-      </div>
-    );
+    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">No surveyor data found.</div>;
 
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
@@ -78,18 +73,15 @@ const SurveyorDashboard = () => {
         </div>
 
         <div className="bg-white rounded-xl shadow p-6 font-manrope">
-          <h2 className="text-xl font-semibold mb-3 text-indigo-700 flex justify-between items-center">
-            Recent Bookings
+          <h2 className="text-xl font-semibold mb-3 text-indigo-700">Recent Bookings</h2>
 
-            {/* Toggle button to show/hide maps */}
-            <button
-              onClick={() => setShowMap(!showMap)}
-              className="bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700 transition"
-              aria-label="Toggle map visibility"
-            >
-              {showMap ? "Hide Maps" : "Show Maps"}
-            </button>
-          </h2>
+          {/* ✅ Map toggle button */}
+          <button
+            onClick={() => setShowMap((prev) => !prev)}
+            className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-manrope"
+          >
+            {showMap ? "Hide Map" : "Show Map"}
+          </button>
 
           {surveyorData.recentBookings?.length > 0 ? (
             <div className="overflow-x-auto">
@@ -141,7 +133,9 @@ const SurveyorDashboard = () => {
                             <select
                               disabled={updatingBookingId === booking.id}
                               value={booking.status}
-                              onChange={(e) => updateBookingStatus(booking.id, { status: e.target.value })}
+                              onChange={(e) =>
+                                updateBookingStatus(booking.id, { status: e.target.value })
+                              }
                               className="border rounded px-2 py-1"
                             >
                               <option value="accepted">Accepted</option>
@@ -152,11 +146,14 @@ const SurveyorDashboard = () => {
                         </td>
                       </tr>
 
-                      {/* Conditionally render map based on showMap state */}
+                      {/* ✅ Map row if coordinates exist and showMap is true */}
                       {showMap && booking.latitude && booking.longitude && (
                         <tr>
                           <td colSpan="6" className="py-4">
-                            <BookingMap latitude={booking.latitude} longitude={booking.longitude} />
+                            <BookingMap
+                              latitude={booking.latitude}
+                              longitude={booking.longitude}
+                            />
                           </td>
                         </tr>
                       )}
