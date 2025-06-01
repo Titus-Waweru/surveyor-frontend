@@ -1,20 +1,11 @@
-// src/components/dashboard/Navbar.jsx
+// src/components/dashboard/Layout.jsx
+import Navbar from "./Navbar"; // ensure this is the correct path
 
-export default function Navbar({ user, onLogout }) {
+export default function Layout({ user, onLogout, children }) {
   return (
-    <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold font-poppins text-yellow-600">Admin Dashboard</h1>
-      <div className="flex items-center gap-4 font-manrope">
-        {user?.email && (
-          <span className="text-sm text-gray-700">{user.email}</span>
-        )}
-        <button
-          onClick={onLogout}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-4 py-2 rounded"
-        >
-          Logout
-        </button>
-      </div>
-    </header>
+    <div className="min-h-screen bg-[#fff6e5] flex flex-col font-manrope">
+      <Navbar user={user} onLogout={onLogout} />
+      <main className="flex-grow p-6">{children}</main>
+    </div>
   );
 }
