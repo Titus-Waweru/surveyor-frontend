@@ -3,6 +3,8 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 export default function Payments({ user }) {
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("paystack");
@@ -17,7 +19,7 @@ export default function Payments({ user }) {
 
       async function fetchPayments() {
         try {
-          const res = await axios.get(`/api/payments?email=${user.email}`);
+          const res = await axios.get(`${API_BASE}/payments?email=${user.email}`);
           setPayments(res.data.payments || []);
         } catch (err) {
           console.error("Failed to fetch payments", err);
@@ -56,7 +58,7 @@ export default function Payments({ user }) {
       let res;
 
       if (paymentMethod === "mpesa") {
-        res = await axios.post("/api/payments/mpesa", {
+        res = await axios.post(`${API_BASE}/payments/mpesa`, {
           phone,
           amount: numericAmount,
         });
@@ -67,7 +69,7 @@ export default function Payments({ user }) {
           setMessage({ type: "error", text: "Failed to initiate M-Pesa payment" });
         }
       } else {
-        res = await axios.post("/api/payment/initiate", {
+        res = await axios.post(`${API_BASE}/payment/initiate`, {
           email: user.email,
           amount: numericAmount,
         });
