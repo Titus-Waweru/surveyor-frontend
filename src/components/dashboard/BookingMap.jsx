@@ -1,9 +1,7 @@
-// src/components/dashboard/BookingMap.jsx
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Fix for default marker icons not loading correctly
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -15,16 +13,17 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-export default function BookingMap({ onSelectLocation, latitude, longitude }) {
+export default function BookingMap({ onSelectLocation, latitude, longitude, searchQuery }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markerRef = useRef(null);
 
+  // 📍 Initialize map
   useEffect(() => {
     if (!mapRef.current) return;
 
     mapInstance.current = L.map(mapRef.current, {
-      center: [latitude || -1.2921, longitude || 36.8219], // Default to Nairobi
+      center: [latitude || -1.2921, longitude || 36.8219],
       zoom: 7,
       scrollWheelZoom: true,
     });
@@ -33,7 +32,7 @@ export default function BookingMap({ onSelectLocation, latitude, longitude }) {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(mapInstance.current);
 
-    // Show existing marker if coordinates provided
+    // 📌 Existing marker if coordinates provided
     if (latitude && longitude) {
       markerRef.current = L.marker([latitude, longitude])
         .addTo(mapInstance.current)
@@ -41,7 +40,7 @@ export default function BookingMap({ onSelectLocation, latitude, longitude }) {
         .openPopup();
     }
 
-    // Only allow setting new marker if onSelectLocation is provided (editable mode)
+    // 🎯 Click to select new marker
     if (onSelectLocation) {
       mapInstance.current.on("click", (e) => {
         const { lat, lng } = e.latlng;
@@ -66,6 +65,43 @@ export default function BookingMap({ onSelectLocation, latitude, longitude }) {
       mapInstance.current.remove();
     };
   }, [latitude, longitude, onSelectLocation]);
+
+  // 🔍 Handle search query
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      if (!searchQuery || !mapInstance.current) return;
+
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`
+        );
+        const data = await res.json();
+        if (data.length > 0) {
+          const { lat, lon } = data[0];
+          const latLng = [parseFloat(lat), parseFloat(lon)];
+
+          mapInstance.current.setView(latLng, 14);
+
+          if (markerRef.current) {
+            markerRef.current.setLatLng(latLng);
+          } else {
+            markerRef.current = L.marker(latLng)
+              .addTo(mapInstance.current)
+              .bindPopup("Searched Location")
+              .openPopup();
+          }
+
+          if (onSelectLocation) {
+            onSelectLocation({ latitude: lat, longitude: lon });
+          }
+        }
+      } catch (err) {
+        console.error("Geocoding failed:", err);
+      }
+    };
+
+    fetchCoordinates();
+  }, [searchQuery, onSelectLocation]);
 
   return (
     <div

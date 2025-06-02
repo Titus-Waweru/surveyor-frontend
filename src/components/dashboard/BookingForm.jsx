@@ -6,6 +6,10 @@ import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// ✅ Import geocoder plugin
+import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+import "leaflet-control-geocoder";
+
 // ✅ Fix Leaflet default marker icons
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -41,31 +45,31 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     resolver: zodResolver(bookingSchema),
   });
 
- const onSubmit = async (data) => {
-  if (!coords.latitude || !coords.longitude) {
-    setStatus({ type: "error", msg: "Please select a location on the map." });
-    return;
-  }
+  const onSubmit = async (data) => {
+    if (!coords.latitude || !coords.longitude) {
+      setStatus({ type: "error", msg: "Please select a location on the map." });
+      return;
+    }
 
-  try {
-    await axios.post(`${import.meta.env.VITE_API_URL}/bookings`, {
-      ...data,
-      email: userEmail,
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-    });
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/bookings`, {
+        ...data,
+        email: userEmail,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
 
-    setStatus({ type: "success", msg: "Booking submitted successfully." });
-    reset();
-    setCoords({ latitude: null, longitude: null });
-    onNewBooking?.();
-  } catch (err) {
-    setStatus({
-      type: "error",
-      msg: err.response?.data?.message || "Failed to submit booking.",
-    });
-  }
-};
+      setStatus({ type: "success", msg: "Booking submitted successfully." });
+      reset();
+      setCoords({ latitude: null, longitude: null });
+      onNewBooking?.();
+    } catch (err) {
+      setStatus({
+        type: "error",
+        msg: err.response?.data?.message || "Failed to submit booking.",
+      });
+    }
+  };
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -77,8 +81,28 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     });
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>',
+      attribution: '&copy; OpenStreetMap contributors',
     }).addTo(mapInstance.current);
+
+    // ✅ Add search bar using Leaflet Control Geocoder
+    L.Control.geocoder({
+      defaultMarkGeocode: false,
+    })
+      .on("markgeocode", function (e) {
+        const { center } = e.geocode;
+        mapInstance.current.setView(center, 15);
+        setCoords({ latitude: center.lat, longitude: center.lng });
+
+        if (markerRef.current) {
+          markerRef.current.setLatLng(center);
+        } else {
+          markerRef.current = L.marker(center)
+            .addTo(mapInstance.current)
+            .bindPopup("Searched Location")
+            .openPopup();
+        }
+      })
+      .addTo(mapInstance.current);
 
     mapInstance.current.on("click", (e) => {
       const { lat, lng } = e.latlng;
@@ -163,7 +187,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             style={{ height: "256px", width: "100%" }}
           ></div>
           <p className="text-sm text-gray-600 mt-1">
-            Click on the map to pin the exact location of your property.
+            Click on the map or use the search to select your property's location.
           </p>
           {coords.latitude && (
             <p className="text-green-600 text-sm mt-1">
