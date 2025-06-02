@@ -27,8 +27,8 @@ export default function AdminNavbar({ onLogout }) {
   };
 
   return (
-    <header className="bg-white dark:bg-gray-900 px-6 py-4 flex justify-between items-center shadow-lg font-poppins border-b border-indigo-400 dark:border-gray-700 transition-colors duration-300">
-      <h1 className="text-gray-900 dark:text-white text-2xl md:text-3xl font-extrabold tracking-wide flex items-center gap-2">
+    <header className="bg-white dark:bg-[#0f172a] px-6 py-4 flex justify-between items-center shadow-lg font-poppins border-b border-indigo-400 dark:border-yellow-500 transition-colors duration-300">
+      <h1 className="text-gray-900 dark:text-yellow-400 text-2xl md:text-3xl font-extrabold tracking-wide flex items-center gap-2">
         <span className="bg-indigo-700 text-white dark:bg-yellow-400 dark:text-gray-900 px-2 py-1 rounded-full text-sm font-semibold shadow-sm">
           ADMIN
         </span>
