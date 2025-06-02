@@ -16,7 +16,7 @@ export default function LandingPage() {
           <img
             src="/assets/logo.png"
             alt="LandLink Logo"
-            className="h-[150px] md:h-[200px] w-auto max-w-[270px] object-contain"
+            className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
           />
         </Link>
 
@@ -25,25 +25,25 @@ export default function LandingPage() {
             to="/home"
             className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
           >
-            Home
+            <b>Home</b>
           </Link>
           <Link
             to="/contact"
             className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
           >
-            Contact Us
+            <b>Contact Us</b>
           </Link>
           <Link
             to="/news"
             className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
           >
-            News
+            <b>News</b>
           </Link>
           <Link
             to="/about"
             className="font-bold text-black px-6 py-2 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
           >
-            About Us
+            <b>About Us</b>
           </Link>
         </nav>
       </header>

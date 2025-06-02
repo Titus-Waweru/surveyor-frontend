@@ -52,7 +52,7 @@ export default function Home() {
             {
               title: "Streamlined Booking System",
               desc: "Schedule surveyor appointments effortlessly through our dashboard.",
-              icon: "/assets/icon-booking.svg",
+              icon: "/assets/lands 6.jpg",
             },
             {
               title: "Secure & Instant Payments",
@@ -72,7 +72,7 @@ export default function Home() {
             {
               title: "SMS & Email Alerts",
               desc: "Stay notified with real-time updates for every service stage.",
-              icon: "/assets/icon-alerts.svg",
+              icon: "/assets/lands 7.jpg",
             },
           ].map((feature, idx) => (
             <div
