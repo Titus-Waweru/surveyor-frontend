@@ -12,37 +12,41 @@ export default function LandingPage() {
     <div className="bg-[#fff6e5] min-h-screen font-poppins">
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-8 md:px-20 py-4 sm:py-6">
-  <Link to="/">
-    <img
-      src="/assets/logo.png"
-      alt="LandLink Logo"
-      className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
-    />
-  </Link>
+        <Link to="/">
+          <img
+            src="/assets/logo.png"
+            alt="LandLink Logo"
+            className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
+          />
+        </Link>
 
-  <nav className="flex items-center">
-    <Link
-      to="/home"
-      className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
-    >
-      Home
-    </Link>
-    <Link
-      to="/contact"
-      className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
-    >
-      Contact Us
-    </Link>
-    <Link
-      to="/news"
-      className="font-bold text-black px-6 py-2 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
-    >
-      News
-    </Link>
-  </nav>
-</header>
-
-
+        <nav className="flex items-center">
+          <Link
+            to="/home"
+            className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+          >
+            Home
+          </Link>
+          <Link
+            to="/contact"
+            className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+          >
+            Contact Us
+          </Link>
+          <Link
+            to="/news"
+            className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+          >
+            News
+          </Link>
+          <Link
+            to="/about"
+            className="font-bold text-black px-6 py-2 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+          >
+            About Us
+          </Link>
+        </nav>
+      </header>
 
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center justify-between px-4 sm:px-8 md:px-20 py-16 sm:py-20">
@@ -85,28 +89,55 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Vision, Mission, Goal Section */}
+      <section className="px-4 sm:px-8 md:px-20 py-16 bg-white" data-aos="fade-up">
+        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Our Vision, Mission & Goals</h2>
+        <div className="grid md:grid-cols-3 gap-10">
+          <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">Vision</h3>
+            <p className="text-gray-600">To be the leading digital infrastructure for land service automation across Africa.</p>
+          </div>
+          <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">Mission</h3>
+            <p className="text-gray-600">To empower individuals and organizations with easy-to-use tools for booking, managing, and completing land-related services.</p>
+          </div>
+          <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">Our Goal</h3>
+            <p className="text-gray-600">Seamlessly connect clients, surveyors, and administrators while enhancing transparency, speed, and trust in land service delivery.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="px-4 sm:px-8 md:px-20 py-16 bg-[#fff6e5]" data-aos="fade-up">
+        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What We Offer</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {["Land Surveying", "Site Inspection Scheduling", "Title Deed Verification", "Agent Tracking & Reporting", "Real-Time Job Monitoring", "Mobile OTP-Verified Access"].map((service, index) => (
+            <div key={index} className="bg-white p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={index * 100}>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">{service}</h3>
+              <p className="text-gray-600">We offer {service.toLowerCase()} solutions powered by automation, accuracy, and simplicity.</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-white" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Why Teams Love LandLink</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {[
-            {
-              title: "OTP-Verified Logins",
-              desc: "Secure access for clients and agents via email & SMS OTPs.",
-            },
-            {
-              title: "Easy Booking Management",
-              desc: "Track appointments and manage field tasks with ease.",
-            },
-            {
-              title: "Integrated Payments",
-              desc: "Accept payments via Paystack or M-Pesa instantly.",
-            },
-            {
-              title: "Admin & Surveyor Dashboards",
-              desc: "Role-based views to keep everyone productive.",
-            },
-          ].map((feature, i) => (
+          {[{
+            title: "OTP-Verified Logins",
+            desc: "Secure access for clients and agents via email & SMS OTPs."
+          }, {
+            title: "Easy Booking Management",
+            desc: "Track appointments and manage field tasks with ease."
+          }, {
+            title: "Integrated Payments",
+            desc: "Accept payments via Paystack or M-Pesa instantly."
+          }, {
+            title: "Admin & Surveyor Dashboards",
+            desc: "Role-based views to keep everyone productive."
+          }].map((feature, i) => (
             <div key={i} className="bg-[#fff6e5] p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={i * 100}>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
               <p className="text-gray-600">{feature.desc}</p>
