@@ -27,9 +27,9 @@ export default function AdminNavbar({ onLogout }) {
   };
 
   return (
-    <header className="bg-gradient-to-r from-indigo-800 to-indigo-600/90 dark:from-gray-900 dark:to-gray-800 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg font-poppins border-b border-indigo-400 dark:border-gray-700 transition-colors duration-300">
-      <h1 className="text-white text-2xl md:text-3xl font-extrabold tracking-wide flex items-center gap-2">
-        <span className="bg-white text-indigo-700 dark:text-gray-900 px-2 py-1 rounded-full text-sm font-semibold shadow-sm">
+    <header className="bg-white dark:bg-gray-900 px-6 py-4 flex justify-between items-center shadow-lg font-poppins border-b border-indigo-400 dark:border-gray-700 transition-colors duration-300">
+      <h1 className="text-gray-900 dark:text-white text-2xl md:text-3xl font-extrabold tracking-wide flex items-center gap-2">
+        <span className="bg-indigo-700 text-white dark:bg-yellow-400 dark:text-gray-900 px-2 py-1 rounded-full text-sm font-semibold shadow-sm">
           ADMIN
         </span>
         Dashboard
@@ -39,9 +39,13 @@ export default function AdminNavbar({ onLogout }) {
         <button
           onClick={() => setDarkMode(!darkMode)}
           aria-label="Toggle dark mode"
-          className="p-2 rounded-full bg-white/20 hover:bg-white/30 dark:hover:bg-gray-700 text-white transition-all duration-200 ring-1 ring-white/10 dark:ring-gray-600 hover:scale-110"
+          className="p-2 rounded-full bg-indigo-700 hover:bg-indigo-800 dark:bg-yellow-400 dark:hover:bg-yellow-300 text-white dark:text-gray-900 transition-all duration-200 ring-1 ring-indigo-900 dark:ring-yellow-700 hover:scale-110"
         >
-          {darkMode ? <Sun size={18} className="transition-transform" /> : <Moon size={18} className="transition-transform" />}
+          {darkMode ? (
+            <Sun size={18} className="transition-transform" />
+          ) : (
+            <Moon size={18} className="transition-transform" />
+          )}
         </button>
 
         <button
