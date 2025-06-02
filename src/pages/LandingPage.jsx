@@ -16,7 +16,7 @@ export default function LandingPage() {
           <img
             src="/assets/logo.png"
             alt="LandLink Logo"
-            className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
+            className="h-[150px] md:h-[200px] w-auto max-w-[270px] object-contain"
           />
         </Link>
 
@@ -55,10 +55,10 @@ export default function LandingPage() {
             <strong>LandLink: Connect, Book & Manage Land Services in One Place</strong>
           </h1>
           <p className="text-lg text-gray-700">
-            <b>
+            
               From real estate surveyors to inspection teams, LandLink gives you a powerful dashboard, automated bookings,
               OTP-secure logins, and instant payments — in minutes.
-            </b>
+            
           </p>
           <div className="space-x-4">
             <Link to="/signup">
