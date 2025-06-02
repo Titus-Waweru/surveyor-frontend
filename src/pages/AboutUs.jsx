@@ -87,7 +87,7 @@ export default function AboutUs() {
               {
                 name: "Michael Otieno",
                 title: "Lead Engineer",
-                image: "/assets/michael.jpg",
+                image: "/assets/michael.JPG",
               },
             ].map((member, index) => (
               <div
