@@ -11,8 +11,8 @@ export default function ClientBookings({ user }) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); // 🔍 Search bar state
 
-  // 🔄 Persistent map toggle state using localStorage
   const [showMap, setShowMap] = useState(() => {
     const saved = localStorage.getItem("showMap");
     return saved === "true";
@@ -54,7 +54,7 @@ export default function ClientBookings({ user }) {
       >
         {/* Title */}
         <h1 className="text-3xl font-bold text-yellow-600 text-center font-poppins mb-8">
-          My Bookings
+          <strong>My Bookings</strong>
         </h1>
 
         {/* Bookings Section */}
@@ -85,9 +85,22 @@ export default function ClientBookings({ user }) {
                   {showMap && (
                     <>
                       <h2 className="text-lg font-semibold text-gray-700 mb-2">
-                        Booking Locations
+                        <strong>Booking Locations</strong>
                       </h2>
-                      <SurveyMap bookings={bookingsWithCoordinates} />
+
+                      {/* 🔍 Search bar for map */}
+                      <input
+                        type="text"
+                        placeholder="Search location..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full md:w-1/2 mb-4 px-4 py-2 border rounded focus:outline-none focus:ring focus:border-yellow-400"
+                      />
+
+                      <SurveyMap
+                        bookings={bookingsWithCoordinates}
+                        searchQuery={searchQuery} // 👈 Pass to map component
+                      />
                     </>
                   )}
                 </div>
@@ -106,7 +119,9 @@ export default function ClientBookings({ user }) {
 
         {/* Booking Form */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Create New Booking</h2>
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">
+            <b>Create New Booking</b>
+          </h2>
           <BookingForm userEmail={user.email} onNewBooking={fetchBookings} />
         </section>
       </div>
