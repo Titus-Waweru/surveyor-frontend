@@ -48,6 +48,7 @@ import BookDemo from "./pages/BookDemo";
 import Home from "./pages/Home";
 import ContactUs from "./pages/ContactUs";
 import News from "./pages/News";
+import AboutUs from "./pages/AboutUs"; // ✅ Imported like a pro
 
 function getDefaultDashboard(role) {
   switch (role) {
@@ -221,6 +222,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       <Route path="/home" element={<Home />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/news" element={<News />} />
+      <Route path="/about" element={<AboutUs />} /> {/* ✅ Now Live! */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
