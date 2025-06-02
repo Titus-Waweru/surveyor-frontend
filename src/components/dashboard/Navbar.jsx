@@ -5,7 +5,7 @@ export default function Navbar({ user, onLogout }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-indigo-700 px-8 py-4 flex justify-between items-center shadow-md font-poppins">
+    <header className="bg-[#1e40af] border-b border-yellow-400 px-8 py-4 flex justify-between items-center shadow-md font-poppins">
       <h2 className="text-2xl font-extrabold text-white tracking-wide">
         Dashboard
       </h2>
