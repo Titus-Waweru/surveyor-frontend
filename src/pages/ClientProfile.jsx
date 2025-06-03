@@ -7,7 +7,13 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export default function ClientProfile({ user }) {
   const [profile, setProfile] = useState(null);
-  const [form, setForm] = useState({ name: "", phoneNumber: "" });
+  const [form, setForm] = useState({
+    name: "",
+    phoneNumber: "",
+    address: "",
+    dateOfBirth: "",
+    about: "",
+  });
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,6 +31,9 @@ export default function ClientProfile({ user }) {
       setForm({
         name: res.data.name || "",
         phoneNumber: res.data.phoneNumber || "",
+        address: res.data.address || "",
+        dateOfBirth: res.data.dateOfBirth || "",
+        about: res.data.about || "",
       });
     } catch (err) {
       console.error("❌ Profile fetch error:", err);
@@ -39,6 +48,9 @@ export default function ClientProfile({ user }) {
     formData.append("email", user.email);
     formData.append("name", form.name);
     formData.append("phoneNumber", form.phoneNumber);
+    formData.append("address", form.address);
+    formData.append("dateOfBirth", form.dateOfBirth);
+    formData.append("about", form.about);
     if (image) formData.append("profileImage", image);
 
     setLoading(true);
@@ -66,6 +78,17 @@ export default function ClientProfile({ user }) {
 
         {profile ? (
           <form onSubmit={handleUpdate} className="space-y-6 font-manrope">
+            {/* Email (read-only) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={user.email}
+                readOnly
+                className="w-full border border-gray-300 rounded px-4 py-2 bg-gray-100 cursor-not-allowed"
+              />
+            </div>
+
             {/* Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -85,6 +108,39 @@ export default function ClientProfile({ user }) {
                 value={form.phoneNumber}
                 onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
                 className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              />
+            </div>
+
+            {/* Address Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+              <input
+                type="text"
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              />
+            </div>
+
+            {/* Date of Birth Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+              <input
+                type="date"
+                value={form.dateOfBirth}
+                onChange={(e) => setForm({ ...form, dateOfBirth: e.target.value })}
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              />
+            </div>
+
+            {/* About Me Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">About Me</label>
+              <textarea
+                value={form.about}
+                onChange={(e) => setForm({ ...form, about: e.target.value })}
+                rows={4}
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
               />
             </div>
 
