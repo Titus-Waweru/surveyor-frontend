@@ -61,6 +61,7 @@ export default function Payments({ user }) {
         res = await axios.post(`${API_BASE}/payments/mpesa`, {
           phone,
           amount: numericAmount,
+          email: user.email,
         });
 
         if (res.data?.success) {
@@ -69,7 +70,7 @@ export default function Payments({ user }) {
           setMessage({ type: "error", text: "Failed to initiate M-Pesa payment" });
         }
       } else {
-        res = await axios.post(`${API_BASE}/payment/initiate`, {
+        res = await axios.post(`${API_BASE}/payments/paystack`, {
           email: user.email,
           amount: numericAmount,
         });
@@ -93,10 +94,7 @@ export default function Payments({ user }) {
 
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
-      <div
-        className="w-full max-w-5xl bg-white shadow-xl rounded-3xl p-10 md:p-14"
-        data-aos="fade-up"
-      >
+      <div className="w-full max-w-5xl bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
         <h1 className="text-3xl font-bold text-yellow-600 mb-6 text-center font-poppins">
           Payments
         </h1>
