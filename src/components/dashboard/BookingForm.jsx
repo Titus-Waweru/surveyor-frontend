@@ -127,6 +127,38 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     };
   }, []);
 
+  // ✅ Handle real-time GPS location
+  const handleUseMyLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCoords({ latitude, longitude });
+
+        if (mapInstance.current) {
+          mapInstance.current.setView([latitude, longitude], 15);
+
+          if (markerRef.current) {
+            markerRef.current.setLatLng([latitude, longitude]);
+          } else {
+            markerRef.current = L.marker([latitude, longitude])
+              .addTo(mapInstance.current)
+              .bindPopup("Your Location")
+              .openPopup();
+          }
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        alert("Unable to retrieve your location.");
+      }
+    );
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mt-8">
       <h2 className="text-xl font-semibold mb-4 font-poppins text-yellow-600">
@@ -187,13 +219,20 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             style={{ height: "256px", width: "100%" }}
           ></div>
           <p className="text-sm text-gray-600 mt-1">
-            Click on the map or use the search to select your property's location.
+            <strong>Click on the map or use the search to select your property's location.</strong>
           </p>
           {coords.latitude && (
             <p className="text-green-600 text-sm mt-1">
-              Selected Coordinates: {coords.latitude.toFixed(5)}, {coords.longitude.toFixed(5)}
+              <b>Selected Coordinates</b>: {coords.latitude.toFixed(5)}, {coords.longitude.toFixed(5)}
             </p>
           )}
+          <button
+            type="button"
+            onClick={handleUseMyLocation}
+            className="mt-2 text-sm text-blue-600 underline hover:text-blue-800"
+          >
+            📍 Use My Current Location
+          </button>
         </div>
 
         <button
