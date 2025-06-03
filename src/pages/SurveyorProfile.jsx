@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import API from "../utils/axios"; // ✅ Use configured axios instance
 
-export default function SurveyorProfile({ user }) {
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+export default function ClientProfile({ user }) {
   const [profile, setProfile] = useState(null);
   const [form, setForm] = useState({ name: "", phoneNumber: "" });
   const [image, setImage] = useState(null);
@@ -16,7 +18,7 @@ export default function SurveyorProfile({ user }) {
 
   const fetchProfile = async () => {
     try {
-      const res = await API.get("/profile", {
+      const res = await axios.get(`${API_BASE_URL}/profile`, {
         params: { email: user.email },
       });
       setProfile(res.data);
@@ -25,28 +27,28 @@ export default function SurveyorProfile({ user }) {
         phoneNumber: res.data.phoneNumber || "",
       });
     } catch (err) {
-      console.error("❌ Error loading profile:", err);
-      alert("Failed to load profile.");
+      console.error("❌ Profile fetch error:", err);
+      alert("Failed to load profile. Please try again.");
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
 
-    const payload = new FormData();
-    payload.append("email", user.email);
-    payload.append("name", form.name);
-    payload.append("phoneNumber", form.phoneNumber);
-    if (image) payload.append("profileImage", image);
+    const formData = new FormData();
+    formData.append("email", user.email);
+    formData.append("name", form.name);
+    formData.append("phoneNumber", form.phoneNumber);
+    if (image) formData.append("profileImage", image);
 
     setLoading(true);
     try {
-      const res = await API.put("/profile", payload);
-      alert("✅ Profile updated.");
+      const res = await axios.put(`${API_BASE_URL}/profile`, formData);
+      alert("✅ Profile updated successfully.");
       setProfile(res.data.user);
     } catch (err) {
-      console.error("❌ Error updating:", err);
-      alert("Update failed.");
+      console.error("❌ Update error:", err);
+      alert("Failed to update profile. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -55,84 +57,78 @@ export default function SurveyorProfile({ user }) {
   return (
     <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4">
       <div
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-8 md:p-12"
+        className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-10 md:p-14"
         data-aos="fade-up"
       >
-        <h1 className="text-2xl md:text-3xl font-bold text-yellow-600 mb-8 text-center font-poppins">
-          Surveyor Profile
+        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins">
+          My Profile
         </h1>
 
         {profile ? (
-          <form onSubmit={handleSubmit} className="space-y-6 font-manrope">
-            {/* Email Display */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <div className="px-4 py-2 bg-gray-100 rounded-md border text-sm text-gray-800">
-                {profile.email}
-              </div>
-            </div>
-
-            {/* ISK Number Display */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">ISK Number</label>
-              <div className="px-4 py-2 bg-gray-100 rounded-md border text-sm text-gray-800">
-                {profile.iskNumber || "Not provided"}
-              </div>
-            </div>
-
+          <form onSubmit={handleUpdate} className="space-y-6 font-manrope">
             {/* Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>
 
-            {/* Phone Number Field */}
+            {/* Phone Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
               <input
                 type="text"
                 value={form.phoneNumber}
                 onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>
 
-            {/* Profile Image Upload */}
+            {/* Profile Image Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
               {profile.profileImageUrl && (
-                <div className="mb-3">
-                  <img
-                    src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${profile.profileImageUrl}`}
-                    alt="Profile"
-                    className="rounded-full border shadow w-16 h-16 object-cover"
-                  />
-                </div>
+                <img
+                  src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
+                  alt="Profile"
+                  className="rounded-full border shadow-sm mb-3"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "cover",
+                  }}
+                />
               )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImage(e.target.files[0])}
-                className="block w-full text-sm text-gray-500 
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-md file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-yellow-100 file:text-yellow-700 hover:file:bg-yellow-200"
-              />
+
+              {/* Custom Upload Button */}
+              <div className="relative inline-block">
+                <label
+                  htmlFor="profile-upload"
+                  className="cursor-pointer inline-block bg-yellow-100 text-yellow-700 hover:bg-yellow-200 font-semibold py-2 px-4 rounded-md text-sm"
+                >
+                  {image ? "Change Photo" : "Upload Photo"}
+                </label>
+                <input
+                  id="profile-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                  className="hidden"
+                />
+              </div>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 rounded-md shadow disabled:opacity-60 transition"
+              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded shadow disabled:opacity-60 transition duration-200"
             >
-              {loading ? "Saving..." : "Save Changes"}
+              {loading ? "Updating..." : "Update Profile"}
             </button>
           </form>
         ) : (

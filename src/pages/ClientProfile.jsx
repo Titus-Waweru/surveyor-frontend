@@ -55,122 +55,85 @@ export default function ClientProfile({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] py-10 px-4 flex flex-col items-center">
-      <div className="w-full max-w-4xl space-y-10">
-        {/* Welcome / Hero Section */}
-        <div className="text-center" data-aos="fade-down">
-          <h1 className="text-3xl md:text-4xl font-bold text-yellow-600 font-poppins">
-            Welcome back{profile?.name ? `, ${profile.name}` : ""}!
-          </h1>
-          <p className="text-gray-600 mt-2 font-manrope text-base md:text-lg">
-            We're glad to have you with us. Manage your profile and stay connected with LandLink.
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4">
+      <div
+        className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-10 md:p-14"
+        data-aos="fade-up"
+      >
+        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins">
+          My Profile
+        </h1>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6" data-aos="fade-up">
-          <div className="bg-white rounded-2xl p-5 shadow text-center">
-            <h2 className="text-yellow-500 font-bold text-lg">Profile Completion</h2>
-            <p className="text-3xl font-bold text-gray-700 mt-2">
-              {profile ? (profile.profileImageUrl ? "100%" : "80%") : "--"}
-            </p>
-          </div>
-          <div className="bg-white rounded-2xl p-5 shadow text-center">
-            <h2 className="text-yellow-500 font-bold text-lg">Bookings Made</h2>
-            <p className="text-3xl font-bold text-gray-700 mt-2">
-              {/* Add real data from backend later */}
-              5
-            </p>
-          </div>
-          <div className="bg-white rounded-2xl p-5 shadow text-center">
-            <h2 className="text-yellow-500 font-bold text-lg">Member Since</h2>
-            <p className="text-3xl font-bold text-gray-700 mt-2">
-              {/* You can format using moment.js or manually later */}
-              {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : "--"}
-            </p>
-          </div>
-        </div>
+        {profile ? (
+          <form onSubmit={handleUpdate} className="space-y-6 font-manrope">
+            {/* Name Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              />
+            </div>
 
-        {/* Profile Form Section */}
-        <div
-          className="bg-white rounded-3xl shadow-xl p-8 md:p-12"
-          data-aos="fade-up"
-        >
-          <h2 className="text-2xl font-semibold text-yellow-600 mb-6 font-poppins text-center">
-            Edit Profile
-          </h2>
+            {/* Phone Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <input
+                type="text"
+                value={form.phoneNumber}
+                onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              />
+            </div>
 
-          {profile ? (
-            <form onSubmit={handleUpdate} className="space-y-6 font-manrope">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            {/* Profile Image Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+              {profile.profileImageUrl && (
+                <img
+                  src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
+                  alt="Profile"
+                  className="rounded-full border shadow-sm mb-3"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "cover",
+                  }}
                 />
-              </div>
+              )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              {/* Custom Upload Button */}
+              <div className="relative inline-block">
+                <label
+                  htmlFor="profile-upload"
+                  className="cursor-pointer inline-block bg-yellow-100 text-yellow-700 hover:bg-yellow-200 font-semibold py-2 px-4 rounded-md text-sm"
+                >
+                  {image ? "Change Photo" : "Upload Photo"}
+                </label>
                 <input
-                  type="text"
-                  value={form.phoneNumber}
-                  onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
-                {profile.profileImageUrl && (
-                  <img
-                    src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
-                    alt="Profile"
-                    className="rounded-full border shadow-sm mb-3"
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      objectFit: "cover",
-                    }}
-                  />
-                )}
-                <input
+                  id="profile-upload"
                   type="file"
                   accept="image/*"
                   onChange={(e) => setImage(e.target.files[0])}
-                  className="block w-full text-sm text-gray-500 
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-yellow-100 file:text-yellow-700 hover:file:bg-yellow-200"
+                  className="hidden"
                 />
               </div>
+            </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded shadow disabled:opacity-60 transition duration-200"
-              >
-                {loading ? "Updating..." : "Update Profile"}
-              </button>
-            </form>
-          ) : (
-            <p className="text-center text-gray-600">Loading profile...</p>
-          )}
-        </div>
-
-        {/* About Section */}
-        <div
-          className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-xl shadow-md"
-          data-aos="fade-up"
-        >
-          <h3 className="font-bold text-yellow-700 text-lg mb-2">Did You Know?</h3>
-          <p className="text-gray-700 font-manrope">
-            LandLink connects you with certified land surveyors in your region, streamlines booking, and helps you track your land’s progress from anywhere. You're part of a modern revolution in land ownership.
-          </p>
-        </div>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded shadow disabled:opacity-60 transition duration-200"
+            >
+              {loading ? "Updating..." : "Update Profile"}
+            </button>
+          </form>
+        ) : (
+          <p className="text-center text-gray-600">Loading profile...</p>
+        )}
       </div>
     </div>
   );
