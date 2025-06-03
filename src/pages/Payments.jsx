@@ -164,6 +164,29 @@ export default function Payments({ user }) {
             </div>
           )}
 
+          {/* === INSTRUCTIONS SECTION === */}
+          {paymentMethod === "paystack" && (
+            <div className="bg-yellow-50 border border-yellow-300 p-4 rounded text-sm text-yellow-700 font-manrope">
+              <p className="mb-1 font-semibold">Instructions:</p>
+              <ul className="list-disc list-inside">
+                <li>You will be redirected to Paystack.</li>
+                <li>Follow the prompts to complete payment securely.</li>
+                <li>Ensure your email is correct for verification.</li>
+              </ul>
+            </div>
+          )}
+
+          {paymentMethod === "mpesa" && (
+            <div className="bg-yellow-50 border border-yellow-300 p-4 rounded text-sm text-yellow-700 font-manrope">
+              <p className="mb-1 font-semibold">Instructions:</p>
+              <ul className="list-disc list-inside">
+                <li>Ensure your phone number starts with 2547 and is M-Pesa registered.</li>
+                <li>You will receive a STK Push on your phone to authorize the payment.</li>
+                <li>Enter your M-Pesa PIN when prompted on your device.</li>
+              </ul>
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={loading}
