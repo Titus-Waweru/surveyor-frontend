@@ -5,7 +5,6 @@ import "aos/dist/aos.css";
 import BookingMap from "../components/dashboard/BookingMap";
 
 const API = import.meta.env.VITE_API_URL;
-const BASE = API.replace("/api", "");
 
 export default function AdminOverview() {
   const [pendingSurveyors, setPendingSurveyors] = useState([]);
@@ -108,7 +107,7 @@ export default function AdminOverview() {
                           <td className="px-4 py-3">{s.iskNumber}</td>
                           <td className="px-4 py-3">
                             <a
-                              href={`${BASE}${s.idCardUrl}`}
+                              href={s.idCardUrl}
                               target="_blank"
                               rel="noreferrer"
                               className="text-indigo-600 underline"
@@ -118,7 +117,7 @@ export default function AdminOverview() {
                           </td>
                           <td className="px-4 py-3">
                             <a
-                              href={`${BASE}${s.certUrl}`}
+                              href={s.certUrl}
                               target="_blank"
                               rel="noreferrer"
                               className="text-indigo-600 underline"
@@ -192,7 +191,10 @@ export default function AdminOverview() {
                                 className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                                 value={b.assignedSurveyorId || ""}
                                 onChange={(e) =>
-                                  handleAssignment(b.id, parseInt(e.target.value))
+                                  handleAssignment(
+                                    b.id,
+                                    parseInt(e.target.value)
+                                  )
                                 }
                               >
                                 <option value="">-- Select --</option>
