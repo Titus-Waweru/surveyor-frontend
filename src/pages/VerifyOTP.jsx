@@ -9,23 +9,31 @@ export default function VerifyOTP() {
   const [success, setSuccess] = useState("");
   const [resending, setResending] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(180);
-  const navigate = useNavigate();
+  const timerRef = useRef(null);
   const inputRefs = useRef([]);
+  const navigate = useNavigate();
 
   const email = localStorage.getItem("pendingEmail");
   const baseURL = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    if (!email) navigate("/signup");
-
-    const timer = setInterval(() => {
+  // Start countdown timer
+  const startCountdown = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
       setSecondsLeft((prev) => {
-        if (prev === 1) clearInterval(timer);
+        if (prev <= 1) {
+          clearInterval(timerRef.current);
+          return 0;
+        }
         return prev - 1;
       });
     }, 1000);
+  };
 
-    return () => clearInterval(timer);
+  useEffect(() => {
+    if (!email) navigate("/signup");
+    startCountdown();
+    return () => clearInterval(timerRef.current);
   }, []);
 
   const handleChange = (index, value) => {
@@ -73,6 +81,7 @@ export default function VerifyOTP() {
       await axios.post(`${baseURL}/auth/resend-otp`, { email });
       setOtpDigits(["", "", "", "", "", ""]);
       setSecondsLeft(180);
+      startCountdown(); // Restart countdown after resend
     } catch (err) {
       setError("Failed to resend OTP.");
     }
@@ -95,7 +104,7 @@ export default function VerifyOTP() {
         </p>
 
         <form onSubmit={handleVerify}>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-5">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-5 max-w-xs mx-auto">
             {otpDigits.map((digit, i) => (
               <input
                 key={i}
@@ -105,8 +114,8 @@ export default function VerifyOTP() {
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 type="text"
                 maxLength="1"
-                className="w-10 h-12 text-xl text-center border border-gray-300 rounded-xl focus:outline-yellow-500 sm:w-12 sm:h-14 sm:text-2xl"
                 inputMode="numeric"
+                className="w-10 h-10 text-lg text-center border border-gray-300 rounded-xl focus:outline-yellow-500 sm:w-11 sm:h-11 sm:text-xl md:w-12 md:h-12 md:text-2xl transition-all"
               />
             ))}
           </div>
