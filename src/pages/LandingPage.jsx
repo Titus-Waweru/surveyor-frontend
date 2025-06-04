@@ -55,10 +55,8 @@ export default function LandingPage() {
             <strong>LandLink: Connect, Book & Manage Land Services in One Place</strong>
           </h1>
           <p className="text-lg text-gray-700">
-            
-              From real estate surveyors to inspection teams, LandLink gives you a powerful dashboard, automated bookings,
-              OTP-secure logins, and instant payments — in minutes.
-            
+            From real estate surveyors to inspection teams, LandLink gives you a powerful dashboard, automated bookings,
+            OTP-secure logins, and instant payments — in minutes.
           </p>
           <div className="space-x-4">
             <Link to="/signup">
@@ -112,10 +110,47 @@ export default function LandingPage() {
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-[#fff6e5]" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What We Offer</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {["Land Surveying", "Site Inspection Scheduling", "Title Deed Verification", "Agent Tracking & Reporting", "Real-Time Job Monitoring", "Mobile OTP-Verified Access"].map((service, index) => (
+          {[
+            {
+              name: "Land Surveying",
+              desc: "Professional surveys for boundary marking, subdivision, and land development with precision and compliance."
+            },
+            {
+              name: "Site Inspection Scheduling",
+              desc: "Easily book, manage, and track on-site inspections — all from your dashboard in real time."
+            },
+            {
+              name: "Title Deed Verification",
+              desc: "Instantly verify title deeds through integrated systems — avoid fraud, ensure peace of mind."
+            },
+            {
+              name: "Agent Tracking & Reporting",
+              desc: "Monitor agent movements, performance, and field activity — complete with smart reporting tools."
+            },
+            {
+              name: "Real-Time Job Monitoring",
+              desc: "Track every job’s progress, location, and status in real time — no more guesswork or delays."
+            },
+            {
+              name: "Mobile OTP-Verified Access",
+              desc: "Secure logins with email & SMS OTP — keeping your team and data safe at every step."
+            },
+            {
+              name: "GIS Expert Services",
+              desc: "Tap into advanced GIS mapping & spatial analysis for land use planning, zoning, and terrain modeling."
+            },
+            {
+              name: "Real Estate Services",
+              desc: "From listings to lead management, connect with verified agents & streamline your land sales process."
+            },
+            {
+              name: "Land Evaluation Services",
+              desc: "Get expert valuation reports to determine fair land pricing — ideal for investment, sales, or taxation."
+            }
+          ].map((service, index) => (
             <div key={index} className="bg-white p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={index * 100}>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">{service}</h3>
-              <p className="text-gray-600">We offer {service.toLowerCase()} solutions powered by automation, accuracy, and simplicity.</p>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">{service.name}</h3>
+              <p className="text-gray-600">{service.desc}</p>
             </div>
           ))}
         </div>

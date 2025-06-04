@@ -135,7 +135,7 @@ export default function AdminSignup() {
         </p>
 
         <p className="mt-6 text-center text-sm text-gray-500 font-manrope">
-          © 2025 Surveyor-on-Demand Ltd. All rights reserved.
+          © 2025 Landlink Ltd. All rights reserved.
         </p>
       </div>
     </div>
