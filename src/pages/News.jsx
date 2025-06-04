@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { FaBullhorn, FaMobileAlt, FaGavel, FaTools } from "react-icons/fa";
 
 function InfoAlert() {
   const [visible, setVisible] = useState(true);
@@ -15,8 +16,8 @@ function InfoAlert() {
       onClick={() => setVisible(false)}
       title="Click to dismiss"
     >
-      <strong className="text-yellow-800 font-bold block mb-1 text-lg">
-        Important Notice!
+      <strong className="text-yellow-800 font-bold block mb-1 text-lg flex items-center gap-2">
+        <FaBullhorn className="text-yellow-600" /> Important Notice!
       </strong>
       <p className="text-yellow-900 leading-relaxed">
         To book a service on LandLink, customers are required to pay a small booking fee upfront to secure their appointment.
@@ -36,45 +37,65 @@ export default function News() {
     AOS.init({ duration: 800, once: true });
   }, []);
 
+  const newsData = [
+    {
+      icon: <FaMobileAlt className="text-yellow-500 text-3xl" />,
+      title: "LandLink Now Integrates M-Pesa",
+      date: "May 20, 2025",
+      summary:
+        "We’re excited to announce full M-Pesa integration, making it easier for clients to make secure payments instantly.",
+      link: "#",
+    },
+    {
+      icon: <FaGavel className="text-yellow-500 text-3xl" />,
+      title: "Government Issues New Land Survey Regulations",
+      date: "May 5, 2025",
+      summary:
+        "The Ministry of Lands has updated policies affecting how land boundaries are surveyed and documented.",
+      link: "#",
+    },
+    {
+      icon: <FaTools className="text-yellow-500 text-3xl" />,
+      title: "New Surveyor Tools Added",
+      date: "April 25, 2025",
+      summary:
+        "Surveyors can now upload geotagged reports directly via their dashboards, improving efficiency and accuracy.",
+      link: "#",
+    },
+  ];
+
   return (
     <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
-      {/* Info Alert */}
       <InfoAlert />
 
-      {/* Page Header */}
       <div className="text-center mb-12" data-aos="fade-up">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Latest News & Updates</h1>
+        <h1 className="text-4xl font-extrabold text-gray-800 mb-4 flex items-center justify-center gap-2">
+          <FaBullhorn className="text-yellow-500" />
+          Latest News & Updates
+        </h1>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          Stay informed about land regulations, industry trends, and what’s new at LandLink.
+          Stay informed about land regulations, industry trends, and what’s new at <span className="text-yellow-600 font-semibold">LandLink</span>.
         </p>
       </div>
 
-      {/* News Cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="100">
-        {[
-          {
-            title: "LandLink Now Integrates M-Pesa",
-            date: "May 20, 2025",
-            summary:
-              "We’re excited to announce full M-Pesa integration, making it easier for clients to make secure payments instantly.",
-          },
-          {
-            title: "Government Issues New Land Survey Regulations",
-            date: "May 5, 2025",
-            summary:
-              "The Ministry of Lands has updated policies affecting how land boundaries are surveyed and documented.",
-          },
-          {
-            title: "New Surveyor Tools Added",
-            date: "April 25, 2025",
-            summary:
-              "Surveyors can now upload geotagged reports directly via their dashboards, improving efficiency and accuracy.",
-          },
-        ].map((item, index) => (
-          <div key={index} className="bg-white p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={index * 100}>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">{item.title}</h2>
-            <p className="text-sm text-gray-500 mb-2">{item.date}</p>
-            <p className="text-gray-600">{item.summary}</p>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {newsData.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition-shadow duration-300"
+            data-aos="fade-up"
+            data-aos-delay={index * 150}
+          >
+            <div className="mb-3">{item.icon}</div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-1">{item.title}</h2>
+            <p className="text-sm text-gray-500 mb-3">{item.date}</p>
+            <p className="text-gray-600 mb-4">{item.summary}</p>
+            <a
+              href={item.link}
+              className="text-sm text-yellow-600 hover:underline font-medium"
+            >
+              Read more →
+            </a>
           </div>
         ))}
       </div>
