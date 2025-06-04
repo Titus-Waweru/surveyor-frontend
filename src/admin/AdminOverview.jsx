@@ -15,6 +15,9 @@ export default function AdminOverview() {
     localStorage.getItem("adminShowMaps") === "false" ? false : true
   );
 
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewType, setPreviewType] = useState(null);
+
   useEffect(() => {
     AOS.init({ duration: 1000 });
     fetchData();
@@ -106,24 +109,34 @@ export default function AdminOverview() {
                           <td className="px-4 py-3">{s.email}</td>
                           <td className="px-4 py-3">{s.iskNumber}</td>
                           <td className="px-4 py-3">
-                            <a
-                              href={s.idCardUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-indigo-600 underline"
+                            <button
+                              onClick={() => {
+                                setPreviewUrl(s.idCardUrl);
+                                setPreviewType(
+                                  s.idCardUrl.endsWith(".pdf")
+                                    ? "pdf"
+                                    : "image"
+                                );
+                              }}
+                              className="text-indigo-600 underline hover:text-indigo-800"
                             >
                               View
-                            </a>
+                            </button>
                           </td>
                           <td className="px-4 py-3">
-                            <a
-                              href={s.certUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-indigo-600 underline"
+                            <button
+                              onClick={() => {
+                                setPreviewUrl(s.certUrl);
+                                setPreviewType(
+                                  s.certUrl.endsWith(".pdf")
+                                    ? "pdf"
+                                    : "image"
+                                );
+                              }}
+                              className="text-indigo-600 underline hover:text-indigo-800"
                             >
                               View
-                            </a>
+                            </button>
                           </td>
                           <td className="px-4 py-3 space-x-2">
                             <button
@@ -227,6 +240,38 @@ export default function AdminOverview() {
           </>
         )}
       </div>
+
+      {/* Document Preview Modal */}
+      {previewUrl && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-white p-6 rounded-xl shadow-lg max-w-3xl w-full relative">
+            <button
+              onClick={() => setPreviewUrl(null)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl font-bold"
+            >
+              ×
+            </button>
+            <h3 className="text-lg font-semibold mb-4">Document Preview</h3>
+            {previewType === "pdf" ? (
+              <iframe
+                src={previewUrl}
+                title="Document Preview"
+                className="w-full h-[500px] rounded-md"
+              ></iframe>
+            ) : (
+              <img
+                src={previewUrl}
+                alt="Document Preview"
+                className="max-w-full max-h-[500px] mx-auto rounded-md"
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
