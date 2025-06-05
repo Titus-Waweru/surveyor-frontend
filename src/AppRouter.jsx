@@ -64,8 +64,8 @@ function getDefaultDashboard(role) {
       return "/surveyor/overview";
     case "admin":
       return "/admin/overview";
-    case "gis-expert":
-      return "/gis-expert/overview";
+    case "gis":             // changed from "gis-expert"
+      return "/gis/overview";
     default:
       return "/login";
   }
@@ -215,11 +215,11 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
         <Route path="settings" element={<AdminSettings />} />
       </Route>
 
-      {/* GIS EXPERT DASHBOARD */}
+      {/* GIS DASHBOARD */}
       <Route
-        path="/gis-expert"
+        path="/gis"
         element={
-          <PrivateRoute user={user} role="gis-expert">
+          <PrivateRoute user={user} role="gis">
             <GISLayout user={user} onLogout={handleLogout} />
           </PrivateRoute>
         }
