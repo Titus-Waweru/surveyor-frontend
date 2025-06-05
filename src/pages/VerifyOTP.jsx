@@ -41,9 +41,7 @@ export default function VerifyOTP() {
     const newDigits = [...otpDigits];
     newDigits[index] = value;
     setOtpDigits(newDigits);
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    if (value && index < 5) inputRefs.current[index + 1]?.focus();
   };
 
   const handleKeyDown = (index, e) => {
@@ -81,7 +79,7 @@ export default function VerifyOTP() {
       await axios.post(`${baseURL}/auth/resend-otp`, { email });
       setOtpDigits(["", "", "", "", "", ""]);
       setSecondsLeft(180);
-      startCountdown(); // Restart countdown after resend
+      startCountdown();
     } catch (err) {
       setError("Failed to resend OTP.");
     }
@@ -103,8 +101,8 @@ export default function VerifyOTP() {
           Code expires in <b>{formatTime(secondsLeft)}</b>
         </p>
 
-        <form onSubmit={handleVerify}>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-5 max-w-xs mx-auto">
+        <form onSubmit={handleVerify} className="space-y-4">
+          <div className="flex justify-center gap-2 sm:gap-3 md:gap-4 mb-1 max-w-xs mx-auto">
             {otpDigits.map((digit, i) => (
               <input
                 key={i}
@@ -113,8 +111,9 @@ export default function VerifyOTP() {
                 onChange={(e) => handleChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 type="text"
-                maxLength="1"
                 inputMode="numeric"
+                maxLength="1"
+                aria-label={`OTP digit ${i + 1}`}
                 className="w-10 h-10 text-lg text-center border border-gray-300 rounded-xl focus:outline-yellow-500 sm:w-11 sm:h-11 sm:text-xl md:w-12 md:h-12 md:text-2xl transition-all"
               />
             ))}
@@ -123,7 +122,7 @@ export default function VerifyOTP() {
           <AnimatePresence>
             {error && (
               <motion.p
-                className="text-red-600 text-sm mb-3"
+                className="text-red-600 text-sm"
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
@@ -133,7 +132,7 @@ export default function VerifyOTP() {
             )}
             {success && (
               <motion.p
-                className="text-green-600 text-sm mb-3"
+                className="text-green-600 text-sm"
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
