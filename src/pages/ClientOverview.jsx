@@ -97,9 +97,21 @@ export default function ClientOverview({ user }) {
         </h1>
 
         {total === 0 ? (
-          <p className="text-center text-gray-600 font-manrope">
-            No bookings found.
-          </p>
+          <div className="text-center text-gray-600 font-manrope space-y-4">
+            <p className="text-lg">You haven’t made any bookings yet.</p>
+            <p className="text-sm">
+              To get started, head over to the{" "}
+              <span className="text-yellow-600 font-medium">Bookings</span>{" "}
+              section in the sidebar and fill in your  details. Our team will take it from
+              there!
+            </p>
+            <a
+              href="/book"
+              className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300"
+            >
+              Book a Survey
+            </a>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-manrope">
             <StatCard label="Total Bookings" value={total} color="blue" />
