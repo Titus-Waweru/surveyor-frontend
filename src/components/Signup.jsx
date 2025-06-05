@@ -1,16 +1,16 @@
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
 import axios from "axios";
 import { motion } from "framer-motion";
 
-// Validation schema using Zod
 const signupSchema = z.object({
   name: z.string().min(4, "Name must be at least 4 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["client", "surveyor"]),
+  role: z.enum(["client", "surveyor", "gis"]),
   iskNumber: z.string().optional(),
   idCard: z.any().optional(),
   certificate: z.any().optional(),
@@ -39,9 +39,9 @@ export default function Signup() {
     try {
       const apiUrl = `${import.meta.env.VITE_API_URL}/auth/signup`;
 
-      if (data.role === "surveyor") {
+      if (["surveyor", "gis"].includes(data.role)) {
         if (!iskNumber?.trim()) {
-          setError("iskNumber", { message: "ISK number is required for surveyors" });
+          setError("iskNumber", { message: "ISK number is required" });
           return;
         }
         if (!idCard?.[0]) {
@@ -95,10 +95,18 @@ export default function Signup() {
           Create Account With Us
         </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" noValidate className="space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          encType="multipart/form-data"
+          noValidate
+          className="space-y-6"
+        >
           {/* Name */}
           <div>
-            <label htmlFor="name" className="block mb-2 font-medium text-gray-700">
+            <label
+              htmlFor="name"
+              className="block mb-2 font-medium text-gray-700"
+            >
               Full Name
             </label>
             <input
@@ -109,12 +117,17 @@ export default function Signup() {
               placeholder="Your full name"
               autoComplete="name"
             />
-            {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block mb-2 font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block mb-2 font-medium text-gray-700"
+            >
               Email Address
             </label>
             <input
@@ -125,12 +138,17 @@ export default function Signup() {
               placeholder="you@example.com"
               autoComplete="email"
             />
-            {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
+            )}
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block mb-2 font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block mb-2 font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -141,15 +159,21 @@ export default function Signup() {
               placeholder="Create a strong password"
               autoComplete="new-password"
             />
-            {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
+            )}
             <p className="text-sm text-gray-500 mt-1">
-              Use at least 6 characters with a mix of letters, numbers, and symbols.
+              Use at least 6 characters with a mix of letters, numbers, and
+              symbols.
             </p>
           </div>
 
           {/* Role Selection */}
           <div>
-            <label htmlFor="role" className="block mb-2 font-medium text-gray-700">
+            <label
+              htmlFor="role"
+              className="block mb-2 font-medium text-gray-700"
+            >
               Select Role
             </label>
             <select
@@ -158,21 +182,33 @@ export default function Signup() {
               className="input cursor-pointer"
               defaultValue=""
             >
-              <option value="" disabled>-- Choose a role --</option>
+              <option value="" disabled>
+                -- Choose a role --
+              </option>
               <option value="client">Client</option>
               <option value="surveyor">Surveyor</option>
+              <option value="gis">GIS Expert</option>
             </select>
-            {errors.role && <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>}
+            {errors.role && (
+              <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>
+            )}
           </div>
 
-          {/* Surveyor-specific Fields */}
-          {role === "surveyor" && (
+          {/* Surveyor or GIS Expert Fields */}
+          {(role === "surveyor" || role === "gis") && (
             <fieldset className="border border-yellow-300 rounded-lg p-5 mt-2 space-y-5">
-              <legend className="font-semibold text-yellow-600">Surveyor Details</legend>
+              <legend className="font-semibold text-yellow-600">
+                {role === "gis"
+                  ? "GIS Expert Details"
+                  : "Surveyor Details"}
+              </legend>
 
               {/* ISK Number */}
               <div>
-                <label htmlFor="iskNumber" className="block mb-2 font-medium text-gray-700">
+                <label
+                  htmlFor="iskNumber"
+                  className="block mb-2 font-medium text-gray-700"
+                >
                   ISK Number
                 </label>
                 <input
@@ -182,13 +218,21 @@ export default function Signup() {
                   className="input"
                   placeholder="Enter your ISK number"
                 />
-                {errors.iskNumber && <p className="text-red-600 text-sm mt-1">{errors.iskNumber.message}</p>}
+                {errors.iskNumber && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.iskNumber.message}
+                  </p>
+                )}
               </div>
 
               {/* ID Card */}
               <div>
-                <label htmlFor="idCard" className="block mb-2 font-medium text-gray-700">
-                  Upload ID Card <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
+                <label
+                  htmlFor="idCard"
+                  className="block mb-2 font-medium text-gray-700"
+                >
+                  Upload ID Card{" "}
+                  <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
                 </label>
                 <input
                   id="idCard"
@@ -197,13 +241,21 @@ export default function Signup() {
                   accept=".jpg,.jpeg,.png,.pdf"
                   className="input file:cursor-pointer"
                 />
-                {errors.idCard && <p className="text-red-600 text-sm mt-1">{errors.idCard.message}</p>}
+                {errors.idCard && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.idCard.message}
+                  </p>
+                )}
               </div>
 
               {/* Certificate */}
               <div>
-                <label htmlFor="certificate" className="block mb-2 font-medium text-gray-700">
-                  Upload Certificate <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
+                <label
+                  htmlFor="certificate"
+                  className="block mb-2 font-medium text-gray-700"
+                >
+                  Upload Certificate{" "}
+                  <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
                 </label>
                 <input
                   id="certificate"
@@ -212,7 +264,11 @@ export default function Signup() {
                   accept=".jpg,.jpeg,.png,.pdf"
                   className="input file:cursor-pointer"
                 />
-                {errors.certificate && <p className="text-red-600 text-sm mt-1">{errors.certificate.message}</p>}
+                {errors.certificate && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.certificate.message}
+                  </p>
+                )}
               </div>
             </fieldset>
           )}
@@ -227,10 +283,12 @@ export default function Signup() {
           </button>
         </form>
 
-        {/* Already have an account */}
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-yellow-600 hover:underline font-semibold">
+          <Link
+            to="/login"
+            className="text-yellow-600 hover:underline font-semibold"
+          >
             Log in here
           </Link>
         </p>

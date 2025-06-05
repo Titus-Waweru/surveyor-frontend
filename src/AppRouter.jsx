@@ -40,6 +40,12 @@ import AdminLogin from "./admin/AdminLogin";
 import AdminSignup from "./admin/AdminSignup";
 import AdminAuth from "./pages/AdminAuth";
 
+// GIS EXPERT PAGES
+import GISLayout from "./components/dashboard/GISLayout";
+import GISDashboard from "./pages/GISDashboard";
+import GISProfile from "./pages/GISProfile";
+import GISSettings from "./pages/GISSettings";
+
 // LANDING PAGE & BOOK DEMO
 import LandingPage from "./pages/LandingPage";
 import BookDemo from "./pages/BookDemo";
@@ -48,7 +54,7 @@ import BookDemo from "./pages/BookDemo";
 import Home from "./pages/Home";
 import ContactUs from "./pages/ContactUs";
 import News from "./pages/News";
-import AboutUs from "./pages/AboutUs"; // ✅ Imported like a pro
+import AboutUs from "./pages/AboutUs";
 
 function getDefaultDashboard(role) {
   switch (role) {
@@ -58,6 +64,8 @@ function getDefaultDashboard(role) {
       return "/surveyor/overview";
     case "admin":
       return "/admin/overview";
+    case "gis-expert":
+      return "/gis-expert/overview";
     default:
       return "/login";
   }
@@ -207,6 +215,21 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
         <Route path="settings" element={<AdminSettings />} />
       </Route>
 
+      {/* GIS EXPERT DASHBOARD */}
+      <Route
+        path="/gis-expert"
+        element={
+          <PrivateRoute user={user} role="gis-expert">
+            <GISLayout user={user} onLogout={handleLogout} />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<Navigate to="overview" />} />
+        <Route path="overview" element={<GISDashboard user={user} />} />
+        <Route path="profile" element={<GISProfile user={user} />} />
+        <Route path="settings" element={<GISSettings user={user} />} />
+      </Route>
+
       {/* PUBLIC ROUTES */}
       <Route
         path="/"
@@ -222,7 +245,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       <Route path="/home" element={<Home />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/news" element={<News />} />
-      <Route path="/about" element={<AboutUs />} /> {/* ✅ Now Live! */}
+      <Route path="/about" element={<AboutUs />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

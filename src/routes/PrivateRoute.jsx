@@ -9,6 +9,8 @@ const getDefaultDashboard = (role) => {
       return "/surveyor/overview";
     case "admin":
       return "/admin/overview";
+    case "gis-expert":
+      return "/gis/overview"  
     default:
       return "/login";
   }
