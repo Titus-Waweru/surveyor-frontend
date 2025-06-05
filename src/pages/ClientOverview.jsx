@@ -106,7 +106,7 @@ export default function ClientOverview({ user }) {
               there!
             </p>
             <a
-              href="/bookings"
+              href="/client/bookings"
               className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300"
             >
               Book a Survey
