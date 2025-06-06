@@ -5,6 +5,7 @@ const Sidebar = () => {
   const isAdmin = location.pathname.startsWith("/admin");
   const isClient = location.pathname.startsWith("/client");
   const isSurveyor = location.pathname.startsWith("/surveyor");
+  const isGIS = location.pathname.startsWith("/gis"); // ✅ Add this
 
   const links = isAdmin
     ? [
@@ -27,6 +28,13 @@ const Sidebar = () => {
         { name: "Payments", href: "/surveyor/payments" },
         { name: "Profile", href: "/surveyor/profile" },
         { name: "Settings", href: "/surveyor/settings" },
+      ]
+    : isGIS
+    ? [
+        { name: "Overview", href: "/gis/overview" },
+        { name: "Profile", href: "/gis/profile" },
+        { name: "Settings", href: "/gis/settings" },
+        // add more GIS-specific pages here if needed
       ]
     : [];
 
