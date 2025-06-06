@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Menu } from "lucide-react";
 import GISNavbar from "./GISNavbar";
-import Sidebar from "../shared/Sidebar"; // ✅ Import the reusable Sidebar
+import Sidebar from "./Sidebar"; // ✅ Import the reusable Sidebar
 
 export default function GISLayout({ user, onLogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
