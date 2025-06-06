@@ -1,26 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-// import { motion } from 'framer-motion'; // uncomment if you use animations from framer-motion
-
-const OTP_LENGTH = 6;
-const COUNTDOWN_SECONDS = 120; // OTP expiry countdown in seconds
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function VerifyOTP() {
-  const navigate = useNavigate();
-  const timerRef = useRef(null);
-
-  // State declarations
-  const [otpDigits, setOtpDigits] = useState(Array(OTP_LENGTH).fill(''));
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [resending, setResending] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
+  const [secondsLeft, setSecondsLeft] = useState(180);
+  const timerRef = useRef(null);
+  const inputRefs = useRef([]);
+  const navigate = useNavigate();
+
+  const email = localStorage.getItem("pendingEmail");
+  const baseURL = import.meta.env.VITE_API_URL;
 
   // Start countdown timer
-  function startCountdown() {
-    clearInterval(timerRef.current);
-    setSecondsLeft(COUNTDOWN_SECONDS);
-
+  const startCountdown = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setSecondsLeft((prev) => {
         if (prev <= 1) {
@@ -30,136 +28,137 @@ export default function VerifyOTP() {
         return prev - 1;
       });
     }, 1000);
-  }
-
-  // Format time in MM:SS for display
-  function formatTime(seconds) {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  }
-
-  // Handle OTP input change
-  const handleChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return; // Only digits allowed
-
-    const newOtp = [...otpDigits];
-    newOtp[index] = value.slice(-1);
-    setOtpDigits(newOtp);
-
-    // Auto-focus next input if current is filled
-    if (value && index < OTP_LENGTH - 1) {
-      const nextInput = document.getElementById(`otp-${index + 1}`);
-      if (nextInput) nextInput.focus();
-    }
-  };
-
-  // Handle OTP submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (otpDigits.some((digit) => digit === '')) {
-      setError('Please enter all OTP digits');
-      return;
-    }
-
-    const otp = otpDigits.join('');
-
-    try {
-      // Example: replace with your API call
-      const res = await fetch('/api/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ otp }),
-      });
-
-      if (!res.ok) throw new Error('Invalid OTP or expired');
-
-      setSuccess('OTP verified successfully!');
-      // Navigate or do next step after success
-      setTimeout(() => navigate('/dashboard'), 1500);
-    } catch (err) {
-      setError(err.message || 'Verification failed');
-    }
-  };
-
-  // Handle resend OTP
-  const handleResend = async () => {
-    setResending(true);
-    setError('');
-    setSuccess('');
-    try {
-      // Replace with your resend OTP API call
-      const res = await fetch('/api/resend-otp', { method: 'POST' });
-      if (!res.ok) throw new Error('Failed to resend OTP');
-      setSuccess('OTP resent successfully!');
-      setOtpDigits(Array(OTP_LENGTH).fill(''));
-      startCountdown();
-    } catch (err) {
-      setError(err.message || 'Could not resend OTP');
-    } finally {
-      setResending(false);
-    }
   };
 
   useEffect(() => {
+    if (!email) navigate("/signup");
     startCountdown();
     return () => clearInterval(timerRef.current);
   }, []);
 
-  return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-yellow-50 p-4 font-poppins">
-      <h1 className="text-3xl font-semibold mb-6">Verify OTP</h1>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <div className="flex justify-between mb-4">
-          {otpDigits.map((digit, idx) => (
-            <input
-              key={idx}
-              id={`otp-${idx}`}
-              type="text"
-              maxLength={1}
-              className="w-12 h-12 text-center border border-gray-300 rounded text-xl focus:outline-yellow-400"
-              value={digit}
-              onChange={(e) => handleChange(idx, e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Backspace' && !otpDigits[idx]) {
-                  if (idx > 0) {
-                    const prevInput = document.getElementById(`otp-${idx - 1}`);
-                    if (prevInput) prevInput.focus();
-                  }
-                }
-              }}
-            />
-          ))}
-        </div>
+  const handleChange = (index, value) => {
+    if (!/^\d?$/.test(value)) return;
+    const newDigits = [...otpDigits];
+    newDigits[index] = value;
+    setOtpDigits(newDigits);
+    if (value && index < 5) inputRefs.current[index + 1]?.focus();
+  };
 
-        {error && <p className="text-red-600 mb-2">{error}</p>}
-        {success && <p className="text-green-600 mb-2">{success}</p>}
+  const handleKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    const otp = otpDigits.join("");
+    if (otp.length !== 6) {
+      setError("Please enter the full 6-digit OTP.");
+      return;
+    }
+
+    try {
+      await axios.post(`${baseURL}/auth/verify-otp`, { email, otp });
+      setSuccess("✅ OTP verified. Redirecting...");
+      setTimeout(() => {
+        localStorage.removeItem("pendingEmail");
+        localStorage.removeItem("pendingRole");
+        navigate("/login");
+      }, 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || "❌ Invalid or expired OTP.");
+    }
+  };
+
+  const handleResend = async () => {
+    setResending(true);
+    try {
+      await axios.post(`${baseURL}/auth/resend-otp`, { email });
+      setOtpDigits(["", "", "", "", "", ""]);
+      setSecondsLeft(180);
+      startCountdown();
+    } catch (err) {
+      setError("Failed to resend OTP.");
+    }
+    setResending(false);
+  };
+
+  const formatTime = (s) => {
+    const m = Math.floor(s / 60).toString().padStart(2, "0");
+    const sec = (s % 60).toString().padStart(2, "0");
+    return `${m}:${sec}`;
+  };
+
+  return (
+    <div className="bg-[#fff6e5] min-h-screen flex items-center justify-center px-4 py-10 sm:px-6 sm:py-12 font-poppins">
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 sm:p-8 text-center">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-yellow-600 mb-4">Verify Your Email</h2>
+        <p className="text-gray-700 mb-6 text-sm sm:text-base">
+          Enter the 6-digit code sent to <b>{email}</b><br />
+          Code expires in <b>{formatTime(secondsLeft)}</b>
+        </p>
+
+        <form onSubmit={handleVerify} className="space-y-4">
+          <div className="flex justify-center gap-2 sm:gap-3 md:gap-4 mb-1 max-w-xs mx-auto">
+            {otpDigits.map((digit, i) => (
+              <input
+                key={i}
+                ref={(el) => (inputRefs.current[i] = el)}
+                value={digit}
+                onChange={(e) => handleChange(i, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(i, e)}
+                type="text"
+                inputMode="numeric"
+                maxLength="1"
+                aria-label={`OTP digit ${i + 1}`}
+                className="w-10 h-10 text-lg text-center border border-gray-300 rounded-xl focus:outline-yellow-500 sm:w-11 sm:h-11 sm:text-xl md:w-12 md:h-12 md:text-2xl transition-all"
+              />
+            ))}
+          </div>
+
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                className="text-red-600 text-sm"
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                {error}
+              </motion.p>
+            )}
+            {success && (
+              <motion.p
+                className="text-green-600 text-sm"
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                {success}
+              </motion.p>
+            )}
+          </AnimatePresence>
+
+          <button
+            type="submit"
+            disabled={secondsLeft <= 0}
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-2xl shadow transition disabled:opacity-50"
+          >
+            Verify OTP
+          </button>
+        </form>
 
         <button
-          type="submit"
-          className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded font-semibold"
-          disabled={secondsLeft === 0}
+          onClick={handleResend}
+          disabled={resending || secondsLeft > 0}
+          className="mt-4 text-sm text-yellow-600 hover:underline disabled:opacity-50"
         >
-          Verify OTP
+          {resending ? "Resending..." : "Didn't receive OTP? Resend"}
         </button>
-
-        <div className="mt-4 flex justify-between items-center">
-          <p className="text-gray-600 text-sm">
-            Expires in: {formatTime(secondsLeft)}
-          </p>
-          <button
-            type="button"
-            className={`text-yellow-600 font-semibold underline ${resending ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={resending || secondsLeft > 0}
-            onClick={handleResend}
-          >
-            {resending ? 'Resending...' : 'Resend OTP'}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
