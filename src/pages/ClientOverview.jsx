@@ -1,5 +1,5 @@
-// src/pages/ClientOverview.jsx
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import {
@@ -26,9 +26,7 @@ export default function ClientOverview({ user }) {
     async function fetchBookings() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(
-            user.email
-          )}`,
+          `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(user.email)}`,
           {
             credentials: "include",
             headers: { "Content-Type": "application/json" },
@@ -54,15 +52,9 @@ export default function ClientOverview({ user }) {
   }, [user.email]);
 
   const total = bookings.length;
-  const pending = bookings.filter(
-    (b) => b.status?.toLowerCase() === "pending"
-  ).length;
-  const completed = bookings.filter(
-    (b) => b.status?.toLowerCase() === "completed"
-  ).length;
-  const inProgress = bookings.filter(
-    (b) => b.status?.toLowerCase() === "in progress"
-  ).length;
+  const pending = bookings.filter((b) => b.status?.toLowerCase() === "pending").length;
+  const completed = bookings.filter((b) => b.status?.toLowerCase() === "completed").length;
+  const inProgress = bookings.filter((b) => b.status?.toLowerCase() === "in progress").length;
 
   const chartData = [
     { name: "Pending", value: pending },
@@ -72,19 +64,21 @@ export default function ClientOverview({ user }) {
 
   const COLORS = ["#facc15", "#a78bfa", "#4ade80"];
 
-  if (loading)
+  if (loading) {
     return (
       <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
         Loading client overview...
       </div>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
         {error}
       </div>
     );
+  }
 
   return (
     <div className="min-h-screen bg-[#fff6e5] px-4 py-10 font-manrope">
@@ -97,19 +91,19 @@ export default function ClientOverview({ user }) {
         </h1>
 
         {total === 0 ? (
-          <div className="text-center text-gray-600 font-manrope space-y-4">
+          <div className="text-center text-gray-600 space-y-4">
             <p className="text-lg">You haven’t made any bookings yet.</p>
             <p className="text-sm">
               To get started, head over to the{" "}
               <span className="text-yellow-600 font-medium">Bookings</span>{" "}
               section in the sidebar and fill in your details. Our team will take it from there!
             </p>
-            <a
-              href="/client/bookings"
+            <Link
+              to="/client/bookings"
               className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300"
             >
               Book a Survey
-            </a>
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-manrope">
@@ -128,7 +122,7 @@ export default function ClientOverview({ user }) {
         >
           {/* Pie Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
+            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
               Booking Distribution
             </h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -155,7 +149,7 @@ export default function ClientOverview({ user }) {
 
           {/* Bar Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
+            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
               Booking Status Overview
             </h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -189,7 +183,10 @@ function StatCard({ label, value, color }) {
   };
 
   return (
-    <div className={`p-6 rounded-xl shadow text-center ${colorMap[color]}`}>
+    <div
+      className={`p-6 rounded-xl shadow text-center transition-transform transform hover:scale-105 ${colorMap[color]}`}
+      data-aos="zoom-in"
+    >
       <h3 className="text-sm font-medium mb-1">{label}</h3>
       <p className="text-2xl font-bold">{value}</p>
     </div>

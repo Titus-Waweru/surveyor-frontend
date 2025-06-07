@@ -1,200 +1,64 @@
-// src/pages/ClientOverview.jsx
-import { useEffect, useState } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts";
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
+import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Menu } from "lucide-react";
 
-export default function ClientOverview({ user }) {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function ClientLayout({ user, onLogout }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Auto-close sidebar after 5 seconds
   useEffect(() => {
-    AOS.init({ duration: 1000 });
-
-    async function fetchBookings() {
-      try {
-        const response = await fetch(
-          ${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(
-            user.email
-          )},
-          {
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(HTTP ${response.status} - ${errText});
-        }
-
-        const data = await response.json();
-        setBookings(data);
-      } catch (err) {
-        console.error("Fetch error:", err);
-        setError("Failed to fetch bookings.");
-      } finally {
-        setLoading(false);
-      }
+    let timeout;
+    if (isSidebarOpen) {
+      timeout = setTimeout(() => {
+        setIsSidebarOpen(false);
+      }, 5000);
     }
-
-    if (user?.email) fetchBookings();
-  }, [user.email]);
-
-  const total = bookings.length;
-  const pending = bookings.filter(
-    (b) => b.status?.toLowerCase() === "pending"
-  ).length;
-  const completed = bookings.filter(
-    (b) => b.status?.toLowerCase() === "completed"
-  ).length;
-  const inProgress = bookings.filter(
-    (b) => b.status?.toLowerCase() === "in progress"
-  ).length;
-
-  const chartData = [
-    { name: "Pending", value: pending },
-    { name: "In Progress", value: inProgress },
-    { name: "Completed", value: completed },
-  ];
-
-  const COLORS = ["#facc15", "#a78bfa", "#4ade80"];
-
-  if (loading)
-    return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
-        Loading client overview...
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
-        {error}
-      </div>
-    );
+    return () => clearTimeout(timeout);
+  }, [isSidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center justify-center px-4 py-10 space-y-10">
+    <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
+      {/* Sidebar */}
       <div
-        className="w-full max-w-4xl bg-white shadow-xl rounded-3xl p-10 md:p-14"
-        data-aos="fade-up"
+        className={`fixed inset-y-0 left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
-        <h1 className="text-3xl font-bold text-yellow-600 text-center mb-6 font-poppins">
-          Client Overview
-        </h1>
-
-        {total === 0 ? (
-          <div className="text-center text-gray-600 font-manrope space-y-4">
-            <p className="text-lg">You haven’t made any bookings yet.</p>
-            <p className="text-sm">
-              To get started, head over to the{" "}
-              <span className="text-yellow-600 font-medium">Bookings</span>{" "}
-              section in the sidebar and fill in your  details. Our team will take it from
-              there!
-            </p>
-            <a
-              href="/client/bookings"
-              className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300"
-            >
-              Book a Survey
-            </a>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-manrope">
-            <StatCard label="Total Bookings" value={total} color="blue" />
-            <StatCard label="Pending" value={pending} color="yellow" />
-            <StatCard label="In Progress" value={inProgress} color="purple" />
-            <StatCard label="Completed" value={completed} color="green" />
-          </div>
-        )}
+        <Sidebar role="client" />
       </div>
 
-      {total > 0 && (
+      {/* Overlay */}
+      {isSidebarOpen && (
         <div
-          className="w-full max-w-6xl grid md:grid-cols-2 gap-8 p-4"
-          data-aos="fade-up"
-        >
-          {/* Pie Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
-              Booking Distribution
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={100}
-                  label
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={cell-${index}}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Legend />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Bar Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700 font-manrope">
-              Booking Status Overview
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={bar-${index}}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+          className="fixed inset-0 z-40 bg-black bg-opacity-30 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
       )}
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Navbar with toggle button */}
+        <div className="relative">
+          <Navbar user={user} onLogout={onLogout} />
+          {/* Toggle button inside navbar */}
+          <button
+            onClick={() => setIsSidebarOpen((prev) => !prev)}
+            className="lg:hidden absolute top-1/2 -translate-y-1/2 left-4 z-50 bg-white p-2 rounded-full shadow hover:bg-blue-100 transition"
+          >
+            <Menu className="w-5 h-5 text-blue-600" />
+          </button>
+        </div>
+
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-xl shadow-md px-6 py-8">
+              <Outlet />
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
-
-function StatCard({ label, value, color }) {
-  const colorMap = {
-    blue: "bg-blue-100 text-blue-700",
-    yellow: "bg-yellow-100 text-yellow-700",
-    green: "bg-green-100 text-green-700",
-    purple: "bg-purple-100 text-purple-700",
-  };
-
-  return (
-    <div className={p-6 rounded-xl shadow text-center ${colorMap[color]}}>
-      <h3 className="text-sm font-medium mb-1">{label}</h3>
-      <p className="text-2xl font-bold">{value}</p>
-    </div>
-  );
-}
-
-
