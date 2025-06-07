@@ -10,7 +10,6 @@ export default function GISDashboard() {
   const [error, setError] = useState(null);
   const [updatingAssignmentId, setUpdatingAssignmentId] = useState(null);
 
-  // Map toggle state with localStorage persistence
   const [showMap, setShowMap] = useState(() => {
     const saved = localStorage.getItem("gisShowMap");
     return saved === "true";
@@ -87,7 +86,6 @@ export default function GISDashboard() {
         <div className="bg-white rounded-xl shadow p-6 font-manrope">
           <h2 className="text-xl font-semibold mb-3 text-indigo-700">Recent GIS Assignments</h2>
 
-          {/* Map toggle button */}
           <button
             onClick={() => setShowMap((prev) => !prev)}
             className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-manrope"
@@ -95,7 +93,7 @@ export default function GISDashboard() {
             {showMap ? "Hide Map" : "Show Map"}
           </button>
 
-          {gisData.recentAssignments?.length > 0 ? (
+          {gisData.recentTasks?.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm text-left">
                 <thead>
@@ -109,7 +107,7 @@ export default function GISDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {gisData.recentAssignments.map((job, i) => (
+                  {gisData.recentTasks.map((job, i) => (
                     <React.Fragment key={job.id}>
                       <tr className="border-b">
                         <td className="py-2 px-4">{i + 1}</td>
@@ -142,22 +140,25 @@ export default function GISDashboard() {
                               </button>
                             </>
                           )}
-                          {job.status !== "completed" && job.status !== "pending" && job.status !== "rejected" && (
-                            <select
-                              disabled={updatingAssignmentId === job.id}
-                              value={job.status}
-                              onChange={(e) => updateAssignmentStatus(job.id, { status: e.target.value })}
-                              className="border rounded px-2 py-1"
-                            >
-                              <option value="accepted">Accepted</option>
-                              <option value="in progress">In Progress</option>
-                              <option value="completed">Completed</option>
-                            </select>
-                          )}
+                          {job.status !== "completed" &&
+                            job.status !== "pending" &&
+                            job.status !== "rejected" && (
+                              <select
+                                disabled={updatingAssignmentId === job.id}
+                                value={job.status}
+                                onChange={(e) =>
+                                  updateAssignmentStatus(job.id, { status: e.target.value })
+                                }
+                                className="border rounded px-2 py-1"
+                              >
+                                <option value="accepted">Accepted</option>
+                                <option value="in progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                              </select>
+                            )}
                         </td>
                       </tr>
 
-                      {/* Map row if coordinates exist and showMap is true */}
                       {showMap && job.latitude && job.longitude && (
                         <tr>
                           <td colSpan="6" className="py-4">
