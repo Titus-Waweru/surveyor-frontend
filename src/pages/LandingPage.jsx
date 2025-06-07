@@ -110,49 +110,26 @@ export default function LandingPage() {
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-[#fff6e5]" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What We Offer</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {[
-            {
-              name: "Land Surveying",
-              desc: "Professional surveys for boundary marking, subdivision, and land development with precision and compliance."
-            },
-            {
-              name: "Site Inspection Scheduling",
-              desc: "Easily book, manage, and track on-site inspections — all from your dashboard in real time."
-            },
-            {
-              name: "Title Deed Verification",
-              desc: "Instantly verify title deeds through integrated systems — avoid fraud, ensure peace of mind."
-            },
-            {
-              name: "Agent Tracking & Reporting",
-              desc: "Monitor agent movements, performance, and field activity — complete with smart reporting tools."
-            },
-            {
-              name: "Real-Time Job Monitoring",
-              desc: "Track every job’s progress, location, and status in real time — no more guesswork or delays."
-            },
-            {
-              name: "Mobile OTP-Verified Access",
-              desc: "Secure logins with email & SMS OTP — keeping your team and data safe at every step."
-            },
-            {
-              name: "GIS Expert Services",
-              desc: "Tap into advanced GIS mapping & spatial analysis for land use planning, zoning, and terrain modeling."
-            },
-            {
-              name: "Real Estate Services",
-              desc: "From listings to lead management, connect with verified agents & streamline your land sales process."
-            },
-            {
-              name: "Land Evaluation Services",
-              desc: "Get expert valuation reports to determine fair land pricing — ideal for investment, sales, or taxation."
-            }
-          ].map((service, index) => (
-            <div key={index} className="bg-white p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={index * 100}>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">{service.name}</h3>
-              <p className="text-gray-600">{service.desc}</p>
-            </div>
-          ))}
+          {[ ...Array(9).keys() ].map((index) => {
+            const services = [
+              { name: "Land Surveying", desc: "Professional surveys for boundary marking, subdivision, and land development with precision and compliance." },
+              { name: "Site Inspection Scheduling", desc: "Easily book, manage, and track on-site inspections — all from your dashboard in real time." },
+              { name: "Title Deed Verification", desc: "Instantly verify title deeds through integrated systems — avoid fraud, ensure peace of mind." },
+              { name: "Agent Tracking & Reporting", desc: "Monitor agent movements, performance, and field activity — complete with smart reporting tools." },
+              { name: "Real-Time Job Monitoring", desc: "Track every job’s progress, location, and status in real time — no more guesswork or delays." },
+              { name: "Mobile OTP-Verified Access", desc: "Secure logins with email & SMS OTP — keeping your team and data safe at every step." },
+              { name: "GIS Expert Services", desc: "Tap into advanced GIS mapping & spatial analysis for land use planning, zoning, and terrain modeling." },
+              { name: "Real Estate Services", desc: "From listings to lead management, connect with verified agents & streamline your land sales process." },
+              { name: "Land Evaluation Services", desc: "Get expert valuation reports to determine fair land pricing — ideal for investment, sales, or taxation." },
+            ];
+            const service = services[index];
+            return (
+              <div key={index} className="bg-white p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={index * 100}>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">{service.name}</h3>
+                <p className="text-gray-600">{service.desc}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -160,24 +137,20 @@ export default function LandingPage() {
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-white" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Why Teams Love LandLink</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {[{
-            title: "OTP-Verified Logins",
-            desc: "Secure access for clients and agents via email & SMS OTPs."
-          }, {
-            title: "Easy Booking Management",
-            desc: "Track appointments and manage field tasks with ease."
-          }, {
-            title: "Integrated Payments",
-            desc: "Accept payments via Paystack or M-Pesa instantly."
-          }, {
-            title: "Admin & Surveyor Dashboards",
-            desc: "Role-based views to keep everyone productive."
-          }].map((feature, i) => (
-            <div key={i} className="bg-[#fff6e5] p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={i * 100}>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.desc}</p>
-            </div>
-          ))}
+          {["OTP-Verified Logins", "Easy Booking Management", "Integrated Payments", "Admin & Surveyor Dashboards"].map((title, i) => {
+            const descs = [
+              "Secure access for clients and agents via email & SMS OTPs.",
+              "Track appointments and manage field tasks with ease.",
+              "Accept payments via Paystack or M-Pesa instantly.",
+              "Role-based views to keep everyone productive."
+            ];
+            return (
+              <div key={i} className="bg-[#fff6e5] p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={i * 100}>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+                <p className="text-gray-600">{descs[i]}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -217,11 +190,8 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-white py-6 px-4 sm:px-8 md:px-20 text-center text-sm text-gray-500">
         <p>
-          © {new Date().getFullYear()} LandLink. All rights reserved.{" "}
-          <Link
-            to="/terms-and-privacy"
-            className="text-yellow-600 hover:underline ml-1"
-          >
+          © {new Date().getFullYear()} LandLink. All rights reserved.{' '}
+          <Link to="/terms" className="text-yellow-600 hover:underline ml-1">
             Terms & Privacy Policy
           </Link>
         </p>
