@@ -2,16 +2,28 @@ import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import API from "../utils/axios";
+import BookingMap from "../components/dashboard/BookingMap";
 
 export default function GISDashboard() {
   const [gisData, setGisData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [updatingAssignmentId, setUpdatingAssignmentId] = useState(null);
+
+  // Map toggle state with localStorage persistence
+  const [showMap, setShowMap] = useState(() => {
+    const saved = localStorage.getItem("gisShowMap");
+    return saved === "true";
+  });
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
     fetchGisData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("gisShowMap", showMap);
+  }, [showMap]);
 
   const fetchGisData = async () => {
     try {
@@ -28,12 +40,36 @@ export default function GISDashboard() {
     }
   };
 
+  const updateAssignmentStatus = async (assignmentId, payload) => {
+    setUpdatingAssignmentId(assignmentId);
+    try {
+      await API.patch(`/gis/assignments/${assignmentId}/status`, payload);
+      await fetchGisData();
+    } catch (err) {
+      alert(err.response?.data?.message || err.message || "Failed to update assignment.");
+    } finally {
+      setUpdatingAssignmentId(null);
+    }
+  };
+
   if (loading)
-    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">Loading GIS dashboard...</div>;
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
+        Loading GIS dashboard...
+      </div>
+    );
   if (error)
-    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">{error}</div>;
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
+        {error}
+      </div>
+    );
   if (!gisData)
-    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">No GIS data found.</div>;
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
+        No GIS data found.
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
@@ -50,30 +86,90 @@ export default function GISDashboard() {
 
         <div className="bg-white rounded-xl shadow p-6 font-manrope">
           <h2 className="text-xl font-semibold mb-3 text-indigo-700">Recent GIS Assignments</h2>
+
+          {/* Map toggle button */}
+          <button
+            onClick={() => setShowMap((prev) => !prev)}
+            className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-manrope"
+          >
+            {showMap ? "Hide Map" : "Show Map"}
+          </button>
+
           {gisData.recentAssignments?.length > 0 ? (
-            <ul className="space-y-3">
-              {gisData.recentAssignments.map((job, index) => (
-                <li key={job.id} className="p-4 border rounded-lg bg-gray-50">
-                  <p className="text-sm text-gray-700">
-                    <strong>Location:</strong> {job.location}
-                  </p>
-                  <p className="text-sm text-gray-700">
-                    <strong>Task:</strong> {job.taskType}
-                  </p>
-                  <p className="text-sm text-gray-700">
-                    <strong>Status:</strong> <span className="capitalize">{job.status}</span>
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    <strong>Due:</strong>{" "}
-                    {new Date(job.dueDate).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
-                </li>
-              ))}
-            </ul>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm text-left">
+                <thead>
+                  <tr className="bg-gray-100 text-gray-700">
+                    <th className="py-2 px-4">#</th>
+                    <th className="py-2 px-4">Location</th>
+                    <th className="py-2 px-4">Task Type</th>
+                    <th className="py-2 px-4">Due Date</th>
+                    <th className="py-2 px-4">Status</th>
+                    <th className="py-2 px-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gisData.recentAssignments.map((job, i) => (
+                    <React.Fragment key={job.id}>
+                      <tr className="border-b">
+                        <td className="py-2 px-4">{i + 1}</td>
+                        <td className="py-2 px-4">{job.location}</td>
+                        <td className="py-2 px-4">{job.taskType}</td>
+                        <td className="py-2 px-4">
+                          {new Date(job.dueDate).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </td>
+                        <td className="py-2 px-4 capitalize">{job.status}</td>
+                        <td className="py-2 px-4 space-x-2">
+                          {(job.status === "pending" || job.status === "rejected") && (
+                            <>
+                              <button
+                                disabled={updatingAssignmentId === job.id}
+                                onClick={() => updateAssignmentStatus(job.id, { action: "accept" })}
+                                className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                              >
+                                Accept
+                              </button>
+                              <button
+                                disabled={updatingAssignmentId === job.id}
+                                onClick={() => updateAssignmentStatus(job.id, { action: "reject" })}
+                                className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50"
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
+                          {job.status !== "completed" && job.status !== "pending" && job.status !== "rejected" && (
+                            <select
+                              disabled={updatingAssignmentId === job.id}
+                              value={job.status}
+                              onChange={(e) => updateAssignmentStatus(job.id, { status: e.target.value })}
+                              className="border rounded px-2 py-1"
+                            >
+                              <option value="accepted">Accepted</option>
+                              <option value="in progress">In Progress</option>
+                              <option value="completed">Completed</option>
+                            </select>
+                          )}
+                        </td>
+                      </tr>
+
+                      {/* Map row if coordinates exist and showMap is true */}
+                      {showMap && job.latitude && job.longitude && (
+                        <tr>
+                          <td colSpan="6" className="py-4">
+                            <BookingMap latitude={job.latitude} longitude={job.longitude} />
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <p className="text-gray-600">No recent assignments.</p>
           )}

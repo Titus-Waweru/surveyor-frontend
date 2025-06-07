@@ -62,17 +62,17 @@ export default function ResetPassword() {
 
   if (!token || !email) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fff6e5] px-4">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-lg p-8 text-center">
-          <h2 className="text-2xl font-poppins font-semibold text-yellow-600 mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#fff6e5] px-4 py-20 font-manrope">
+        <div className="max-w-md w-full bg-white rounded-3xl shadow-lg p-10 text-center" data-aos="fade-up">
+          <h2 className="text-3xl font-poppins font-semibold text-yellow-600 mb-5">
             Invalid Reset Link
           </h2>
-          <p className="font-manrope text-gray-700">
-            Sorry, the password reset link is invalid or expired. Please request a new link.
+          <p className="text-gray-700 leading-relaxed">
+            Sorry, the password reset link is invalid or has expired. Please request a new password reset link to continue.
           </p>
           <button
             onClick={() => navigate("/login")}
-            className="mt-6 inline-block text-sm text-yellow-600 hover:text-yellow-700 font-medium"
+            className="mt-8 inline-block text-yellow-600 hover:text-yellow-700 font-medium text-sm font-poppins transition-colors"
           >
             ← Back to Login
           </button>
@@ -82,21 +82,24 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fff6e5] px-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-lg p-8">
-        <h1 className="text-3xl font-poppins font-bold text-yellow-600 mb-6 text-center">
+    <div className="min-h-screen flex items-start justify-center bg-[#fff6e5] px-4 py-16 font-manrope">
+      <div
+        className="max-w-md w-full bg-white rounded-3xl shadow-xl p-10"
+        data-aos="fade-up"
+      >
+        <h1 className="text-3xl font-poppins font-bold text-yellow-600 mb-8 text-center">
           Reset Your Password
         </h1>
 
         <form onSubmit={handleSubmit} noValidate>
-          <label htmlFor="newPassword" className="block text-gray-700 font-manrope mb-2">
+          <label htmlFor="newPassword" className="block mb-2 font-semibold text-gray-800">
             New Password
           </label>
           <input
             id="newPassword"
             type="password"
             placeholder="Enter new password"
-            className="w-full p-3 mb-5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:outline-none font-manrope text-gray-900"
+            className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-yellow-400 focus:ring-2 focus:ring-yellow-400 transition font-manrope text-gray-900"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             minLength={8}
@@ -105,14 +108,14 @@ export default function ResetPassword() {
             autoComplete="new-password"
           />
 
-          <label htmlFor="confirmPassword" className="block text-gray-700 font-manrope mb-2">
+          <label htmlFor="confirmPassword" className="block mb-2 font-semibold text-gray-800">
             Confirm Password
           </label>
           <input
             id="confirmPassword"
             type="password"
             placeholder="Confirm new password"
-            className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:outline-none font-manrope text-gray-900"
+            className="w-full p-3 mb-8 border border-gray-300 rounded-lg focus:outline-yellow-400 focus:ring-2 focus:ring-yellow-400 transition font-manrope text-gray-900"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             minLength={8}
@@ -133,15 +136,15 @@ export default function ResetPassword() {
         </form>
 
         {message && (
-          <p className="mt-6 text-green-600 font-manrope text-center font-medium">{message}</p>
+          <p className="mt-8 text-green-600 font-medium text-center font-manrope">{message}</p>
         )}
         {error && (
-          <p className="mt-6 text-red-600 font-manrope text-center font-medium">{error}</p>
+          <p className="mt-8 text-red-600 font-medium text-center font-manrope">{error}</p>
         )}
 
         <button
           onClick={() => navigate("/login")}
-          className="w-full mt-6 text-yellow-600 hover:text-yellow-700 text-sm font-medium"
+          className="w-full mt-10 text-yellow-600 hover:text-yellow-700 text-sm font-medium font-poppins transition-colors"
         >
           ← Back to Login
         </button>
