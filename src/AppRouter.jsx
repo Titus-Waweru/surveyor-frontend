@@ -12,6 +12,7 @@ import API from "./utils/axios";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import VerifyOTP from "./pages/VerifyOTP";
+import ForgotPassword from "./pages/ForgotPassword"; // ✅ NEW IMPORT
 
 // CLIENT PAGES
 import ClientDashboard from "./pages/ClientDashboard";
@@ -162,6 +163,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       />
       <Route path="/signup" element={<Signup onSignup={handleSignup} />} />
       <Route path="/verify-otp" element={<VerifyOTP />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} /> {/* ✅ NEW ROUTE */}
 
       {/* ADMIN AUTH */}
       <Route path="/admin/auth" element={<AdminAuth setUser={setUser} />} />
