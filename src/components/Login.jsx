@@ -17,10 +17,9 @@ const MAX_ATTEMPTS = 5;
 const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
 export default function Login({ onSubmit }) {
-  // 'onSubmit' is passed from AppRouter and handles login API + state update
-
   const [isBlocked, setIsBlocked] = useState(false);
   const [retryAfter, setRetryAfter] = useState(0);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -38,7 +37,6 @@ export default function Login({ onSubmit }) {
   function checkLoginAttempts() {
     const now = Date.now();
     const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
-    // filter out old attempts outside window
     const recent = attempts.filter((ts) => now - ts < ATTEMPT_WINDOW_MS);
 
     if (recent.length >= MAX_ATTEMPTS) {
@@ -70,19 +68,20 @@ export default function Login({ onSubmit }) {
     localStorage.removeItem("loginAttempts");
   }
 
-  // Wrapper for your onSubmit prop to handle blocking and attempt counting
   const onSubmitWrapper = async (formData) => {
     if (isBlocked) {
-      alert(`Too many attempts. Please wait ${retryAfter} seconds.`);
+      setFormError(`Too many attempts. Please wait ${retryAfter} seconds.`);
       return;
     }
+
     try {
-      await onSubmit(formData); // call parent's onSubmit (AppRouter)
+      await onSubmit(formData);
       clearAttempts();
+      setFormError("");
     } catch (error) {
       recordFailedAttempt();
       checkLoginAttempts();
-      alert(error.message || "Login failed");
+      setFormError(error.response?.data?.message || "Login failed");
     }
   };
 
@@ -194,6 +193,17 @@ export default function Login({ onSubmit }) {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Error message from server */}
+            {formError && (
+              <motion.p
+                className="text-red-600 text-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                {formError}
+              </motion.p>
+            )}
 
             {/* Forgot Password */}
             <div className="flex justify-end">
