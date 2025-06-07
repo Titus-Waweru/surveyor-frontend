@@ -22,9 +22,13 @@ export default function ClientLayout({ user, onLogout }) {
     <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex ${
+        className={`fixed left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{
+          top: "64px", // Height of navbar
+          height: "calc(100vh - 64px)", // Fill remaining height below navbar
+        }}
       >
         <Sidebar role="client" />
       </div>
