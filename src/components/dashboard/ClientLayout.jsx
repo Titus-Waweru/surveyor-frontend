@@ -44,7 +44,7 @@ export default function ClientLayout({ user, onLogout }) {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Navbar with toggle button */}
-        <div className="relative flex items-center">
+        <div className="relative">
           <Navbar user={user} onLogout={onLogout} />
           {/* Toggle button inside navbar */}
           <button
@@ -53,12 +53,6 @@ export default function ClientLayout({ user, onLogout }) {
           >
             <Menu className="w-5 h-5 text-blue-600" />
           </button>
-          {/* This wrapper pushes the text right so it's not under toggle */}
-          <div className="ml-14"> {/* ~ 56px margin-left to clear toggle */}
-            {/* Assuming your Navbar or title is here */}
-            {/* If Navbar already contains the title, you might need to add this margin inside Navbar itself */}
-            {/* Or wrap the text element inside Navbar with this margin */}
-          </div>
         </div>
 
         <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
