@@ -5,7 +5,7 @@ const Sidebar = () => {
   const isAdmin = location.pathname.startsWith("/admin");
   const isClient = location.pathname.startsWith("/client");
   const isSurveyor = location.pathname.startsWith("/surveyor");
-  const isGIS = location.pathname.startsWith("/gis"); // ✅ Add this
+  const isGIS = location.pathname.startsWith("/gis");
 
   const links = isAdmin
     ? [
@@ -34,17 +34,18 @@ const Sidebar = () => {
         { name: "Overview", href: "/gis/overview" },
         { name: "Profile", href: "/gis/profile" },
         { name: "Settings", href: "/gis/settings" },
-        // add more GIS-specific pages here if needed
       ]
     : [];
 
   return (
     <aside className="w-52 min-h-screen bg-[#e3f2fd] text-[#0a1b3d] flex flex-col shadow-md">
+      {/* Logo / Brand */}
       <div className="p-5 text-xl font-extrabold tracking-wide border-b border-[#cfd8dc] font-poppins">
         LandLink<span className="text-yellow-500">.app</span>
       </div>
 
-      <nav className="flex-1 px-3 py-5 space-y-2 font-manrope font-semibold">
+      {/* Nav Links */}
+      <nav className="flex-1 px-3 py-5 space-y-2 font-manrope">
         {links.map((link) => (
           <NavLink
             key={link.name}
@@ -52,8 +53,8 @@ const Sidebar = () => {
             className={({ isActive }) =>
               `block px-4 py-2 rounded-md text-sm transition-all duration-200 ${
                 isActive
-                  ? "bg-yellow-400 text-[#0a1b3d] shadow font-bold"
-                  : "hover:bg-yellow-100 hover:text-[#0a1b3d] text-[#0a1b3d]"
+                  ? "bg-yellow-300 text-[#0a1b3d] font-semibold ring-1 ring-yellow-500/30"
+                  : "hover:bg-yellow-100 hover:text-[#0a1b3d] text-[#0a1b3d] font-medium"
               }`
             }
           >
@@ -62,6 +63,7 @@ const Sidebar = () => {
         ))}
       </nav>
 
+      {/* Footer */}
       <div className="p-4 text-xs text-gray-600 border-t border-[#cfd8dc] font-manrope">
         &copy; 2025 LandLink Ltd
       </div>
