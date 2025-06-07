@@ -3,7 +3,7 @@ import { LogOut } from "lucide-react";
 export default function Navbar({ onLogout }) {
   return (
     <header className="bg-[#1e40af] border-b border-yellow-400 px-8 py-4 flex justify-between items-center shadow-md font-poppins">
-      <h2 className="text-2xl font-extrabold text-white tracking-wide">
+      <h2 className="text-2xl font-extrabold text-white tracking-wide ml-14">
         Dashboard
       </h2>
 
