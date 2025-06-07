@@ -12,18 +12,18 @@ export default function AdminNavbar({ onLogout }) {
   };
 
   return (
-    <header className="bg-[#1e40af] px-6 py-4 flex justify-between items-center shadow-lg font-poppins border-b border-yellow-400 transition-colors duration-300">
-      <h1 className="text-white text-2xl md:text-3xl font-extrabold tracking-wide flex items-center gap-2">
-        <span className="bg-yellow-400 text-[#1e40af] px-2 py-1 rounded-full text-sm font-semibold shadow-sm">
+    <header className="bg-[#1e40af] border-b border-yellow-400 px-4 sm:px-6 md:px-8 py-3 flex flex-wrap justify-between items-center shadow-md font-poppins gap-3">
+      <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-wide flex items-center gap-2">
+        <span className="bg-yellow-400 text-[#1e40af] px-2 py-0.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
           ADMIN
         </span>
         Dashboard
-      </h1>
+      </h2>
 
-      <div className="flex items-center gap-4 font-manrope">
+      <div className="font-manrope">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+          className="flex items-center gap-1 sm:gap-2 bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2 rounded-xl shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
         >
           <LogOut size={16} />
           Logout
