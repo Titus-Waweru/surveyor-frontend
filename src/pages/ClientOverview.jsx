@@ -87,12 +87,12 @@ export default function ClientOverview({ user }) {
     );
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center justify-center px-4 py-10 space-y-10">
+    <div className="min-h-screen bg-[#fff6e5] px-4 py-10 font-manrope">
       <div
-        className="w-full max-w-4xl bg-white shadow-xl rounded-3xl p-10 md:p-14"
+        className="w-full max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-6 md:p-10"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold text-yellow-600 text-center mb-6 font-poppins">
+        <h1 className="text-3xl font-bold text-yellow-600 text-center mb-8 font-poppins">
           Client Overview
         </h1>
 
@@ -102,8 +102,7 @@ export default function ClientOverview({ user }) {
             <p className="text-sm">
               To get started, head over to the{" "}
               <span className="text-yellow-600 font-medium">Bookings</span>{" "}
-              section in the sidebar and fill in your  details. Our team will take it from
-              there!
+              section in the sidebar and fill in your details. Our team will take it from there!
             </p>
             <a
               href="/client/bookings"
@@ -124,7 +123,7 @@ export default function ClientOverview({ user }) {
 
       {total > 0 && (
         <div
-          className="w-full max-w-6xl grid md:grid-cols-2 gap-8 p-4"
+          className="w-full max-w-6xl mx-auto grid md:grid-cols-2 gap-8 mt-10"
           data-aos="fade-up"
         >
           {/* Pie Chart */}

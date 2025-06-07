@@ -7,7 +7,6 @@ import { Menu } from "lucide-react";
 export default function ClientLayout({ user, onLogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Auto-close sidebar after 5 seconds
   useEffect(() => {
     let timeout;
     if (isSidebarOpen) {
@@ -37,17 +36,23 @@ export default function ClientLayout({ user, onLogout }) {
         />
       )}
 
-      {/* Toggle button */}
-      <button
-        onClick={() => setIsSidebarOpen((prev) => !prev)}
-        className="lg:hidden absolute top-4 left-4 z-50 bg-white p-2 rounded-full shadow hover:bg-blue-100 transition"
-      >
-        <Menu className="w-5 h-5 text-blue-600" />
-      </button>
-
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar user={user} onLogout={onLogout} />
+        {/* Navbar with integrated toggle */}
+        <div className="bg-white shadow px-4 py-3 flex items-center justify-between">
+          {/* Toggle visible only on mobile */}
+          <button
+            onClick={() => setIsSidebarOpen((prev) => !prev)}
+            className="lg:hidden mr-4 bg-white p-2 rounded-md shadow hover:bg-blue-100 transition"
+          >
+            <Menu className="w-5 h-5 text-blue-600" />
+          </button>
+
+          <div className="flex-1">
+            <Navbar user={user} onLogout={onLogout} />
+          </div>
+        </div>
+
         <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-xl shadow-md px-6 py-8">
