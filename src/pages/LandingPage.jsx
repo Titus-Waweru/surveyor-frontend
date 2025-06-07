@@ -213,6 +213,19 @@ export default function LandingPage() {
           </button>
         </Link>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-white py-6 px-4 sm:px-8 md:px-20 text-center text-sm text-gray-500">
+        <p>
+          © {new Date().getFullYear()} LandLink. All rights reserved.{" "}
+          <Link
+            to="/terms-and-privacy"
+            className="text-yellow-600 hover:underline ml-1"
+          >
+            Terms & Privacy Policy
+          </Link>
+        </p>
+      </footer>
     </div>
   );
 }

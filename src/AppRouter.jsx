@@ -56,6 +56,9 @@ import ContactUs from "./pages/ContactUs";
 import News from "./pages/News";
 import AboutUs from "./pages/AboutUs";
 
+// LEGAL
+import TermsAndPrivacy from "./pages/TermsAndPrivacy";
+
 function getDefaultDashboard(role) {
   switch (role) {
     case "client":
@@ -64,7 +67,7 @@ function getDefaultDashboard(role) {
       return "/surveyor/overview";
     case "admin":
       return "/admin/overview";
-    case "gis":             // changed from "gis-expert"
+    case "gis":
       return "/gis/overview";
     default:
       return "/login";
@@ -246,6 +249,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/news" element={<News />} />
       <Route path="/about" element={<AboutUs />} />
+      <Route path="/terms" element={<TermsAndPrivacy />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
