@@ -93,8 +93,9 @@ export default function Payments({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-5xl bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
+    <div className="min-h-screen bg-[#fff6e5] px-6 py-8 font-manrope">
+      {/* Container now aligned top with vertical padding, no flex centering */}
+      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
         <h1 className="text-3xl font-bold text-yellow-600 mb-6 text-center font-poppins">
           Payments
         </h1>
@@ -102,7 +103,7 @@ export default function Payments({ user }) {
         {message && (
           <div
             aria-live="polite"
-            className={`mb-6 px-4 py-2 rounded font-manrope text-center ${
+            className={`mb-6 px-4 py-2 rounded text-center ${
               message.type === "error"
                 ? "bg-red-100 text-red-700"
                 : "bg-green-100 text-green-700"
@@ -112,7 +113,7 @@ export default function Payments({ user }) {
           </div>
         )}
 
-        <form onSubmit={handlePayment} className="mb-10 space-y-6 font-manrope">
+        <form onSubmit={handlePayment} className="mb-10 space-y-6">
           <div>
             <label className="block font-medium mb-1" htmlFor="amount">
               Amount (KES)
@@ -162,9 +163,9 @@ export default function Payments({ user }) {
             </div>
           )}
 
-          {/* === INSTRUCTIONS SECTION === */}
+          {/* Instructions */}
           {paymentMethod === "paystack" && (
-            <div className="bg-yellow-50 border border-yellow-300 p-4 rounded text-sm text-yellow-700 font-manrope">
+            <div className="bg-yellow-50 border border-yellow-300 p-4 rounded text-sm text-yellow-700">
               <p className="mb-1 font-semibold">Instructions:</p>
               <ul className="list-disc list-inside">
                 <li>You will be redirected to Paystack.</li>
@@ -175,7 +176,7 @@ export default function Payments({ user }) {
           )}
 
           {paymentMethod === "mpesa" && (
-            <div className="bg-yellow-50 border border-yellow-300 p-4 rounded text-sm text-yellow-700 font-manrope">
+            <div className="bg-yellow-50 border border-yellow-300 p-4 rounded text-sm text-yellow-700">
               <p className="mb-1 font-semibold">Instructions:</p>
               <ul className="list-disc list-inside">
                 <li>Ensure your phone number starts with 2547 and is M-Pesa registered.</li>
@@ -195,11 +196,11 @@ export default function Payments({ user }) {
         </form>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 font-manrope">Recent Payments</h2>
+          <h2 className="text-2xl font-semibold mb-4">Recent Payments</h2>
           {payments.length === 0 ? (
-            <p className="text-gray-600 font-manrope">No payments found.</p>
+            <p className="text-gray-600">No payments found.</p>
           ) : (
-            <div className="overflow-x-auto font-manrope">
+            <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>
                   <tr className="bg-yellow-50">
