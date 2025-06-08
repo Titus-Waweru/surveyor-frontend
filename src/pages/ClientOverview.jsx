@@ -96,13 +96,13 @@ export default function ClientOverview({ user }) {
             <p className="text-sm">
               To get started, head over to the{" "}
               <span className="text-yellow-600 font-medium">Bookings</span>{" "}
-              section in the sidebar and fill in your details. Our team will take it from there!
+              section in the sidebar in the top left toggle and fill in your details. Our team will take it from there!
             </p>
             <Link
               to="/client/bookings"
               className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300"
             >
-              Book a Survey
+              <strong>Book a Survey</strong>
             </Link>
           </div>
         ) : (

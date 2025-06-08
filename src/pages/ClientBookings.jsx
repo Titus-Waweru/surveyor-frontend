@@ -54,7 +54,7 @@ export default function ClientBookings({ user }) {
       >
         {/* Title */}
         <h1 className="text-3xl font-bold text-yellow-600 text-center font-poppins mb-8">
-          <strong>My Bookings</strong>
+          <strong><b>Bookings</b></strong>
         </h1>
 
         {/* Bookings Section */}
