@@ -101,12 +101,14 @@ export default function VerifyOTP() {
           Verify Your Email
         </h2>
         <p className="text-gray-700 mb-6 text-sm sm:text-base leading-relaxed">
-          Enter the 6-digit code sent to <b>{email}</b><br />
+          Enter the 6-digit code sent to <b>{email}</b>
+          <br />
           Code expires in <b>{formatTime(secondsLeft)}</b>
         </p>
 
         <form onSubmit={handleVerify} className="space-y-6">
-          <div className="flex justify-center gap-2 sm:gap-3 md:gap-4 max-w-xs mx-auto">
+          {/* ✅ Stacked and responsive OTP inputs */}
+          <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-5 mx-auto">
             {otpDigits.map((digit, i) => (
               <input
                 key={i}
@@ -118,7 +120,7 @@ export default function VerifyOTP() {
                 inputMode="numeric"
                 maxLength="1"
                 aria-label={`OTP digit ${i + 1}`}
-                className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 text-lg sm:text-xl md:text-2xl text-center border border-gray-300 rounded-xl focus:outline-yellow-500 focus:ring-2 focus:ring-yellow-400 transition-all font-manrope text-gray-900"
+                className="w-16 h-14 sm:w-20 sm:h-16 md:w-24 md:h-20 text-2xl sm:text-3xl md:text-4xl text-center border border-gray-300 rounded-2xl focus:outline-yellow-500 focus:ring-2 focus:ring-yellow-400 transition-all font-manrope text-gray-900"
               />
             ))}
           </div>
