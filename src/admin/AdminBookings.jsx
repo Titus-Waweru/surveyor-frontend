@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -11,32 +11,48 @@ export default function AdminBookings() {
   const [surveyors, setSurveyors] = useState([]);
   const [status, setStatus] = useState("");
 
-  // 🔄 Persistent map toggle (just like Client)
+  // 👇 New: Role selection (surveyor or gis-expert)
+  const [selectedRole, setSelectedRole] = useState("surveyor");
+
   const [showMaps, setShowMaps] = useState(() => {
     const saved = localStorage.getItem("adminShowMaps");
-    return saved === "true"; // default to false if not set
+    return saved === "true";
   });
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-    fetchData();
+    fetchBookings();
   }, []);
 
   useEffect(() => {
     localStorage.setItem("adminShowMaps", showMaps);
   }, [showMaps]);
 
-  const fetchData = async () => {
+  useEffect(() => {
+    fetchSurveyors();
+  }, [selectedRole]);
+
+  const fetchBookings = async () => {
     try {
-      const [bookingRes, surveyorRes] = await Promise.all([
-        axios.get(`${API}/admin/bookings/all`),
-        axios.get(`${API}/admin/users/surveyors`),
-      ]);
-      setBookings(bookingRes.data);
-      setSurveyors(surveyorRes.data);
+      const res = await axios.get(`${API}/admin/bookings/all`);
+      setBookings(res.data);
     } catch (err) {
-      console.error("Error fetching data:", err);
+      console.error("Error fetching bookings:", err);
       setStatus("Failed to load bookings.");
+    }
+  };
+
+  // 👇 New: Fetch either surveyors or GIS experts
+  const fetchSurveyors = async () => {
+    try {
+      const endpoint =
+        selectedRole === "gis-expert"
+          ? "users/gis-experts"
+          : "users/surveyors";
+      const res = await axios.get(`${API}/admin/${endpoint}`);
+      setSurveyors(res.data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
     }
   };
 
@@ -45,7 +61,7 @@ export default function AdminBookings() {
       await axios.patch(`${API}/admin/bookings/${bookingId}/assign`, {
         surveyorId,
       });
-      fetchData(); // refresh after assigning
+      fetchBookings();
     } catch (err) {
       console.error("Assignment error:", err);
     }
@@ -65,16 +81,30 @@ export default function AdminBookings() {
           <p className="text-red-500 text-sm mb-4 text-center">{status}</p>
         )}
 
-        {/* ✅ Persistent Map Toggle Button */}
-        <div className="text-center mb-4">
+        {/* ✅ Map toggle */}
+        <div className="text-center mb-4 flex flex-col md:flex-row gap-4 items-center justify-between">
           <button
             onClick={() => setShowMaps((prev) => !prev)}
             className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-all"
           >
             {showMaps ? "Hide Maps" : "Show Maps"}
           </button>
+
+          {/* ✅ Role selector */}
+          <div className="text-sm">
+            <label className="mr-2 font-medium">Assign role:</label>
+            <select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            >
+              <option value="surveyor">Surveyor</option>
+              <option value="gis-expert">GIS Expert</option>
+            </select>
+          </div>
         </div>
 
+        {/* ✅ Table */}
         <div className="overflow-x-auto border rounded-xl shadow-sm">
           <table className="min-w-full text-sm text-left border-collapse">
             <thead className="bg-gray-100 text-gray-700 font-semibold">
@@ -84,7 +114,7 @@ export default function AdminBookings() {
                 <th className="px-4 py-3">Location</th>
                 <th className="px-4 py-3">Preferred Date</th>
                 <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Assign Surveyor</th>
+                <th className="px-4 py-3">Assign {selectedRole === "gis-expert" ? "GIS Expert" : "Surveyor"}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -128,11 +158,13 @@ export default function AdminBookings() {
                     </td>
                   </tr>
 
-                  {/* ✅ Show Map Row Below Booking */}
                   {showMaps && b.latitude && b.longitude && (
                     <tr>
                       <td colSpan="6" className="px-4 py-3">
-                        <BookingMap latitude={b.latitude} longitude={b.longitude} />
+                        <BookingMap
+                          latitude={b.latitude}
+                          longitude={b.longitude}
+                        />
                       </td>
                     </tr>
                   )}
@@ -145,6 +177,3 @@ export default function AdminBookings() {
     </div>
   );
 }
-
-// ✅ Required import for Fragment shorthand
-import { Fragment } from "react";
