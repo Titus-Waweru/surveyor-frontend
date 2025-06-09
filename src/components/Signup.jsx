@@ -27,7 +27,7 @@ export default function Signup() {
     setError,
   } = useForm({
     resolver: zodResolver(signupSchema),
-    defaultValues: { role: "" },
+    defaultValues: { role: "client" },  // changed from "" to "client" for select default
   });
 
   const role = watch("role");
@@ -180,7 +180,7 @@ export default function Signup() {
               id="role"
               {...register("role")}
               className="input cursor-pointer"
-              defaultValue=""
+              // Removed defaultValue here to let react-hook-form manage it
             >
               <option value="" disabled>
                 -- Choose a role --
