@@ -61,7 +61,7 @@ export default function LandingPage() {
           <div className="space-x-4">
             <Link to="/signup">
               <button
-                aria-label="Start Free Trial"
+                aria-label="Click here to Signup/Login"
                 className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-2xl shadow"
               >
                 <b>Start Free Trial</b>
