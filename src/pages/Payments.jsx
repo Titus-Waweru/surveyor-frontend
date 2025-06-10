@@ -70,7 +70,7 @@ export default function Payments({ user }) {
           setMessage({ type: "error", text: "Failed to initiate M-Pesa payment" });
         }
       } else {
-        res = await axios.post(`${API_BASE}/payment/paystack`, {
+        res = await axios.post(`${API_BASE}/payment/initiate`, {
           email: user.email,
           amount: numericAmount,
         });
