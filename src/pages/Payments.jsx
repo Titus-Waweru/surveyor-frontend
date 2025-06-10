@@ -19,7 +19,7 @@ export default function Payments({ user }) {
 
       async function fetchPayments() {
         try {
-          const res = await axios.get(`${API_BASE}/payments?email=${user.email}`);
+          const res = await axios.get(`${API_BASE}/payment?email=${user.email}`);
           setPayments(res.data.payments || []);
         } catch (err) {
           console.error("Failed to fetch payments", err);
@@ -58,7 +58,7 @@ export default function Payments({ user }) {
       let res;
 
       if (paymentMethod === "mpesa") {
-        res = await axios.post(`${API_BASE}/payments/mpesa`, {
+        res = await axios.post(`${API_BASE}/payment/mpesa`, {
           phone,
           amount: numericAmount,
           email: user.email,
@@ -70,7 +70,7 @@ export default function Payments({ user }) {
           setMessage({ type: "error", text: "Failed to initiate M-Pesa payment" });
         }
       } else {
-        res = await axios.post(`${API_BASE}/payments/paystack`, {
+        res = await axios.post(`${API_BASE}/payment/paystack`, {
           email: user.email,
           amount: numericAmount,
         });
@@ -94,7 +94,6 @@ export default function Payments({ user }) {
 
   return (
     <div className="min-h-screen bg-[#fff6e5] px-6 py-8 font-manrope">
-      {/* Container now aligned top with vertical padding, no flex centering */}
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
         <h1 className="text-3xl font-bold text-yellow-600 mb-6 text-center font-poppins">
           Payments
@@ -163,7 +162,6 @@ export default function Payments({ user }) {
             </div>
           )}
 
-          {/* Instructions */}
           {paymentMethod === "paystack" && (
             <div className="bg-yellow-50 border border-yellow-300 p-4 rounded text-sm text-yellow-700">
               <p className="mb-1 font-semibold">Instructions:</p>
