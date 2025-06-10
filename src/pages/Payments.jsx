@@ -19,7 +19,7 @@ export default function Payments({ user }) {
 
       async function fetchPayments() {
         try {
-          const res = await axios.get(`${API_BASE}/payment?email=${user.email}`);
+          const res = await axios.get(`${API_BASE}/payment/history?email=${user.email}`);
           setPayments(res.data.payments || []);
         } catch (err) {
           console.error("Failed to fetch payments", err);
