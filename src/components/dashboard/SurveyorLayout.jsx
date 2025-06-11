@@ -28,8 +28,8 @@ export default function SurveyorLayout({ user, onLogout }) {
   return (
     <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
       {/* Sidebar */}
-      <div
-        className={`fixed left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex overflow-hidden ${
+      <aside
+        className={`fixed left-0 z-50 transform bg-blue-100 text-blue-900 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex flex-col overflow-hidden ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{
@@ -41,7 +41,7 @@ export default function SurveyorLayout({ user, onLogout }) {
           Surveyor<span className="text-yellow-500">.app</span>
         </div>
 
-        <nav className="flex-1 px-4 py-6 space-y-2">
+        <nav className="flex-1 px-4 py-6 space-y-2 font-[Manrope]">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -50,7 +50,7 @@ export default function SurveyorLayout({ user, onLogout }) {
               className={`block px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 location.pathname === link.path
                   ? "bg-yellow-400 text-blue-900 font-semibold shadow"
-                  : "hover:bg-yellow-100 hover:text-blue-900 text-blue-900"
+                  : "hover:bg-yellow-100 hover:text-blue-900"
               }`}
             >
               {link.name}
@@ -58,10 +58,10 @@ export default function SurveyorLayout({ user, onLogout }) {
           ))}
         </nav>
 
-        <div className="p-4 text-xs text-gray-600 border-t border-blue-200 font-[Manrope]">
+        <footer className="p-4 text-xs text-gray-600 border-t border-blue-200">
           &copy; 2025 LandLink App
-        </div>
-      </div>
+        </footer>
+      </aside>
 
       {/* Overlay */}
       {isSidebarOpen && (
