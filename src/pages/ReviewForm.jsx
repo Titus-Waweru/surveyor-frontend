@@ -1,4 +1,3 @@
-// src/pages/ReviewForm.jsx
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,13 +20,12 @@ export default function ReviewForm({ user }) {
     try {
       const res = await axios.post(`${API_BASE}/reviews`, {
         bookingId,
-        reviewer: user.email,
-        role: user.role, // client or surveyor
+        userId: user.id, // use numeric user ID from props
         rating,
         comment,
       });
 
-      if (res.data.success) {
+      if (res.status === 201) {
         setMessage({ type: "success", text: "Review submitted successfully!" });
         setTimeout(() => navigate(`/${user.role}/bookings`), 2000);
       } else {
@@ -49,9 +47,13 @@ export default function ReviewForm({ user }) {
         <h2 className="text-2xl font-bold mb-4 text-yellow-600 text-center font-poppins">Leave a Review</h2>
 
         {message && (
-          <div className={`mb-4 px-4 py-2 rounded text-center ${
-            message.type === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
-          }`}>
+          <div
+            className={`mb-4 px-4 py-2 rounded text-center ${
+              message.type === "error"
+                ? "bg-red-100 text-red-700"
+                : "bg-green-100 text-green-700"
+            }`}
+          >
             {message.text}
           </div>
         )}
@@ -65,7 +67,9 @@ export default function ReviewForm({ user }) {
               className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               {[5, 4, 3, 2, 1].map((r) => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r} value={r}>
+                  {r}
+                </option>
               ))}
             </select>
           </div>
