@@ -1,67 +1,34 @@
 import { useState, useEffect } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";  // import Sidebar
+import { Outlet } from "react-router-dom";
 
 export default function SurveyorLayout({ user, onLogout }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Start open
-  const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Auto-close sidebar after 5 seconds
   useEffect(() => {
     let timeout;
     if (isSidebarOpen) {
-      timeout = setTimeout(() => {
-        setIsSidebarOpen(false);
-      }, 5000);
+      timeout = setTimeout(() => setIsSidebarOpen(false), 5000);
     }
     return () => clearTimeout(timeout);
   }, [isSidebarOpen]);
 
-  const navLinks = [
-    { name: "Dashboard", path: "/surveyor/dashboard" },
-    { name: "Payments", path: "/surveyor/payments" },
-    { name: "Profile", path: "/surveyor/profile" },
-    { name: "Settings", path: "/surveyor/settings" },
-  ];
-
   return (
     <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
       {/* Sidebar */}
-      <aside
-        className={`fixed left-0 z-50 transform bg-blue-100 text-blue-900 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex flex-col overflow-hidden ${
+      <div
+        className={`fixed left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex overflow-hidden ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{
-          top: "64px", // height of navbar
-          height: "calc(100vh - 64px)", // full height minus navbar
+          top: "64px",
+          height: "calc(100vh - 64px)",
         }}
       >
-        <div className="p-4 text-xl font-extrabold tracking-wide border-b border-blue-200 font-[Poppins]">
-          Surveyor<span className="text-yellow-500">.app</span>
-        </div>
-
-        <nav className="flex-1 px-4 py-6 space-y-2 font-[Manrope]">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              onClick={() => setIsSidebarOpen(false)}
-              className={`block px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                location.pathname === link.path
-                  ? "bg-yellow-400 text-blue-900 font-semibold shadow"
-                  : "hover:bg-yellow-100 hover:text-blue-900"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-
-        <footer className="p-4 text-xs text-gray-600 border-t border-blue-200">
-          &copy; 2025 LandLink App
-        </footer>
-      </aside>
+        <Sidebar role="surveyor" />
+      </div>
 
       {/* Overlay */}
       {isSidebarOpen && (
