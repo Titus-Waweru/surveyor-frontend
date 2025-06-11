@@ -236,7 +236,7 @@ export default function Login({ onSubmit }) {
               to="/signup"
               className="text-yellow-600 hover:underline font-semibold"
             >
-              Sign up here
+             <strong>Sign up here</strong> 
             </Link>
           </p>
         </div>

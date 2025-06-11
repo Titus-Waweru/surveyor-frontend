@@ -61,6 +61,9 @@ import AboutUs from "./pages/AboutUs";
 // LEGAL
 import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 
+// ✅ REVIEW FORM PAGE
+import ReviewForm from "./pages/ReviewForm";
+
 function getDefaultDashboard(role) {
   switch (role) {
     case "client":
@@ -254,6 +257,10 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       <Route path="/news" element={<News />} />
       <Route path="/about" element={<AboutUs />} />
       <Route path="/terms" element={<TermsAndPrivacy />} />
+
+      {/* ✅ REVIEW FORM ROUTE */}
+      <Route path="/review" element={<ReviewForm />} />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
