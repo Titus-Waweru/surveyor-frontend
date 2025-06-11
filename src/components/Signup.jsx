@@ -289,7 +289,7 @@ export default function Signup() {
             to="/login"
             className="text-yellow-600 hover:underline font-semibold"
           >
-            Log in here
+            <strong>Log in here</strong>
           </Link>
         </p>
       </motion.div>

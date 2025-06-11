@@ -211,7 +211,7 @@ export default function Login({ onSubmit }) {
                 to="/forgot-password"
                 className="text-sm text-yellow-600 hover:underline font-medium"
               >
-                Forgot password?
+                <strong>Forgot password?</strong>
               </Link>
             </div>
 
