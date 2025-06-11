@@ -3,14 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-// ✅ Import geocoder plugin
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "leaflet-control-geocoder";
-
-// ✅ Fix Leaflet default marker icons
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -35,6 +32,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markerRef = useRef(null);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -63,6 +61,11 @@ export default function BookingForm({ userEmail, onNewBooking }) {
       reset();
       setCoords({ latitude: null, longitude: null });
       onNewBooking?.();
+
+      // ✅ Redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/client/reviews");
+      }, 2000);
     } catch (err) {
       setStatus({
         type: "error",
@@ -84,7 +87,6 @@ export default function BookingForm({ userEmail, onNewBooking }) {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(mapInstance.current);
 
-    // ✅ Add search bar using Leaflet Control Geocoder
     L.Control.geocoder({
       defaultMarkGeocode: false,
     })
@@ -127,7 +129,6 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     };
   }, []);
 
-  // ✅ Handle real-time GPS location
   const handleUseMyLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
