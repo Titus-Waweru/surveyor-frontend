@@ -110,7 +110,7 @@ export default function LandingPage() {
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-[#fff6e5]" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What We Offer</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {[ ...Array(9).keys() ].map((index) => {
+          {[...Array(9).keys()].map((index) => {
             const services = [
               { name: "Land Surveying", desc: "Professional surveys for boundary marking, subdivision, and land development with precision and compliance." },
               { name: "Site Inspection Scheduling", desc: "Easily book, manage, and track on-site inspections — all from your dashboard in real time." },
@@ -180,22 +180,12 @@ export default function LandingPage() {
         <Link to="/signup">
           <button
             aria-label="Get Started Free"
-            className="bg-white text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
+            className="bg-white text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow hover:bg-gray-100"
           >
             <b>Get Started Free</b>
           </button>
         </Link>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-white py-6 px-4 sm:px-8 md:px-20 text-center text-sm text-gray-500">
-        <p>
-          © {new Date().getFullYear()} LandLink. All rights reserved.{' '}
-          <Link to="/terms" className="text-yellow-600 hover:underline ml-1">
-            Terms & Privacy Policy
-          </Link>
-        </p>
-      </footer>
     </div>
   );
 }
