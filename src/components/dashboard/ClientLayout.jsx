@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 
 export default function ClientLayout({ user, onLogout }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // Start sidebar open by default
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Auto-close sidebar after 5 seconds
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function ClientLayout({ user, onLogout }) {
     <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
       {/* Sidebar */}
       <div
-        className={`fixed left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex ${
+        className={`fixed left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex overflow-hidden ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{

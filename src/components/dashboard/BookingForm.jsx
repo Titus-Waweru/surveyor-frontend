@@ -64,7 +64,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
 
       // ✅ Redirect after 2 seconds
       setTimeout(() => {
-        navigate("/client/reviews");
+        navigate("/review");
       }, 2000);
     } catch (err) {
       setStatus({
