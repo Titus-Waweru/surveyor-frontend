@@ -51,11 +51,15 @@ export default function AdminLogin({ setUser }) {
       >
         {/* Left Panel */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
-          <img
-            src={logo}  // <-- updated here to use the logo
-            alt="LandLink Logo"
-            className="h-[100px] w-auto max-w-[220px] object-contain mb-6"
-          />
+          {/* Wrapped logo in white rounded container */}
+          <div className="bg-white p-3 rounded-full mb-6">
+            <img
+              src={logo}
+              alt="LandLink Logo"
+              className="h-[100px] w-auto max-w-[220px] object-contain"
+            />
+          </div>
+
           <h1 className="text-3xl font-bold mb-2 font-poppins text-center">
             LandLink Admins
           </h1>

@@ -53,15 +53,30 @@ const SurveyorDashboard = () => {
   };
 
   if (loading)
-    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">Loading surveyor dashboard...</div>;
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
+        Loading surveyor dashboard...
+      </div>
+    );
   if (error)
-    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">{error}</div>;
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
+        {error}
+      </div>
+    );
   if (!surveyorData)
-    return <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">No surveyor data found.</div>;
+    return (
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
+        No surveyor data found.
+      </div>
+    );
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
+    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center px-4 py-6 md:py-10">
+      <div
+        className="w-full max-w-full md:max-w-6xl bg-white shadow-xl rounded-3xl p-6 md:p-14"
+        data-aos="fade-up"
+      >
         <h1 className="text-3xl font-bold text-blue-700 text-center mb-6 font-poppins">
           Welcome, {surveyorData.surveyorName}
         </h1>
@@ -75,7 +90,7 @@ const SurveyorDashboard = () => {
         <div className="bg-white rounded-xl shadow p-6 font-manrope">
           <h2 className="text-xl font-semibold mb-3 text-indigo-700">Recent Bookings</h2>
 
-          {/* ✅ Map toggle button */}
+          {/* Map toggle button */}
           <button
             onClick={() => setShowMap((prev) => !prev)}
             className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-manrope"
@@ -112,7 +127,7 @@ const SurveyorDashboard = () => {
                         </td>
                         <td className="py-2 px-4 capitalize">{booking.status}</td>
                         <td className="py-2 px-4 space-x-2">
-                          {booking.status === "pending" || booking.status === "rejected" ? (
+                          {(booking.status === "pending" || booking.status === "rejected") && (
                             <>
                               <button
                                 disabled={updatingBookingId === booking.id}
@@ -129,31 +144,31 @@ const SurveyorDashboard = () => {
                                 Reject
                               </button>
                             </>
-                          ) : booking.status !== "completed" ? (
-                            <select
-                              disabled={updatingBookingId === booking.id}
-                              value={booking.status}
-                              onChange={(e) =>
-                                updateBookingStatus(booking.id, { status: e.target.value })
-                              }
-                              className="border rounded px-2 py-1"
-                            >
-                              <option value="accepted">Accepted</option>
-                              <option value="in progress">In Progress</option>
-                              <option value="completed">Completed</option>
-                            </select>
-                          ) : null}
+                          )}
+
+                          {booking.status !== "pending" &&
+                            booking.status !== "rejected" &&
+                            booking.status !== "completed" && (
+                              <select
+                                disabled={updatingBookingId === booking.id}
+                                value={booking.status}
+                                onChange={(e) =>
+                                  updateBookingStatus(booking.id, { status: e.target.value })
+                                }
+                                className="border rounded px-2 py-1"
+                              >
+                                <option value="accepted">Accepted</option>
+                                <option value="in progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                              </select>
+                            )}
                         </td>
                       </tr>
 
-                      {/* ✅ Map row if coordinates exist and showMap is true */}
                       {showMap && booking.latitude && booking.longitude && (
                         <tr>
                           <td colSpan="6" className="py-4">
-                            <BookingMap
-                              latitude={booking.latitude}
-                              longitude={booking.longitude}
-                            />
+                            <BookingMap latitude={booking.latitude} longitude={booking.longitude} />
                           </td>
                         </tr>
                       )}
