@@ -34,8 +34,10 @@ const SurveyorDashboard = () => {
         `/surveyor/dashboard?email=${encodeURIComponent(email)}`
       );
       setSurveyorData(res.data);
+      setError(null);
     } catch (err) {
       setError(err.message || "Failed to fetch surveyor data.");
+      setSurveyorData(null);
     } finally {
       setLoading(false);
     }
