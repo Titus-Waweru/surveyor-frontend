@@ -14,7 +14,7 @@ const loginSchema = z.object({
 });
 
 const MAX_ATTEMPTS = 5;
-const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const BLOCK_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export default function Login({ onSubmit }) {
   const [isBlocked, setIsBlocked] = useState(false);
@@ -23,7 +23,8 @@ export default function Login({ onSubmit }) {
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-    checkLoginAttempts();
+    checkLoginStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -34,43 +35,80 @@ export default function Login({ onSubmit }) {
     resolver: zodResolver(loginSchema),
   });
 
-  function checkLoginAttempts() {
+  /* ---------- Check current block / attempt status ---------- */
+  function checkLoginStatus() {
     const now = Date.now();
-    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
-    const recent = attempts.filter((ts) => now - ts < ATTEMPT_WINDOW_MS);
+    const blockedUntil = parseInt(
+      localStorage.getItem("loginBlockedUntil") || "0",
+      10
+    );
 
-    if (recent.length >= MAX_ATTEMPTS) {
-      const retryIn = ATTEMPT_WINDOW_MS - (now - recent[0]);
+    // Still blocked?
+    if (blockedUntil && now < blockedUntil) {
       setIsBlocked(true);
-      setRetryAfter(Math.ceil(retryIn / 1000));
+      setRetryAfter(Math.ceil((blockedUntil - now) / 1000));
+      startCountdown(blockedUntil - now);
+      return;
+    }
 
-      const interval = setInterval(() => {
-        setRetryAfter((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            setIsBlocked(false);
-            localStorage.removeItem("loginAttempts");
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    // Not blocked -> clear flag & attempts if 24h passed
+    if (blockedUntil && now >= blockedUntil) {
+      localStorage.removeItem("loginBlockedUntil");
+      localStorage.removeItem("loginAttempts");
+    }
+
+    setIsBlocked(false);
+    setRetryAfter(0);
+  }
+
+  /* ---------- Start 1-second countdown updater ---------- */
+  function startCountdown(initialMs) {
+    let remaining = initialMs;
+    const interval = setInterval(() => {
+      remaining -= 1000;
+      setRetryAfter(Math.max(0, Math.ceil(remaining / 1000)));
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        setIsBlocked(false);
+        setRetryAfter(0);
+        localStorage.removeItem("loginBlockedUntil");
+        localStorage.removeItem("loginAttempts");
+      }
+    }, 1000);
+  }
+
+  /* ---------- Record failed attempt ---------- */
+  function recordFailedAttempt() {
+    const attempts = JSON.parse(localStorage.getItem("loginAttempts") || "[]");
+    attempts.push(Date.now());
+    localStorage.setItem("loginAttempts", JSON.stringify(attempts));
+
+    if (attempts.length >= MAX_ATTEMPTS) {
+      // Block for 24h
+      const blockedUntil = Date.now() + BLOCK_DURATION_MS;
+      localStorage.setItem("loginBlockedUntil", blockedUntil.toString());
+      localStorage.removeItem("loginAttempts");
+      setIsBlocked(true);
+      setRetryAfter(Math.ceil(BLOCK_DURATION_MS / 1000));
+      startCountdown(BLOCK_DURATION_MS);
     }
   }
 
-  function recordFailedAttempt() {
-    const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
-    attempts.push(Date.now());
-    localStorage.setItem("loginAttempts", JSON.stringify(attempts));
-  }
-
+  /* ---------- Clear attempts ---------- */
   function clearAttempts() {
     localStorage.removeItem("loginAttempts");
+    localStorage.removeItem("loginBlockedUntil");
   }
 
+  /* ---------- Submit wrapper ---------- */
   const onSubmitWrapper = async (formData) => {
     if (isBlocked) {
-      setFormError(`Too many attempts. Please wait ${retryAfter} seconds.`);
+      setFormError(
+        `Too many failed logins. Please try again in ${Math.ceil(
+          retryAfter / 60
+        )} mins`
+      );
       return;
     }
 
@@ -80,7 +118,7 @@ export default function Login({ onSubmit }) {
       setFormError("");
     } catch (error) {
       recordFailedAttempt();
-      checkLoginAttempts();
+      checkLoginStatus();
       setFormError(error.response?.data?.message || "Login failed");
     }
   };
@@ -118,7 +156,8 @@ export default function Login({ onSubmit }) {
             Login
           </h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
-            Welcome back! Please enter your credentials to access your dashboard.
+            Welcome back! Please enter your credentials to access your
+            dashboard.
           </p>
 
           <form
@@ -224,7 +263,7 @@ export default function Login({ onSubmit }) {
               {isSubmitting
                 ? "Logging in..."
                 : isBlocked
-                ? `Try again in ${retryAfter}s`
+                ? `Try again in ${Math.ceil(retryAfter / 60)} min`
                 : "Login"}
             </button>
           </form>
@@ -236,7 +275,7 @@ export default function Login({ onSubmit }) {
               to="/signup"
               className="text-yellow-600 hover:underline font-semibold"
             >
-             <strong>Sign up here</strong> 
+              <strong>Sign up here</strong>
             </Link>
           </p>
         </div>
