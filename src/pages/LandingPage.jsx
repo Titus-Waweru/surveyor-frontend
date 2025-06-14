@@ -94,13 +94,15 @@ export default function LandingPage() {
               </button>
             </Link>
             <Link to="/book-demo">
-              <button
-                aria-label="Book a Demo"
-                className="border border-yellow-400 text-yellow-500 font-semibold px-6 py-3 rounded-2xl"
-              >
-                <b>Book a Demo</b>
-              </button>
-            </Link>
+  <button
+    aria-label="Book a Demo"
+    className="border border-yellow-400 text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
+  >
+    <b>Book a Demo</b>
+  </button>
+</Link>
+
+            
           </div>
         </div>
         <div className="md:w-1/2 mt-12 md:mt-0" data-aos="zoom-in">
