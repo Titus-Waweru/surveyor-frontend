@@ -17,12 +17,20 @@ const TermsAndPrivacyModal = ({ onClose }) => {
     html2pdf().set(opt).from(element).save();
   };
 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      console.warn("No onClose function provided.");
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-xl shadow-lg p-6 relative text-gray-800 font-manrope">
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-black transition"
         >
           <X size={24} />
@@ -91,7 +99,7 @@ const TermsAndPrivacyModal = ({ onClose }) => {
             <li>Access a copy of your data</li>
             <li>Revoke consent for marketing</li>
           </ul>
-          <p>To make a request, email: <a href="mailto:privacy@landlink.co.ke" className="underline">privacy@landlink.co.ke</a></p>
+          <p>To make a request, email: <a href="mailto:tituswaweru631@gmail.com" className="underline">tituswaweru631@gmail.com</a></p>
 
           <h2 className="text-lg font-semibold mt-8">⚖️ Terms of Service</h2>
 
@@ -126,8 +134,8 @@ const TermsAndPrivacyModal = ({ onClose }) => {
 
           <h3 className="font-bold mt-6">Contact Us</h3>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Support: <a href="mailto:support@landlink.co.ke" className="underline">support@landlink.co.ke</a></li>
-            <li>Legal: <a href="mailto:legal@landlink.co.ke" className="underline">legal@landlink.co.ke</a></li>
+            <li>Support: <a href="mailto:tituswaweru631@gmail.com" className="underline">tituswaweru631@gmail.com</a></li>
+            <li>Legal: <a href="mailto:tituswaweru631@gmail.com" className="underline">tituswaweru631@gmail.com</a></li>
             <li>Phone: +254 745745186</li>
           </ul>
 
