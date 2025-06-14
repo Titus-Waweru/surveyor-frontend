@@ -11,35 +11,37 @@ export default function LandingPage() {
     AOS.init({ duration: 800, once: true });
   }, []);
 
-  // Close the mobile menu after a link is clicked
   const handleLinkClick = () => setIsNavOpen(false);
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins">
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 sm:px-8 md:px-20 py-4 sm:py-6">
-        <Link to="/">
-          <img
-            src="/assets/logo.png"
-            alt="LandLink Logo"
-            className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
-          />
-        </Link>
+      {/* ───────────────────────── Header ───────────────────────── */}
+      <header className="relative px-4 sm:px-8 md:px-20 py-4 sm:py-6">
+        {/* Logo + hamburger */}
+        <div className="flex items-center justify-between">
+          <Link to="/">
+            <img
+              src="/assets/logo.png"
+              alt="LandLink Logo"
+              className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
+            />
+          </Link>
 
-        {/* Mobile toggle button */}
-        <button
-          aria-label="Toggle navigation menu"
-          className="md:hidden p-2 rounded-md hover:bg-yellow-400/20 transition-colors"
-          onClick={() => setIsNavOpen(!isNavOpen)}
-        >
-          <Menu size={28} />
-        </button>
+          {/* Mobile toggle button */}
+          <button
+            aria-label="Toggle navigation menu"
+            className="md:hidden p-2 rounded-md hover:bg-yellow-400/20 transition-colors"
+            onClick={() => setIsNavOpen(!isNavOpen)}
+          >
+            <Menu size={28} />
+          </button>
+        </div>
 
         {/* Navigation links */}
         <nav
           className={`${
             isNavOpen ? "flex" : "hidden"
-          } md:flex flex-col md:flex-row items-start md:items-center absolute md:static top-full left-0 w-full md:w-auto bg-[#fff6e5] md:bg-transparent shadow-md md:shadow-none md:ml-auto z-20`}
+          } md:flex flex-col md:flex-row items-start md:items-center absolute md:static top-[100%] left-0 w-full md:w-auto bg-[#fff6e5] md:bg-transparent shadow-md md:shadow-none z-20`}
         >
           <Link
             to="/home"
@@ -72,7 +74,7 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      {/* Hero Section */}
+      {/* ──────────────────────── Hero Section ─────────────────────── */}
       <section className="flex flex-col md:flex-row items-center justify-between px-4 sm:px-8 md:px-20 py-16 sm:py-20">
         <div className="md:w-1/2 space-y-6" data-aos="fade-up">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
@@ -111,26 +113,34 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Vision, Mission, Goal Section */}
+      {/* ─────────────── Vision, Mission, Goal Section ─────────────── */}
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-white" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Our Vision, Mission & Goals</h2>
         <div className="grid md:grid-cols-3 gap-10">
           <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Vision</h3>
-            <p className="text-gray-600">To be the leading digital infrastructure for land service automation across Africa.</p>
+            <p className="text-gray-600">
+              To be the leading digital infrastructure for land service automation across Africa.
+            </p>
           </div>
           <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Mission</h3>
-            <p className="text-gray-600">To empower individuals and organizations with easy-to-use tools for booking, managing, and completing land-related services.</p>
+            <p className="text-gray-600">
+              To empower individuals and organizations with easy-to-use tools for booking, managing, and completing
+              land-related services.
+            </p>
           </div>
           <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Our Goal</h3>
-            <p className="text-gray-600">Seamlessly connect clients, surveyors, and administrators while enhancing transparency, speed, and trust in land service delivery.</p>
+            <p className="text-gray-600">
+              Seamlessly connect clients, surveyors, and administrators while enhancing transparency, speed, and trust
+              in land service delivery.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* ─────────────────────── Services Section ───────────────────── */}
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-[#fff6e5]" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What We Offer</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -162,35 +172,38 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* ─────────────────────── Features Section ───────────────────── */}
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-white" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Why Teams Love LandLink</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {["OTP-Verified Logins", "Easy Booking Management", "Integrated Payments", "Admin & Surveyor Dashboards"].map(
-            (title, i) => {
-              const descs = [
-                "Secure access for clients and agents via email & SMS OTPs.",
-                "Track appointments and manage field tasks with ease.",
-                "Accept payments via Paystack or M-Pesa instantly.",
-                "Role-based views to keep everyone productive.",
-              ];
-              return (
-                <div
-                  key={i}
-                  className="bg-[#fff6e5] p-6 rounded-2xl shadow"
-                  data-aos="fade-up"
-                  data-aos-delay={i * 100}
-                >
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
-                  <p className="text-gray-600">{descs[i]}</p>
-                </div>
-              );
-            }
-          )}
+          {[
+            "OTP-Verified Logins",
+            "Easy Booking Management",
+            "Integrated Payments",
+            "Admin & Surveyor Dashboards",
+          ].map((title, i) => {
+            const descs = [
+              "Secure access for clients and agents via email & SMS OTPs.",
+              "Track appointments and manage field tasks with ease.",
+              "Accept payments via Paystack or M-Pesa instantly.",
+              "Role-based views to keep everyone productive.",
+            ];
+            return (
+              <div
+                key={i}
+                className="bg-[#fff6e5] p-6 rounded-2xl shadow"
+                data-aos="fade-up"
+                data-aos-delay={i * 100}
+              >
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+                <p className="text-gray-600">{descs[i]}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* ─────────────────────── Testimonials ──────────────────────── */}
       <section className="px-4 sm:px-8 md:px-20 py-16" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What Our Users Say</h2>
         <div className="grid md:grid-cols-2 gap-8">
@@ -209,7 +222,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final Call to Action */}
+      {/* ────────────────── Final Call to Action ───────────────────── */}
       <section className="text-center py-16 bg-yellow-400 text-white" data-aos="fade-up">
         <h2 className="text-3xl font-bold mb-4">Ready to simplify your operations?</h2>
         <p className="mb-6">Start your free trial today — no credit card required.</p>
@@ -223,7 +236,7 @@ export default function LandingPage() {
         </Link>
       </section>
 
-      {/* Footer */}
+      {/* ───────────────────────── Footer ─────────────────────────── */}
       <footer className="bg-white py-6 px-4 sm:px-8 md:px-20 text-center text-sm text-gray-500">
         <p>
           © {new Date().getFullYear()} LandLink. All rights reserved.{" "}
