@@ -1,12 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Menu } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 export default function LandingPage() {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
+
+  // Close the mobile menu after a link is clicked
+  const handleLinkClick = () => setIsNavOpen(false);
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins">
@@ -20,30 +26,48 @@ export default function LandingPage() {
           />
         </Link>
 
-        <nav className="flex items-center">
+        {/* Mobile toggle button */}
+        <button
+          aria-label="Toggle navigation menu"
+          className="md:hidden p-2 rounded-md hover:bg-yellow-400/20 transition-colors"
+          onClick={() => setIsNavOpen(!isNavOpen)}
+        >
+          <Menu size={28} />
+        </button>
+
+        {/* Navigation links */}
+        <nav
+          className={`${
+            isNavOpen ? "flex" : "hidden"
+          } md:flex flex-col md:flex-row items-start md:items-center absolute md:static top-full left-0 w-full md:w-auto bg-[#fff6e5] md:bg-transparent shadow-md md:shadow-none md:ml-auto z-20`}
+        >
           <Link
             to="/home"
-            className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+            onClick={handleLinkClick}
+            className="font-bold text-black px-6 py-3 border-b md:border-b-0 md:border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
           >
-            <b>Home</b>
+            Home
           </Link>
           <Link
             to="/contact"
-            className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+            onClick={handleLinkClick}
+            className="font-bold text-black px-6 py-3 border-b md:border-b-0 md:border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
           >
-            <b>Contact Us</b>
+            Contact&nbsp;Us
           </Link>
           <Link
             to="/news"
-            className="font-bold text-black px-6 py-2 border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+            onClick={handleLinkClick}
+            className="font-bold text-black px-6 py-3 border-b md:border-b-0 md:border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
           >
-            <b>News</b>
+            News
           </Link>
           <Link
             to="/about"
-            className="font-bold text-black px-6 py-2 hover:text-[#7B4F24] transition-transform duration-300 ease-in-out transform hover:scale-105"
+            onClick={handleLinkClick}
+            className="font-bold text-black px-6 py-3 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
           >
-            <b>About Us</b>
+            About&nbsp;Us
           </Link>
         </nav>
       </header>
@@ -110,7 +134,7 @@ export default function LandingPage() {
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-[#fff6e5]" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What We Offer</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {[ ...Array(9).keys() ].map((index) => {
+          {[...Array(9).keys()].map((index) => {
             const services = [
               { name: "Land Surveying", desc: "Professional surveys for boundary marking, subdivision, and land development with precision and compliance." },
               { name: "Site Inspection Scheduling", desc: "Easily book, manage, and track on-site inspections — all from your dashboard in real time." },
@@ -124,7 +148,12 @@ export default function LandingPage() {
             ];
             const service = services[index];
             return (
-              <div key={index} className="bg-white p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={index * 100}>
+              <div
+                key={index}
+                className="bg-white p-6 rounded-2xl shadow"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+              >
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">{service.name}</h3>
                 <p className="text-gray-600">{service.desc}</p>
               </div>
@@ -137,20 +166,27 @@ export default function LandingPage() {
       <section className="px-4 sm:px-8 md:px-20 py-16 bg-white" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Why Teams Love LandLink</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {["OTP-Verified Logins", "Easy Booking Management", "Integrated Payments", "Admin & Surveyor Dashboards"].map((title, i) => {
-            const descs = [
-              "Secure access for clients and agents via email & SMS OTPs.",
-              "Track appointments and manage field tasks with ease.",
-              "Accept payments via Paystack or M-Pesa instantly.",
-              "Role-based views to keep everyone productive."
-            ];
-            return (
-              <div key={i} className="bg-[#fff6e5] p-6 rounded-2xl shadow" data-aos="fade-up" data-aos-delay={i * 100}>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
-                <p className="text-gray-600">{descs[i]}</p>
-              </div>
-            );
-          })}
+          {["OTP-Verified Logins", "Easy Booking Management", "Integrated Payments", "Admin & Surveyor Dashboards"].map(
+            (title, i) => {
+              const descs = [
+                "Secure access for clients and agents via email & SMS OTPs.",
+                "Track appointments and manage field tasks with ease.",
+                "Accept payments via Paystack or M-Pesa instantly.",
+                "Role-based views to keep everyone productive.",
+              ];
+              return (
+                <div
+                  key={i}
+                  className="bg-[#fff6e5] p-6 rounded-2xl shadow"
+                  data-aos="fade-up"
+                  data-aos-delay={i * 100}
+                >
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+                  <p className="text-gray-600">{descs[i]}</p>
+                </div>
+              );
+            }
+          )}
         </div>
       </section>
 
@@ -190,9 +226,9 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-white py-6 px-4 sm:px-8 md:px-20 text-center text-sm text-gray-500">
         <p>
-          © {new Date().getFullYear()} LandLink. All rights reserved.{' '}
+          © {new Date().getFullYear()} LandLink. All rights reserved.{" "}
           <Link to="/terms" className="text-yellow-600 hover:underline ml-1">
-            Terms & Privacy Policy
+            Terms &amp; Privacy Policy
           </Link>
         </p>
       </footer>
