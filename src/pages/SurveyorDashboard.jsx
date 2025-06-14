@@ -10,7 +10,6 @@ const SurveyorDashboard = () => {
   const [error, setError] = useState(null);
   const [updatingBookingId, setUpdatingBookingId] = useState(null);
 
-  // Map toggle state with localStorage persistence
   const [showMap, setShowMap] = useState(() => {
     const saved = localStorage.getItem("showMap");
     return saved === "true";
@@ -72,7 +71,7 @@ const SurveyorDashboard = () => {
     );
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center px-4 py-6 md:py-10">
+    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center px-2 sm:px-4 md:px-6 py-6 md:py-10">
       <div
         className="w-full max-w-full md:max-w-6xl bg-white shadow-xl rounded-3xl p-6 md:p-14"
         data-aos="fade-up"
@@ -90,7 +89,6 @@ const SurveyorDashboard = () => {
         <div className="bg-white rounded-xl shadow p-6 font-manrope">
           <h2 className="text-xl font-semibold mb-3 text-indigo-700">Recent Bookings</h2>
 
-          {/* Map toggle button */}
           <button
             onClick={() => setShowMap((prev) => !prev)}
             className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-manrope"

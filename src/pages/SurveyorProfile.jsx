@@ -46,6 +46,7 @@ export default function ClientProfile({ user }) {
       const res = await axios.put(`${API_BASE_URL}/profile`, formData);
       alert("✅ Profile updated successfully.");
       setProfile(res.data.user);
+      setImage(null); // Clear image input after update
     } catch (err) {
       console.error("❌ Update error:", err);
       alert("Failed to update profile. Please try again.");
@@ -55,81 +56,104 @@ export default function ClientProfile({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4">
+    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-12 px-4 sm:px-6 lg:px-8 font-manrope">
       <div
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-10 md:p-14"
+        className="w-full max-w-3xl bg-white rounded-3xl shadow-xl p-8 sm:p-12"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins">
+        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins tracking-wide">
           My Profile
         </h1>
 
         {profile ? (
-          <form onSubmit={handleUpdate} className="space-y-6 font-manrope">
+          <form onSubmit={handleUpdate} className="space-y-8">
             {/* Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Name
+              </label>
               <input
+                id="name"
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition"
+                placeholder="Enter your full name"
+                required
               />
             </div>
 
-            {/* Phone Field */}
+            {/* Phone Number Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Phone Number
+              </label>
               <input
-                type="text"
+                id="phoneNumber"
+                type="tel"
                 value={form.phoneNumber}
-                onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                onChange={(e) =>
+                  setForm({ ...form, phoneNumber: e.target.value })
+                }
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition"
+                placeholder="Enter your phone number"
+                required
               />
             </div>
 
             {/* Profile Image Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
-              {profile.profileImageUrl && (
-                <img
-                  src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
-                  alt="Profile"
-                  className="rounded-full border shadow-sm mb-3"
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Profile Image
+              </label>
+              <div className="flex items-center space-x-4">
+                {profile.profileImageUrl ? (
+                  <img
+                    src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
+                    alt="Profile"
+                    className="w-16 h-16 rounded-full border shadow-sm object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full border bg-gray-100 flex items-center justify-center text-gray-400">
+                    N/A
+                  </div>
+                )}
 
-              {/* Custom Upload Button */}
-              <div className="relative inline-block">
-                <label
-                  htmlFor="profile-upload"
-                  className="cursor-pointer inline-block bg-yellow-100 text-yellow-700 hover:bg-yellow-200 font-semibold py-2 px-4 rounded-md text-sm"
-                >
-                  {image ? "Change Photo" : "Upload Photo"}
-                </label>
-                <input
-                  id="profile-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImage(e.target.files[0])}
-                  className="hidden"
-                />
+                {/* Custom Upload Button */}
+                <div>
+                  <label
+                    htmlFor="profile-upload"
+                    className="cursor-pointer inline-block bg-yellow-100 text-yellow-700 hover:bg-yellow-200 font-semibold py-2 px-5 rounded-lg text-sm select-none transition"
+                  >
+                    {image ? "Change Photo" : "Upload Photo"}
+                  </label>
+                  <input
+                    id="profile-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    className="hidden"
+                  />
+                </div>
               </div>
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded shadow disabled:opacity-60 transition duration-200"
-            >
-              {loading ? "Updating..." : "Update Profile"}
-            </button>
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-xl shadow-md disabled:opacity-60 transition duration-200"
+              >
+                {loading ? "Updating..." : "Update Profile"}
+              </button>
+            </div>
           </form>
         ) : (
           <p className="text-center text-gray-600">Loading profile...</p>
