@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   useEffect(() => {
@@ -31,8 +32,6 @@ export default function Home() {
         />
         <meta property="og:url" content="https://www.landlink.co.ke/" />
         <meta property="og:type" content="website" />
-
-        {/* JSON-LD structured data for Organization with founder */}
         <script type="application/ld+json">
           {`
             {
@@ -56,6 +55,11 @@ export default function Home() {
       </Helmet>
 
       <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
+        {/* Back to Landing Page Link */}
+        <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
+          ← Back to Landing Page
+        </Link>
+
         {/* Welcome Header */}
         <div className="text-center mb-16" data-aos="fade-up">
           <h1 className="text-5xl font-extrabold text-gray-800 mb-4 leading-tight">

@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { Link } from "react-router-dom";
 
 export default function BookDemo() {
   const [formData, setFormData] = useState({
@@ -8,6 +11,10 @@ export default function BookDemo() {
     phone: "",
     date: "",
   });
+
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true });
+  }, []);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -21,6 +28,11 @@ export default function BookDemo() {
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins px-6 md:px-20 py-16">
+      {/* Back to Landing Page */}
+      <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
+        ← Back to Landing Page
+      </Link>
+
       <div className="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-lg" data-aos="fade-up">
         <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">Book a Demo</h2>
         <p className="text-gray-600 text-center mb-8">

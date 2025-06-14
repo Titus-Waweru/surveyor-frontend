@@ -1,9 +1,11 @@
 import React, { useRef } from "react";
 import html2pdf from "html2pdf.js";
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const TermsAndPrivacyModal = ({ onClose }) => {
+const TermsAndPrivacyModal = () => {
   const contentRef = useRef();
+  const navigate = useNavigate();
 
   const handleDownload = () => {
     const element = contentRef.current;
@@ -18,11 +20,7 @@ const TermsAndPrivacyModal = ({ onClose }) => {
   };
 
   const handleClose = () => {
-    if (onClose) {
-      onClose();
-    } else {
-      console.warn("No onClose function provided.");
-    }
+    navigate("/");
   };
 
   return (

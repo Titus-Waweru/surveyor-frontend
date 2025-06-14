@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Link } from "react-router-dom"; // ✅ added for navigation
 
 export default function ContactUs() {
   useEffect(() => {
@@ -9,6 +10,11 @@ export default function ContactUs() {
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
+      {/* Back to Landing Page */}
+      <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
+        ← Back to Landing Page
+      </Link>
+
       {/* Header */}
       <div className="text-center mb-12" data-aos="fade-up">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Get in Touch</h1>
@@ -37,7 +43,7 @@ export default function ContactUs() {
         </div>
       </div>
 
-      {/* Embedded Map (optional) */}
+      {/* Embedded Map */}
       <div data-aos="fade-up" data-aos-delay="200">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Our Location</h2>
         <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow">

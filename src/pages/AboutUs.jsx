@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Link } from "react-router-dom"; // ✅ added for navigation
 
 export default function AboutUs() {
   useEffect(() => {
@@ -10,6 +11,11 @@ export default function AboutUs() {
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins text-gray-800">
       <div className="px-4 sm:px-8 md:px-20 py-16">
+        {/* Back to Landing Page */}
+        <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
+          ← Back to Landing Page
+        </Link>
+
         <h1
           className="text-4xl md:text-5xl font-bold mb-10 text-center"
           data-aos="fade-down"
@@ -29,10 +35,7 @@ export default function AboutUs() {
         </section>
 
         {/* Vision / Mission / Values */}
-        <section
-          className="grid md:grid-cols-3 gap-10 mb-16"
-          data-aos="fade-up"
-        >
+        <section className="grid md:grid-cols-3 gap-10 mb-16" data-aos="fade-up">
           <div className="bg-white p-6 rounded-2xl shadow">
             <h2 className="text-xl font-semibold mb-2">Our Vision</h2>
             <p>

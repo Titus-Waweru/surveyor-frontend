@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { FaBullhorn, FaMobileAlt, FaGavel, FaTools } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function InfoAlert() {
   const [visible, setVisible] = useState(true);
@@ -66,6 +67,11 @@ export default function News() {
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
+      {/* Back to Landing Page Link */}
+      <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
+        ← Back to Landing Page
+      </Link>
+
       <InfoAlert />
 
       <div className="text-center mb-12" data-aos="fade-up">

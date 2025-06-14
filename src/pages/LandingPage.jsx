@@ -16,73 +16,102 @@ export default function LandingPage() {
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins">
       {/* ───────────────────────── Header ───────────────────────── */}
-      <header className="relative px-4 sm:px-8 md:px-20 py-4 sm:py-6">
-        {/* Logo + hamburger */}
+      <header className="px-4 sm:px-8 md:px-20 py-2 sm:py-3 bg-[#fff6e5] relative z-30">
         <div className="flex items-center justify-between">
+          {/* Logo */}
           <Link to="/">
             <img
               src="/assets/logo.png"
               alt="LandLink Logo"
-              className="h-[100px] md:h-[150px] w-auto max-w-[270px] object-contain"
+              className="h-[80px] md:h-[120px] w-auto object-contain"
             />
           </Link>
 
-          {/* Mobile toggle button */}
+          {/* Desktop links */}
+          <nav className="hidden md:flex gap-6 items-center">
+            <Link
+              to="/home"
+              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
+            >
+              Home
+            </Link>
+            <Link
+              to="/contact"
+              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
+            >
+              Contact&nbsp;Us
+            </Link>
+            <Link
+              to="/news"
+              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
+            >
+              News
+            </Link>
+            <Link
+              to="/about"
+              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
+            >
+              About&nbsp;Us
+            </Link>
+          </nav>
+
+          {/* Mobile toggle */}
           <button
             aria-label="Toggle navigation menu"
             className="md:hidden p-2 rounded-md hover:bg-yellow-400/20 transition-colors"
-            onClick={() => setIsNavOpen(!isNavOpen)}
+            onClick={() => setIsNavOpen((prev) => !prev)}
           >
             <Menu size={28} />
           </button>
         </div>
 
-        {/* Navigation links */}
-        <nav
-          className={`${
-            isNavOpen ? "flex" : "hidden"
-          } md:flex flex-col md:flex-row items-start md:items-center absolute md:static top-[100%] left-0 w-full md:w-auto bg-[#fff6e5] md:bg-transparent shadow-md md:shadow-none z-20`}
-        >
-          <Link
-            to="/home"
-            onClick={handleLinkClick}
-            className="font-bold text-black px-6 py-3 border-b md:border-b-0 md:border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
-          >
-            Home
-          </Link>
-          <Link
-            to="/contact"
-            onClick={handleLinkClick}
-            className="font-bold text-black px-6 py-3 border-b md:border-b-0 md:border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
-          >
-            Contact&nbsp;Us
-          </Link>
-          <Link
-            to="/news"
-            onClick={handleLinkClick}
-            className="font-bold text-black px-6 py-3 border-b md:border-b-0 md:border-r border-gray-400 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
-          >
-            News
-          </Link>
-          <Link
-            to="/about"
-            onClick={handleLinkClick}
-            className="font-bold text-black px-6 py-3 hover:text-[#7B4F24] transition-transform duration-300 transform hover:scale-105"
-          >
-            About&nbsp;Us
-          </Link>
-        </nav>
+        {/* Mobile menu */}
+        {isNavOpen && (
+          <div className="md:hidden mt-4 bg-white shadow rounded-lg p-4">
+            <Link
+              to="/home"
+              onClick={handleLinkClick}
+              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
+            >
+              Home
+            </Link>
+            <Link
+              to="/contact"
+              onClick={handleLinkClick}
+              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
+            >
+              Contact&nbsp;Us
+            </Link>
+            <Link
+              to="/news"
+              onClick={handleLinkClick}
+              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
+            >
+              News
+            </Link>
+            <Link
+              to="/about"
+              onClick={handleLinkClick}
+              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
+            >
+              About&nbsp;Us
+            </Link>
+          </div>
+        )}
       </header>
 
       {/* ──────────────────────── Hero Section ─────────────────────── */}
-      <section className="flex flex-col md:flex-row items-center justify-between px-4 sm:px-8 md:px-20 py-16 sm:py-20">
+      <section className="flex flex-col md:flex-row items-center justify-between px-4 sm:px-8 md:px-20 pt-8 sm:pt-10 pb-16 sm:pb-20">
         <div className="md:w-1/2 space-y-6" data-aos="fade-up">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
-            <strong>LandLink: Connect, Book & Manage Land Services in One Place</strong>
+            <strong>
+              LandLink: Connect, Book &amp; Manage Land Services in One Place
+            </strong>
           </h1>
           <p className="text-lg text-gray-700">
-            From real estate surveyors to inspection teams, LandLink gives you a powerful dashboard, automated bookings,
-            OTP-secure logins, and instant payments — in minutes.
+            From real estate surveyors to inspection teams, LandLink gives you a
+            powerful dashboard, automated bookings, OTP‑secure logins, and
+            instant payments — in minutes.
           </p>
           <div className="space-x-4">
             <Link to="/signup">
@@ -94,15 +123,13 @@ export default function LandingPage() {
               </button>
             </Link>
             <Link to="/book-demo">
-  <button
-    aria-label="Book a Demo"
-    className="border border-yellow-400 text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
-  >
-    <b>Book a Demo</b>
-  </button>
-</Link>
-
-            
+              <button
+                aria-label="Book a Demo"
+                className="border border-yellow-400 text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
+              >
+                <b>Book a Demo</b>
+              </button>
+            </Link>
           </div>
         </div>
         <div className="md:w-1/2 mt-12 md:mt-0" data-aos="zoom-in">
