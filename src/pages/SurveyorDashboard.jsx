@@ -79,9 +79,7 @@ const SurveyorDashboard = () => {
     );
 
   return (
-    <div
-      className="min-h-screen bg-[#fff6e5] py-12 px-4 font-manrope flex justify-center items-start overflow-x-hidden"
-    >
+    <div className="min-h-screen bg-[#fff6e5] py-12 px-4 font-manrope flex justify-center items-start overflow-x-hidden">
       <div
         className="w-full max-w-7xl bg-white shadow-xl rounded-3xl p-8 md:p-12 mx-auto"
         data-aos="fade-up"
@@ -91,28 +89,16 @@ const SurveyorDashboard = () => {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatCard
-            title="Assigned Jobs"
-            value={surveyorData.totalAssigned}
-            color="blue"
-          />
-          <StatCard
-            title="Completed"
-            value={surveyorData.completedCount}
-            color="green"
-          />
-          <StatCard
-            title="Pending"
-            value={surveyorData.pendingCount}
-            color="yellow"
-          />
+          <StatCard title="Assigned Jobs" value={surveyorData.totalAssigned} color="blue" />
+          <StatCard title="Completed" value={surveyorData.completedCount} color="green" />
+          <StatCard title="Pending" value={surveyorData.pendingCount} color="yellow" />
         </div>
 
         {/* Map Toggle */}
         <div className="text-center mb-6">
           <button
             onClick={() => setShowMap((prev) => !prev)}
-            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-all"
+            className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
           >
             {showMap ? "Hide Map" : "Show Map"}
           </button>
@@ -136,21 +122,14 @@ const SurveyorDashboard = () => {
                 <React.Fragment key={booking.id}>
                   <tr>
                     <td className="px-4 py-3">{i + 1}</td>
-                    <td className="px-4 py-3 break-words whitespace-normal">
-                      {booking.location}
-                    </td>
-                    <td className="px-4 py-3 break-words whitespace-normal">
-                      {booking.surveyType}
-                    </td>
+                    <td className="px-4 py-3 break-words whitespace-normal">{booking.location}</td>
+                    <td className="px-4 py-3 break-words whitespace-normal">{booking.surveyType}</td>
                     <td className="px-4 py-3">
-                      {new Date(booking.preferredDate).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        }
-                      )}
+                      {new Date(booking.preferredDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
                     </td>
                     <td className="px-4 py-3 capitalize">
                       <span
@@ -166,24 +145,19 @@ const SurveyorDashboard = () => {
                       </span>
                     </td>
                     <td className="px-4 py-3 space-x-2">
-                      {(booking.status === "pending" ||
-                        booking.status === "rejected") && (
+                      {(booking.status === "pending" || booking.status === "rejected") && (
                         <>
                           <button
                             disabled={updatingBookingId === booking.id}
-                            onClick={() =>
-                              updateBookingStatus(booking.id, { action: "accept" })
-                            }
-                            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                            onClick={() => updateBookingStatus(booking.id, { action: "accept" })}
+                            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50 transition"
                           >
                             Accept
                           </button>
                           <button
                             disabled={updatingBookingId === booking.id}
-                            onClick={() =>
-                              updateBookingStatus(booking.id, { action: "reject" })
-                            }
-                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 disabled:opacity-50"
+                            onClick={() => updateBookingStatus(booking.id, { action: "reject" })}
+                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 disabled:opacity-50 transition"
                           >
                             Reject
                           </button>
@@ -199,7 +173,7 @@ const SurveyorDashboard = () => {
                             onChange={(e) =>
                               updateBookingStatus(booking.id, { status: e.target.value })
                             }
-                            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 transition"
                           >
                             <option value="accepted">Accepted</option>
                             <option value="in progress">In Progress</option>
@@ -212,12 +186,7 @@ const SurveyorDashboard = () => {
                   {showMap && booking.latitude && booking.longitude && (
                     <tr>
                       <td colSpan="6" className="px-4 py-3 max-w-full">
-                        <div className="w-full max-w-full">
-                          <BookingMap
-                            latitude={booking.latitude}
-                            longitude={booking.longitude}
-                          />
-                        </div>
+                        <BookingMap latitude={booking.latitude} longitude={booking.longitude} />
                       </td>
                     </tr>
                   )}
