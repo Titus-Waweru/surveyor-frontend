@@ -5,13 +5,13 @@ import BookingForm from "../components/dashboard/BookingForm";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import SurveyMap from "../components/map/SurveyMap";
-import "leaflet/dist/leaflet.css"; // Ensure Leaflet styles are loaded
+import "leaflet/dist/leaflet.css";
 
 export default function ClientBookings({ user }) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(""); // 🔍 Search bar state
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [showMap, setShowMap] = useState(() => {
     const saved = localStorage.getItem("showMap");
@@ -47,14 +47,14 @@ export default function ClientBookings({ user }) {
   );
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center px-4 py-10 font-manrope">
       <div
-        className="w-full max-w-5xl bg-white shadow-xl rounded-3xl p-6 md:p-10"
+        className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl bg-white shadow-xl rounded-3xl p-6 md:p-10"
         data-aos="fade-up"
       >
         {/* Title */}
         <h1 className="text-3xl font-bold text-yellow-600 text-center font-poppins mb-8">
-          <strong><b>Bookings</b></strong>
+          <strong>Bookings</strong>
         </h1>
 
         {/* Bookings Section */}
@@ -71,36 +71,38 @@ export default function ClientBookings({ user }) {
             </p>
           ) : (
             <>
-              {/* ✅ Map Toggle */}
+              {/* Map Toggle */}
               {bookingsWithCoordinates.length > 0 && (
                 <div className="mb-10">
                   <button
                     onClick={() => setShowMap((prev) => !prev)}
-                    className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                    className="mb-4 w-full sm:w-auto px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
                   >
                     {showMap ? "Hide Map" : "Show Map"}
                   </button>
 
-                  {/* ✅ Conditionally render map */}
+                  {/* Conditionally render map */}
                   {showMap && (
                     <>
-                      <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                      <h2 className="text-lg font-semibold text-gray-700 mb-2 font-poppins">
                         <strong>Booking Locations</strong>
                       </h2>
 
-                      {/* 🔍 Search bar for map */}
+                      {/* Search bar for map */}
                       <input
                         type="text"
                         placeholder="Search location..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full md:w-1/2 mb-4 px-4 py-2 border rounded focus:outline-none focus:ring focus:border-yellow-400"
+                        className="w-full md:w-1/2 mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition"
                       />
 
-                      <SurveyMap
-                        bookings={bookingsWithCoordinates}
-                        searchQuery={searchQuery} // 👈 Pass to map component
-                      />
+                      <div className="w-full h-64 sm:h-80 md:h-96">
+                        <SurveyMap
+                          bookings={bookingsWithCoordinates}
+                          searchQuery={searchQuery}
+                        />
+                      </div>
                     </>
                   )}
                 </div>
@@ -111,11 +113,11 @@ export default function ClientBookings({ user }) {
                 <BookingsTable bookings={bookings} />
               </div>
 
-              {/* ✅ Leave a Review Button */}
+              {/* Leave a Review Button */}
               <div className="text-center mt-6">
                 <a
                   href="/client/review"
-                  className="inline-block px-6 py-2 bg-yellow-500 text-white font-semibold rounded hover:bg-yellow-600 transition"
+                  className="inline-block w-full sm:w-auto px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition"
                 >
                   Leave a Review
                 </a>
@@ -125,12 +127,12 @@ export default function ClientBookings({ user }) {
         </section>
 
         {/* Divider */}
-        <div className="border-t mt-10 mb-6"></div>
+        <div className="border-t border-gray-300 mt-10 mb-6"></div>
 
         {/* Booking Form */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            <b>Create New Booking</b>
+          <h2 className="text-xl font-semibold text-gray-700 mb-4 font-poppins">
+            <strong>Create New Booking</strong>
           </h2>
           <BookingForm userEmail={user.email} onNewBooking={fetchBookings} />
         </section>
