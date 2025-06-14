@@ -64,7 +64,7 @@ export default function AdminSignup() {
               value={form.name}
               onChange={handleChange}
               required
-              placeholder="Jane Doe"
+              placeholder="First  Last"
               className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </div>

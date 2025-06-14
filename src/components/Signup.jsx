@@ -114,7 +114,7 @@ export default function Signup() {
               {...register("name")}
               type="text"
               className="input"
-              placeholder="Your full name"
+              placeholder="First Middle Surname"
               autoComplete="name"
             />
             {errors.name && (
@@ -185,9 +185,9 @@ export default function Signup() {
               <option value="" disabled>
                 -- Choose a role --
               </option>
-              <option value="client">Client</option>
-              <option value="surveyor">Surveyor</option>
-              <option value="gis">GIS Expert</option>
+              <option value="client">Landlink Client</option>
+              <option value="surveyor">Landlink Surveyor</option>
+              <option value="gis">Landlink GIS Expert</option>
             </select>
             {errors.role && (
               <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>
@@ -216,7 +216,7 @@ export default function Signup() {
                   {...register("iskNumber")}
                   type="text"
                   className="input"
-                  placeholder="Enter your ISK number"
+                  placeholder="Enter your ISK number(optional)"
                 />
                 {errors.iskNumber && (
                   <p className="text-red-600 text-sm mt-1">
