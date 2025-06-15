@@ -69,7 +69,7 @@ export default function News() {
     <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
       {/* Back to Landing Page Link */}
       <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
-        ← Back to Landing Page
+        ← Back 
       </Link>
 
       <InfoAlert />

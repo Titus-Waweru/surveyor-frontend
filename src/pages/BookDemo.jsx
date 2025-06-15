@@ -30,7 +30,7 @@ export default function BookDemo() {
     <div className="bg-[#fff6e5] min-h-screen font-poppins px-6 md:px-20 py-16">
       {/* Back to Landing Page */}
       <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
-        ← Back to Landing Page
+        ← Back
       </Link>
 
       <div className="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-lg" data-aos="fade-up">

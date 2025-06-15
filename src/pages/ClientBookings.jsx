@@ -31,7 +31,9 @@ export default function ClientBookings({ user }) {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(user.email)}`
+        `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(
+          user.email
+        )}`
       );
       setBookings(res.data);
     } catch (err) {
@@ -47,9 +49,9 @@ export default function ClientBookings({ user }) {
   );
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center px-4 py-10 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center px-2 sm:px-4 py-10 font-manrope">
       <div
-        className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl bg-white shadow-xl rounded-3xl p-6 md:p-10"
+        className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-6"
         data-aos="fade-up"
       >
         {/* Title */}

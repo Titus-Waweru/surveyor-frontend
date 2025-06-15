@@ -114,7 +114,7 @@ export default function Signup() {
               {...register("name")}
               type="text"
               className="input"
-              placeholder="First      Middle      Surname"
+              placeholder="First                Last"
               autoComplete="name"
             />
             {errors.name && (
