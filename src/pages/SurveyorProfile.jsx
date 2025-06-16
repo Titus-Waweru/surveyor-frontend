@@ -56,17 +56,17 @@ export default function ClientProfile({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-8 px-1 sm:px-3 lg:px-6 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-6 px-0.5 font-manrope">
       <div
-        className="w-full max-w-3xl bg-white rounded-2xl shadow-xl px-4 sm:px-6 md:px-8 py-8 sm:py-10 border border-yellow-200"
+        className="w-full bg-white rounded-xl shadow-md px-3 sm:px-5 py-6 sm:py-8 border border-yellow-200"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins tracking-wide">
+        <h1 className="text-3xl font-bold text-yellow-600 mb-8 text-center font-poppins tracking-wide">
           My Profile
         </h1>
 
         {profile ? (
-          <form onSubmit={handleUpdate} className="space-y-8">
+          <form onSubmit={handleUpdate} className="space-y-7">
             {/* Name Field */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
