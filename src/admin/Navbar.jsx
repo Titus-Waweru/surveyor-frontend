@@ -22,7 +22,7 @@ export default function AdminNavbar({ onLogout }) {
             ADMIN
           </span>
           {/* Dashboard text with spacing */}
-          <span className="ml-8">Dashboard</span>
+          <span className="ml-10">Dashboard</span>
         </h2>
       </div>
 
