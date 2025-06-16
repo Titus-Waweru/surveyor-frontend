@@ -8,9 +8,9 @@ import SurveyMap from "../components/map/SurveyMap";
 import "leaflet/dist/leaflet.css";
 
 export default function ClientBookings({ user }) {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [bookings, setBookings]   = useState([]);
+  const [loading,  setLoading]    = useState(true);
+  const [error,    setError]      = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [showMap, setShowMap] = useState(() => {
@@ -18,6 +18,7 @@ export default function ClientBookings({ user }) {
     return saved === "true";
   });
 
+  /* ---------------- effects ---------------- */
   useEffect(() => {
     AOS.init({ duration: 1000 });
     if (user?.email) fetchBookings();
@@ -27,6 +28,7 @@ export default function ClientBookings({ user }) {
     localStorage.setItem("showMap", showMap);
   }, [showMap]);
 
+  /* ---------------- data fetchers ---------------- */
   const fetchBookings = async () => {
     setLoading(true);
     try {
@@ -48,22 +50,23 @@ export default function ClientBookings({ user }) {
     (b) => b.latitude && b.longitude
   );
 
+  /* ---------------- ui ---------------- */
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex flex-col items-center px-2 sm:px-4 py-10 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] px-4 py-10 font-manrope">
       <div
-        className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-6"
+        className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-6 md:p-10"
         data-aos="fade-up"
       >
-        {/* Title */}
+        {/* title */}
         <h1 className="text-3xl font-bold text-yellow-600 text-center font-poppins mb-8">
-          <strong>Bookings</strong>
+          Bookings
         </h1>
 
-        {/* Bookings Section */}
+        {/* content area */}
         <section>
           {loading ? (
             <p className="text-center text-sm text-gray-600 animate-pulse">
-              Loading bookings...
+              Loading bookings…
             </p>
           ) : error ? (
             <p className="text-center text-sm text-red-600">{error}</p>
@@ -73,7 +76,7 @@ export default function ClientBookings({ user }) {
             </p>
           ) : (
             <>
-              {/* Map Toggle */}
+              {/* map toggle */}
               {bookingsWithCoordinates.length > 0 && (
                 <div className="mb-10">
                   <button
@@ -83,17 +86,16 @@ export default function ClientBookings({ user }) {
                     {showMap ? "Hide Map" : "Show Map"}
                   </button>
 
-                  {/* Conditionally render map */}
                   {showMap && (
                     <>
                       <h2 className="text-lg font-semibold text-gray-700 mb-2 font-poppins">
-                        <strong>Booking Locations</strong>
+                        Booking Locations
                       </h2>
 
-                      {/* Search bar for map */}
+                      {/* map search */}
                       <input
                         type="text"
-                        placeholder="Search location..."
+                        placeholder="Search location…"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full md:w-1/2 mb-4 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition"
@@ -110,12 +112,15 @@ export default function ClientBookings({ user }) {
                 </div>
               )}
 
-              {/* Table + Review Button */}
-              <div className="bg-white rounded-xl shadow-md overflow-x-auto">
-                <BookingsTable bookings={bookings} />
+              {/* table in its own scroll area */}
+              <div className="overflow-x-auto rounded-xl shadow-md">
+                {/* give the table room to breathe; if it’s wider than the card, it scrolls  */}
+                <div className="min-w-[700px] bg-white rounded-xl">
+                  <BookingsTable bookings={bookings} />
+                </div>
               </div>
 
-              {/* Leave a Review Button */}
+              {/* review button */}
               <div className="text-center mt-6">
                 <a
                   href="/client/review"
@@ -128,13 +133,13 @@ export default function ClientBookings({ user }) {
           )}
         </section>
 
-        {/* Divider */}
-        <div className="border-t border-gray-300 mt-10 mb-6"></div>
+        {/* divider */}
+        <div className="border-t border-gray-300 mt-10 mb-6" />
 
-        {/* Booking Form */}
+        {/* booking form */}
         <section>
           <h2 className="text-xl font-semibold text-gray-700 mb-4 font-poppins">
-            <strong>Create New Booking</strong>
+            Create New Booking
           </h2>
           <BookingForm userEmail={user.email} onNewBooking={fetchBookings} />
         </section>
