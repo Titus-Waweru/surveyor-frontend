@@ -79,9 +79,9 @@ const SurveyorDashboard = () => {
     );
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] py-12 px-4 font-manrope flex justify-center items-start overflow-x-hidden">
+    <div className="min-h-screen bg-[#fff6e5] py-12 px-2 sm:px-4 font-manrope flex justify-center items-start overflow-x-hidden">
       <div
-        className="w-full max-w-7xl bg-white shadow-xl rounded-3xl p-8 md:p-12 mx-auto"
+        className="w-full max-w-7xl bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-8 mx-auto"
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold font-poppins text-blue-700 text-center mb-8">
@@ -122,8 +122,12 @@ const SurveyorDashboard = () => {
                 <React.Fragment key={booking.id}>
                   <tr>
                     <td className="px-4 py-3">{i + 1}</td>
-                    <td className="px-4 py-3 break-words whitespace-normal">{booking.location}</td>
-                    <td className="px-4 py-3 break-words whitespace-normal">{booking.surveyType}</td>
+                    <td className="px-4 py-3 break-words whitespace-normal">
+                      {booking.location}
+                    </td>
+                    <td className="px-4 py-3 break-words whitespace-normal">
+                      {booking.surveyType}
+                    </td>
                     <td className="px-4 py-3">
                       {new Date(booking.preferredDate).toLocaleDateString("en-US", {
                         year: "numeric",
