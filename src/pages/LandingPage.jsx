@@ -327,7 +327,7 @@ export default function LandingPage() {
       modules={[Autoplay, Pagination]}
       spaceBetween={30}
       pagination={{ clickable: true }}
-      autoplay={{ delay: 5000 }}
+      autoplay={{ delay: 8000 }}
       loop={true}
       className="w-full overflow-hidden rounded-xl shadow-lg"
     >
