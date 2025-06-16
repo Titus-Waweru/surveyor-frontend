@@ -46,7 +46,7 @@ export default function ClientProfile({ user }) {
       const res = await axios.put(`${API_BASE_URL}/profile`, formData);
       alert("✅ Profile updated successfully.");
       setProfile(res.data.user);
-      setImage(null); // Clear image input after update
+      setImage(null);
     } catch (err) {
       console.error("❌ Update error:", err);
       alert("Failed to update profile. Please try again.");
@@ -58,7 +58,7 @@ export default function ClientProfile({ user }) {
   return (
     <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-12 px-4 sm:px-6 lg:px-8 font-manrope">
       <div
-        className="w-full max-w-3xl bg-white rounded-3xl shadow-xl p-8 sm:p-12"
+        className="w-full max-w-3xl bg-white rounded-3xl shadow-xl px-4 md:px-6 py-8 sm:py-12"
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins tracking-wide">
@@ -69,10 +69,7 @@ export default function ClientProfile({ user }) {
           <form onSubmit={handleUpdate} className="space-y-8">
             {/* Name Field */}
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                 Name
               </label>
               <input
@@ -88,19 +85,14 @@ export default function ClientProfile({ user }) {
 
             {/* Phone Number Field */}
             <div>
-              <label
-                htmlFor="phoneNumber"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-2">
                 Phone Number
               </label>
               <input
                 id="phoneNumber"
                 type="tel"
                 value={form.phoneNumber}
-                onChange={(e) =>
-                  setForm({ ...form, phoneNumber: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition"
                 placeholder="Enter your phone number"
                 required
@@ -125,7 +117,6 @@ export default function ClientProfile({ user }) {
                   </div>
                 )}
 
-                {/* Custom Upload Button */}
                 <div>
                   <label
                     htmlFor="profile-upload"
