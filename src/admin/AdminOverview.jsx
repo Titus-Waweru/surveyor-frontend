@@ -69,7 +69,7 @@ export default function AdminOverview() {
   return (
     <div className="min-h-screen bg-[#fff6e5] px-4 py-10 flex items-start justify-center font-manrope">
       <div
-        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-8 md:p-12"
+        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-4 md:p-6"
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold text-yellow-600 text-center mb-10 font-poppins">
