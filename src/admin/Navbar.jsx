@@ -16,14 +16,14 @@ export default function AdminNavbar({ onLogout }) {
       
       {/* Left Section: Sidebar toggle + Title */}
       <div className="flex items-center gap-4 flex-shrink-0">
-        {/* Sidebar Toggle Button */}
+        {/* Sidebar Toggle Button (optional) */}
         {/* <button className="text-white focus:outline-none sm:hidden">
           <YourSidebarToggleIcon />
         </button> */}
 
-        {/* ADMIN Badge + Dashboard Title */}
-        <h2 className="flex items-center gap-2 whitespace-nowrap text-xl sm:text-2xl font-extrabold text-white tracking-wide">
-          <span className="bg-yellow-400 text-[#1e40af] px-2 py-0.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
+        {/* Dashboard Title with optional ADMIN badge */}
+        <h2 className="flex items-center gap-2 text-xl sm:text-2xl font-extrabold text-white tracking-wide">
+          <span className="hidden sm:inline-block bg-yellow-400 text-[#1e40af] px-2 py-0.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
             ADMIN
           </span>
           Dashboard
