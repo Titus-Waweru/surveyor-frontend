@@ -4,17 +4,26 @@ import { Menu } from "lucide-react";
 import Navbar from "./Navbar";
 
 export default function SurveyorLayout({ user, onLogout }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
-  // Auto-close sidebar after 5 seconds
+  // Open sidebar initially only if not seen in this session
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const seen = sessionStorage.getItem("surveyorSidebarSeen");
+    return !seen;
+  });
+
+  // Auto-close after 5s only once per session
   useEffect(() => {
     let timeout;
-    if (isSidebarOpen) {
+    const seen = sessionStorage.getItem("surveyorSidebarSeen");
+
+    if (isSidebarOpen && !seen) {
       timeout = setTimeout(() => {
         setIsSidebarOpen(false);
+        sessionStorage.setItem("surveyorSidebarSeen", "true");
       }, 5000);
     }
+
     return () => clearTimeout(timeout);
   }, [isSidebarOpen]);
 
@@ -26,10 +35,10 @@ export default function SurveyorLayout({ user, onLogout }) {
   ];
 
   return (
-    <div className="flex h-screen bg-[#f6f9fc] relative">
+    <div className="flex h-screen bg-[#f6f9fc] relative font-[Manrope]">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out bg-[#e3f2fd] text-[#0a1b3d] shadow-md w-64 lg:relative lg:translate-x-0 lg:flex flex-col ${
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out bg-[#e3f2fd] text-[#0a1b3d] shadow-md w-64 lg:relative lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -47,7 +56,7 @@ export default function SurveyorLayout({ user, onLogout }) {
                   ? "bg-yellow-400 text-[#0a1b3d] font-semibold shadow"
                   : "hover:bg-yellow-100 hover:text-[#0a1b3d] text-[#0a1b3d]"
               }`}
-              onClick={() => setIsSidebarOpen(false)} // close sidebar on nav click
+              onClick={() => setIsSidebarOpen(false)}
             >
               {link.name}
             </Link>
@@ -78,7 +87,7 @@ export default function SurveyorLayout({ user, onLogout }) {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar user={user} onLogout={onLogout} />
-        <main className="flex-1 overflow-y-auto p-6 bg-[#f6f9fc] font-manrope">
+        <main className="flex-1 overflow-y-auto p-6 bg-[#f6f9fc]">
           <div className="bg-white rounded-xl shadow px-6 py-8">
             <Outlet />
           </div>
