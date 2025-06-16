@@ -56,12 +56,12 @@ export default function ClientProfile({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-12 px-4 sm:px-6 lg:px-8 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4 sm:px-6 font-manrope">
       <div
-        className="w-full max-w-3xl bg-white rounded-3xl shadow-xl px-4 md:px-6 py-8 sm:py-12"
+        className="w-full max-w-md sm:max-w-lg md:max-w-xl bg-white rounded-3xl shadow-xl p-6 sm:p-10 border border-yellow-200"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins tracking-wide">
+        <h1 className="text-3xl font-bold text-yellow-600 mb-8 text-center font-poppins tracking-wide">
           My Profile
         </h1>
 
@@ -104,16 +104,16 @@ export default function ClientProfile({ user }) {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Profile Image
               </label>
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-center">
                 {profile.profileImageUrl ? (
                   <img
                     src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
                     alt="Profile"
-                    className="w-16 h-16 rounded-full border shadow-sm object-cover"
+                    className="w-20 h-20 rounded-full border shadow-sm object-cover"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full border bg-gray-100 flex items-center justify-center text-gray-400">
-                    N/A
+                  <div className="w-20 h-20 rounded-full border bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
+                    No Photo
                   </div>
                 )}
 
