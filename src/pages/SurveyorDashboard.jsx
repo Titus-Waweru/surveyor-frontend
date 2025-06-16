@@ -1,5 +1,3 @@
-// No logic changes made – just styling upgrades throughout
-
 import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -11,6 +9,7 @@ const SurveyorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingBookingId, setUpdatingBookingId] = useState(null);
+
   const [showMap, setShowMap] = useState(() => {
     const saved = localStorage.getItem("showMap");
     return saved === "true";
@@ -60,21 +59,21 @@ const SurveyorDashboard = () => {
 
   if (loading)
     return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope text-lg">
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
         Loading surveyor dashboard...
       </div>
     );
 
   if (error)
     return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope text-lg">
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center text-red-600 font-manrope">
         {error}
       </div>
     );
 
   if (!surveyorData)
     return (
-      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope text-lg">
+      <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
         No surveyor data found.
       </div>
     );
@@ -82,34 +81,33 @@ const SurveyorDashboard = () => {
   return (
     <div className="min-h-screen bg-[#fff6e5] py-12 px-2 sm:px-4 font-manrope flex justify-center items-start overflow-x-hidden">
       <div
-        className="w-full max-w-7xl bg-white shadow-2xl rounded-3xl px-4 sm:px-6 md:px-10 py-8 mx-auto border border-yellow-100"
+        className="w-full max-w-7xl bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-8 mx-auto"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold font-poppins text-blue-700 text-center mb-10">
+        <h1 className="text-3xl font-bold font-poppins text-blue-700 text-center mb-8">
           Welcome, {surveyorData.surveyorName}
         </h1>
 
-        {/* Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatCard title="Assigned Jobs" value={surveyorData.totalAssigned} color="blue" />
           <StatCard title="Completed" value={surveyorData.completedCount} color="green" />
           <StatCard title="Pending" value={surveyorData.pendingCount} color="yellow" />
         </div>
 
         {/* Map Toggle */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <button
             onClick={() => setShowMap((prev) => !prev)}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-semibold shadow hover:bg-indigo-700 transition-all duration-200"
+            className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
           >
             {showMap ? "Hide Map" : "Show Map"}
           </button>
         </div>
 
         {/* Booking Table */}
-        <div className="overflow-x-auto border rounded-xl shadow-md bg-white">
-          <table className="min-w-full table-auto text-sm text-left font-medium">
-            <thead className="bg-yellow-50 text-yellow-800 uppercase tracking-wide text-xs border-b">
+        <div className="overflow-x-auto border rounded-xl shadow-sm">
+          <table className="min-w-full table-fixed text-sm text-left border-collapse">
+            <thead className="bg-gray-100 text-gray-700 font-semibold">
               <tr>
                 <th className="px-4 py-3 w-10">#</th>
                 <th className="px-4 py-3 w-48">Location</th>
@@ -119,14 +117,18 @@ const SurveyorDashboard = () => {
                 <th className="px-4 py-3 w-44">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-200">
               {surveyorData.recentBookings?.map((booking, i) => (
                 <React.Fragment key={booking.id}>
-                  <tr className="hover:bg-gray-50">
+                  <tr>
                     <td className="px-4 py-3">{i + 1}</td>
-                    <td className="px-4 py-3 break-words whitespace-normal text-gray-700">{booking.location}</td>
-                    <td className="px-4 py-3 break-words whitespace-normal text-gray-700">{booking.surveyType}</td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3 break-words whitespace-normal">
+                      {booking.location}
+                    </td>
+                    <td className="px-4 py-3 break-words whitespace-normal">
+                      {booking.surveyType}
+                    </td>
+                    <td className="px-4 py-3">
                       {new Date(booking.preferredDate).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -135,7 +137,7 @@ const SurveyorDashboard = () => {
                     </td>
                     <td className="px-4 py-3 capitalize">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
                           booking.status === "pending"
                             ? "bg-yellow-100 text-yellow-700"
                             : booking.status === "completed"
@@ -152,19 +154,20 @@ const SurveyorDashboard = () => {
                           <button
                             disabled={updatingBookingId === booking.id}
                             onClick={() => updateBookingStatus(booking.id, { action: "accept" })}
-                            className="bg-green-600 text-white px-3 py-1.5 rounded-md hover:bg-green-700 disabled:opacity-50 transition-all"
+                            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50 transition"
                           >
                             Accept
                           </button>
                           <button
                             disabled={updatingBookingId === booking.id}
                             onClick={() => updateBookingStatus(booking.id, { action: "reject" })}
-                            className="bg-red-600 text-white px-3 py-1.5 rounded-md hover:bg-red-700 disabled:opacity-50 transition-all"
+                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 disabled:opacity-50 transition"
                           >
                             Reject
                           </button>
                         </>
                       )}
+
                       {booking.status !== "pending" &&
                         booking.status !== "rejected" &&
                         booking.status !== "completed" && (
@@ -174,7 +177,7 @@ const SurveyorDashboard = () => {
                             onChange={(e) =>
                               updateBookingStatus(booking.id, { status: e.target.value })
                             }
-                            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all"
+                            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 transition"
                           >
                             <option value="accepted">Accepted</option>
                             <option value="in progress">In Progress</option>
@@ -209,8 +212,8 @@ const StatCard = ({ title, value, color }) => {
   };
 
   return (
-    <div className={`p-6 rounded-xl shadow-sm border border-yellow-100 ${colorMap[color]}`}>
-      <h3 className="text-sm font-semibold mb-1">{title}</h3>
+    <div className={`p-6 rounded-xl shadow text-center ${colorMap[color]}`}>
+      <h3 className="text-sm font-medium mb-1">{title}</h3>
       <p className="text-2xl font-bold">{value}</p>
     </div>
   );

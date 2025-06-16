@@ -53,9 +53,7 @@ export default function ClientLayout({ user, onLogout }) {
 
         {/* Main content */}
         <div className="flex-1 min-h-screen p-2 sm:p-4 md:p-6 bg-gray-50">
-          <div className="bg-white shadow-md rounded-2xl px-4 sm:px-6 md:px-10 py-8">
-            <Outlet />
-          </div>
+          <Outlet />
         </div>
       </div>
     </div>

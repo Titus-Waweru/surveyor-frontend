@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Menu } from "lucide-react";
 import Sidebar from "../components/dashboard/Sidebar";
-import AdminNavbar from "./Navbar"; // ✅ Import the AdminNavbar
+import AdminNavbar from "./Navbar"; // ✅ Admin top navbar
 
 export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
