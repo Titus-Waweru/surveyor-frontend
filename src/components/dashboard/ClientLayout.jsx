@@ -1,18 +1,25 @@
+import { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import { Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import { Outlet } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Menu } from "lucide-react";
 
 export default function ClientLayout({ user, onLogout }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // 👉 Sidebar starts open only if user hasn’t seen it this session
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const seen = sessionStorage.getItem("clientSidebarSeen");
+    return !seen;          // open on first visit, closed afterwards
+  });
 
-  // Auto-close sidebar after 5 seconds
+  // 👉 Auto‑close once, then never again this session
   useEffect(() => {
     let timeout;
-    if (isSidebarOpen) {
+    const seen = sessionStorage.getItem("clientSidebarSeen");
+
+    if (isSidebarOpen && !seen) {
       timeout = setTimeout(() => {
         setIsSidebarOpen(false);
+        sessionStorage.setItem("clientSidebarSeen", "true");
       }, 5000);
     }
     return () => clearTimeout(timeout);
@@ -22,14 +29,15 @@ export default function ClientLayout({ user, onLogout }) {
     <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 transform bg-blue-100 transition-transform duration-300 ease-in-out w-64 lg:relative lg:translate-x-0 lg:flex ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-blue-100 transition-transform duration-300 ease-in-out
+          lg:relative lg:translate-x-0 ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <Sidebar role="client" />
       </div>
 
-      {/* Overlay */}
+      {/* Overlay for mobile */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-30 lg:hidden"
@@ -39,6 +47,7 @@ export default function ClientLayout({ user, onLogout }) {
 
       {/* Toggle button */}
       <button
+        aria-label="Toggle sidebar"
         onClick={() => setIsSidebarOpen((prev) => !prev)}
         className="lg:hidden absolute top-4 left-4 z-50 bg-white p-2 rounded-full shadow hover:bg-blue-100 transition"
       >
@@ -48,6 +57,7 @@ export default function ClientLayout({ user, onLogout }) {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar user={user} onLogout={onLogout} />
+
         <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-xl shadow-md px-6 py-8">
