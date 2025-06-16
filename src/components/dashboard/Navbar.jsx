@@ -9,7 +9,7 @@ export default function Navbar({ onLogout }) {
         <h2 className="flex items-center text-xl sm:text-2xl font-extrabold text-white tracking-wide">
           {/* ADMIN Badge - hidden on small screens */}
           <span className="hidden sm:inline-block bg-yellow-400 text-[#1e40af] px-2 py-0.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
-            ADMIN
+            Your
           </span>
           {/* Dashboard text with spacing */}
           <span className="ml-10">Dashboard</span>
