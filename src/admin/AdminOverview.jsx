@@ -69,10 +69,10 @@ export default function AdminOverview() {
   return (
     <div className="min-h-screen bg-[#fff6e5] px-4 py-10 flex items-start justify-center font-manrope">
       <div
-        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-4 md:p-6"
+        className="w-full max-w-6xl bg-white shadow-xl rounded-3xl p-2 md:p-3"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold text-yellow-600 text-center mb-10 font-poppins">
+        <h1 className="text-2xl font-bold text-yellow-600 text-center mb-6 font-poppins">
           Admin Dashboard Overview
         </h1>
 
@@ -83,8 +83,8 @@ export default function AdminOverview() {
         ) : (
           <>
             {/* Pending Surveyors */}
-            <section className="mb-12">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            <section className="mb-8">
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">
                 Pending Surveyor Approvals
               </h2>
               {pendingSurveyors.length === 0 ? (
@@ -94,21 +94,21 @@ export default function AdminOverview() {
                   <table className="min-w-full text-sm text-left border-collapse">
                     <thead className="bg-gray-100 text-gray-700 font-semibold">
                       <tr>
-                        <th className="px-4 py-3">Name</th>
-                        <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">ISK Number</th>
-                        <th className="px-4 py-3">ID Card</th>
-                        <th className="px-4 py-3">Certificate</th>
-                        <th className="px-4 py-3">Actions</th>
+                        <th className="px-3 py-2">Name</th>
+                        <th className="px-3 py-2">Email</th>
+                        <th className="px-3 py-2">ISK Number</th>
+                        <th className="px-3 py-2">ID Card</th>
+                        <th className="px-3 py-2">Certificate</th>
+                        <th className="px-3 py-2">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {pendingSurveyors.map((s) => (
                         <tr key={s.id}>
-                          <td className="px-4 py-3">{s.name}</td>
-                          <td className="px-4 py-3">{s.email}</td>
-                          <td className="px-4 py-3">{s.iskNumber}</td>
-                          <td className="px-4 py-3">
+                          <td className="px-3 py-2">{s.name}</td>
+                          <td className="px-3 py-2">{s.email}</td>
+                          <td className="px-3 py-2">{s.iskNumber}</td>
+                          <td className="px-3 py-2">
                             <button
                               onClick={() => {
                                 setPreviewUrl(s.idCardUrl);
@@ -123,7 +123,7 @@ export default function AdminOverview() {
                               View
                             </button>
                           </td>
-                          <td className="px-4 py-3">
+                          <td className="px-3 py-2">
                             <button
                               onClick={() => {
                                 setPreviewUrl(s.certUrl);
@@ -138,16 +138,16 @@ export default function AdminOverview() {
                               View
                             </button>
                           </td>
-                          <td className="px-4 py-3 space-x-2">
+                          <td className="px-3 py-2 space-x-2">
                             <button
                               onClick={() => handleApproval(s.id, "approve")}
-                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md transition"
+                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md"
                             >
                               Approve
                             </button>
                             <button
                               onClick={() => handleApproval(s.id, "reject")}
-                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md transition"
+                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md"
                             >
                               Reject
                             </button>
@@ -162,14 +162,14 @@ export default function AdminOverview() {
 
             {/* Bookings */}
             <section>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">
                 All Bookings from Clients
               </h2>
 
-              <div className="flex justify-end mb-4">
+              <div className="flex justify-end mb-3">
                 <button
                   onClick={toggleShowMaps}
-                  className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition font-semibold"
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-1.5 rounded-md font-semibold"
                 >
                   {showMaps ? "Hide Maps" : "Show Maps"}
                 </button>
@@ -182,26 +182,26 @@ export default function AdminOverview() {
                   <table className="min-w-full text-sm text-left border-collapse">
                     <thead className="bg-gray-100 text-gray-700 font-semibold">
                       <tr>
-                        <th className="px-4 py-3">Client</th>
-                        <th className="px-4 py-3">Survey Type</th>
-                        <th className="px-4 py-3">Location</th>
-                        <th className="px-4 py-3">Status</th>
-                        <th className="px-4 py-3">Assign Surveyor</th>
+                        <th className="px-3 py-2">Client</th>
+                        <th className="px-3 py-2">Survey Type</th>
+                        <th className="px-3 py-2">Location</th>
+                        <th className="px-3 py-2">Status</th>
+                        <th className="px-3 py-2">Assign Surveyor</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {bookings.map((b) => (
                         <>
                           <tr key={b.id}>
-                            <td className="px-4 py-3">
+                            <td className="px-3 py-2">
                               {b.user?.name || "N/A"}
                             </td>
-                            <td className="px-4 py-3">{b.surveyType}</td>
-                            <td className="px-4 py-3">{b.location}</td>
-                            <td className="px-4 py-3 capitalize">{b.status}</td>
-                            <td className="px-4 py-3">
+                            <td className="px-3 py-2">{b.surveyType}</td>
+                            <td className="px-3 py-2">{b.location}</td>
+                            <td className="px-3 py-2 capitalize">{b.status}</td>
+                            <td className="px-3 py-2">
                               <select
-                                className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                                 value={b.assignedSurveyorId || ""}
                                 onChange={(e) =>
                                   handleAssignment(
@@ -222,7 +222,7 @@ export default function AdminOverview() {
 
                           {showMaps && b.latitude && b.longitude && (
                             <tr key={`map-${b.id}`}>
-                              <td colSpan="5" className="px-4 py-3">
+                              <td colSpan="5" className="px-3 py-2">
                                 <BookingMap
                                   latitude={b.latitude}
                                   longitude={b.longitude}
@@ -248,14 +248,14 @@ export default function AdminOverview() {
           role="dialog"
           aria-modal="true"
         >
-          <div className="bg-white p-6 rounded-xl shadow-lg max-w-3xl w-full relative">
+          <div className="bg-white p-4 rounded-xl shadow-lg max-w-3xl w-full relative">
             <button
               onClick={() => setPreviewUrl(null)}
               className="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl font-bold"
             >
               ×
             </button>
-            <h3 className="text-lg font-semibold mb-4">Document Preview</h3>
+            <h3 className="text-lg font-semibold mb-3">Document Preview</h3>
             {previewType === "pdf" ? (
               <iframe
                 src={previewUrl}
