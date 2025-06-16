@@ -40,10 +40,13 @@ export default function SurveyorSettings({ user, onLogout }) {
         Surveyor Settings
       </h1>
 
-      <div className="space-y-8 max-w-3xl">
+      {/* 💥 Added horizontal padding here */}
+      <div className="space-y-8 max-w-3xl px-4 md:px-6">
         {/* Notifications Toggle */}
         <section className="bg-yellow-50 p-6 rounded-xl shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">Notifications</h2>
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">
+            Notifications
+          </h2>
           <label className="flex items-center space-x-3 text-gray-700">
             <input
               type="checkbox"
@@ -57,7 +60,9 @@ export default function SurveyorSettings({ user, onLogout }) {
 
         {/* Password Change */}
         <section className="bg-yellow-50 p-6 rounded-xl shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">Change Password</h2>
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">
+            Change Password
+          </h2>
           <input
             type="password"
             placeholder="New password"
