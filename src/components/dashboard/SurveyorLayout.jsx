@@ -5,14 +5,11 @@ import Navbar from "./Navbar";
 
 export default function SurveyorLayout({ user, onLogout }) {
   const location = useLocation();
-
-  // Open sidebar initially only if not seen in this session
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     const seen = sessionStorage.getItem("surveyorSidebarSeen");
     return !seen;
   });
 
-  // Auto-close after 5s only once per session
   useEffect(() => {
     let timeout;
     const seen = sessionStorage.getItem("surveyorSidebarSeen");
@@ -88,12 +85,8 @@ export default function SurveyorLayout({ user, onLogout }) {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar user={user} onLogout={onLogout} />
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-          <div className="max-w-7xl mx-auto">
-            <div className="bg-white rounded-xl shadow-md px-6 py-8">
-              <Outlet />
-            </div>
-          </div>
+        <main className="flex-1 overflow-y-auto bg-gray-50 px-1 sm:px-2">
+          <Outlet />
         </main>
       </div>
     </div>
