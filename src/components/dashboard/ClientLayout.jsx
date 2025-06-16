@@ -5,13 +5,11 @@ import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
 export default function ClientLayout({ user, onLogout }) {
-  // 👉 Sidebar starts open only if user hasn’t seen it this session
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     const seen = sessionStorage.getItem("clientSidebarSeen");
-    return !seen;          // open on first visit, closed afterwards
+    return !seen;
   });
 
-  // 👉 Auto‑close once, then never again this session
   useEffect(() => {
     let timeout;
     const seen = sessionStorage.getItem("clientSidebarSeen");
@@ -58,12 +56,8 @@ export default function ClientLayout({ user, onLogout }) {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar user={user} onLogout={onLogout} />
 
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
-          <div className="max-w-7xl mx-auto">
-            <div className="bg-white rounded-xl shadow-md px-6 py-8">
-              <Outlet />
-            </div>
-          </div>
+        <main className="flex-1 overflow-y-auto px-2 sm:px-4 md:px-6 py-4 bg-gray-50">
+          <Outlet />
         </main>
       </div>
     </div>
