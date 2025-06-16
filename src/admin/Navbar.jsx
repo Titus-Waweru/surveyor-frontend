@@ -12,14 +12,25 @@ export default function AdminNavbar({ onLogout }) {
   };
 
   return (
-    <header className="bg-[#1e40af] border-b border-yellow-400 px-4 sm:px-6 md:px-8 py-3 flex flex-wrap justify-between items-center shadow-md font-poppins gap-3">
-      <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-wide flex items-center gap-2">
-        <span className="bg-yellow-400 text-[#1e40af] px-2 py-0.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
-          ADMIN
-        </span>
-        Dashboard
-      </h2>
+    <header className="bg-[#1e40af] border-b border-yellow-400 px-4 sm:px-6 md:px-8 py-3 flex justify-between items-center shadow-md font-poppins gap-3">
+      
+      {/* Left Section: Sidebar toggle + Title */}
+      <div className="flex items-center gap-4 flex-shrink-0">
+        {/* Sidebar Toggle Button */}
+        {/* <button className="text-white focus:outline-none sm:hidden">
+          <YourSidebarToggleIcon />
+        </button> */}
 
+        {/* ADMIN Badge + Dashboard Title */}
+        <h2 className="flex items-center gap-2 whitespace-nowrap text-xl sm:text-2xl font-extrabold text-white tracking-wide">
+          <span className="bg-yellow-400 text-[#1e40af] px-2 py-0.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
+            ADMIN
+          </span>
+          Dashboard
+        </h2>
+      </div>
+
+      {/* Right Section: Logout Button */}
       <div className="font-manrope">
         <button
           onClick={handleLogout}
