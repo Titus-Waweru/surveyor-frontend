@@ -200,7 +200,7 @@ export default function LandingPage() {
             />
           </Link>
 
-          {/* Desktop links */}
+          {/* Desktop links */}
           <nav className="hidden md:flex gap-6 items-center">
             <Link
               to="/home"
@@ -238,7 +238,8 @@ export default function LandingPage() {
           </button>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu */}
+
         {isNavOpen && (
           <div className="md:hidden mt-4 bg-white shadow rounded-lg p-4">
             <Link
@@ -289,8 +290,9 @@ export default function LandingPage() {
 
     <p className="text-lg text-gray-700">
       From real estate surveyors to inspection teams, LandLink gives you a
-      powerful dashboard, automated bookings, OTP‑secure logins, and
-      instant payments — in minutes.
+    powerful dashboard, automated bookings OTP-secured logins, and
+
+      instant payments -in minutes.
     </p>
 
     <div className="flex flex-wrap gap-4">
