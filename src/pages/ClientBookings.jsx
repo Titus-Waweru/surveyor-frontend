@@ -123,7 +123,7 @@ export default function ClientBookings({ user }) {
               {/* review button */}
               <div className="text-center mt-6">
                 <a
-                  href="/client/review"
+                  href="/review"
                   className="inline-block w-full sm:w-auto px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition"
                 >
                   Leave a Review

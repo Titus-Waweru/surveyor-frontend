@@ -5,15 +5,22 @@ import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 
 export default function ClientLayout({ user, onLogout }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const seen = sessionStorage.getItem("clientSidebarSeen");
+    return !seen; // Sidebar should open if not seen before
+  });
 
   useEffect(() => {
     let timeout;
-    if (isSidebarOpen) {
+    const seen = sessionStorage.getItem("clientSidebarSeen");
+
+    if (isSidebarOpen && !seen) {
       timeout = setTimeout(() => {
         setIsSidebarOpen(false);
+        sessionStorage.setItem("clientSidebarSeen", "true");
       }, 5000);
     }
+
     return () => clearTimeout(timeout);
   }, [isSidebarOpen]);
 
