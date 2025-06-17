@@ -12,7 +12,7 @@ export default function GISNavbar({ onLogout }) {
   };
 
   return (
-    <header className="bg-[#1e40af] border-b border-yellow-400 px-8 py-4 flex justify-between items-center shadow-md font-poppins transition-colors duration-300">
+    <header className="bg-[#1e40af] border-b border-yellow-400 px-8 py-6 my-4 flex justify-between items-center shadow-md font-poppins transition-colors duration-300 rounded-b-xl">
       {/* Logo + Title */}
       <h1 className="text-white text-2xl md:text-3xl font-extrabold tracking-wide flex items-center gap-3 ml-4">
         <span className="bg-yellow-400 text-[#1e40af] px-3 py-1 rounded-full text-xs font-bold shadow-md uppercase tracking-wider">
