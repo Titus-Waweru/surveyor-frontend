@@ -2,7 +2,7 @@ import { LogOut } from "lucide-react";
 
 export default function Navbar({ onLogout }) {
   return (
-    <header className="bg-[#1e40af] border-b border-yellow-400 px-4 sm:px-6 md:px-8 py-5 my-4 flex justify-between items-center shadow-md font-poppins gap-3 rounded-b-xl">
+    <header className="bg-[#1e40af] border-b border-yellow-400 px-4 sm:px-6 md:px-8 py-3 flex justify-between items-center shadow-md font-poppins gap-3">
       
       {/* Left Section */}
       <div className="flex items-center gap-4 flex-shrink-0">
