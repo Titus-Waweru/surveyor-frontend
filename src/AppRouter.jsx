@@ -13,7 +13,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import VerifyOTP from "./pages/VerifyOTP";
 import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword"; // ✅ NEW IMPORT
+import ResetPassword from "./pages/ResetPassword";
 
 // CLIENT PAGES
 import ClientDashboard from "./pages/ClientDashboard";
@@ -58,11 +58,21 @@ import ContactUs from "./pages/ContactUs";
 import News from "./pages/News";
 import AboutUs from "./pages/AboutUs";
 
+// ✅ NEWS DETAIL PAGES
+import MpesaIntegration from "./pages/news/MpesaIntegration";
+import LandRegulations from "./pages/news/LandRegulations";
+import SurveyorTools from "./pages/news/SurveyorTools";
+
 // LEGAL
 import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 
-// ✅ REVIEW FORM PAGE
+// REVIEW FORM
 import ReviewForm from "./pages/ReviewForm";
+
+// ✅ TEAM MEMBER PAGES
+import TitusWaweru from "./pages/TitusWaweru";
+import SarahMwangi from "./pages/SarahMwangi";
+import MichaelOtieno from "./pages/MichaelOtieno";
 
 function getDefaultDashboard(role) {
   switch (role) {
@@ -168,7 +178,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       <Route path="/signup" element={<Signup onSignup={handleSignup} />} />
       <Route path="/verify-otp" element={<VerifyOTP />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} /> {/* ✅ ADDED */}
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* ADMIN AUTH */}
       <Route path="/admin/auth" element={<AdminAuth setUser={setUser} />} />
@@ -255,12 +265,20 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       <Route path="/home" element={<Home />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/news" element={<News />} />
+      <Route path="/news/mpesa-integration" element={<MpesaIntegration />} />
+      <Route path="/news/land-regulations" element={<LandRegulations />} />
+      <Route path="/news/surveyor-tools" element={<SurveyorTools />} />
       <Route path="/about" element={<AboutUs />} />
-      <Route path="/terms" element={<TermsAndPrivacy />} />
 
-      {/* ✅ REVIEW FORM ROUTE */}
+      {/* ✅ TEAM MEMBER PAGES */}
+      <Route path="/about/titus-waweru" element={<TitusWaweru />} />
+      <Route path="/about/sarah-mwangi" element={<SarahMwangi />} />
+      <Route path="/about/michael-otieno" element={<MichaelOtieno />} />
+
+      <Route path="/terms" element={<TermsAndPrivacy />} />
       <Route path="/review" element={<ReviewForm />} />
 
+      {/* CATCH-ALL */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

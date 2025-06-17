@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { Link } from "react-router-dom"; // ✅ added for navigation
+import { Link } from "react-router-dom";
 
 export default function AboutUs() {
   useEffect(() => {
@@ -12,7 +12,10 @@ export default function AboutUs() {
     <div className="bg-[#fff6e5] min-h-screen font-poppins text-gray-800">
       <div className="px-4 sm:px-8 md:px-20 py-16">
         {/* Back to Landing Page */}
-        <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
+        <Link
+          to="/"
+          className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6"
+        >
           ← Back
         </Link>
 
@@ -64,8 +67,8 @@ export default function AboutUs() {
         <section className="mb-16" data-aos="fade-up">
           <h2 className="text-2xl font-bold mb-4">Our Story</h2>
           <p className="text-lg leading-relaxed">
-            Born out of the need for modern, efficient, and client-friendly
-            land services, LandLink was founded by a team of engineers and land
+            Born out of the need for modern, efficient, and client-friendly land
+            services, LandLink was founded by a team of engineers and land
             experts who believe technology can eliminate the long queues, lost
             paperwork, and endless follow-ups traditionally involved in land
             surveying and inspection.
@@ -81,16 +84,19 @@ export default function AboutUs() {
                 name: "Titus Waweru",
                 title: "Founder & CEO",
                 image: "/assets/titus.jpg",
+                link: "/about/titus-waweru",
               },
               {
                 name: "Sarah Mwangi",
                 title: "Operations Lead",
                 image: "/assets/sarah.jpg",
+                link: "/about/sarah-mwangi",
               },
               {
                 name: "Michael Otieno",
                 title: "Lead Engineer",
                 image: "/assets/michael.JPG",
+                link: "/about/michael-otieno",
               },
             ].map((member, index) => (
               <div
@@ -106,6 +112,12 @@ export default function AboutUs() {
                 />
                 <h3 className="font-bold text-xl">{member.name}</h3>
                 <p className="text-gray-600">{member.title}</p>
+                <Link
+                  to={member.link}
+                  className="text-sm text-yellow-500 hover:underline mt-2 inline-block"
+                >
+                  Read more →
+                </Link>
               </div>
             ))}
           </div>
