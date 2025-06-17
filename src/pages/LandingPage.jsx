@@ -382,7 +382,7 @@ export default function LandingPage() {
           <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Our Goal</h3>
             <p className="text-gray-600">
-              Seamlessly connect clients, surveyors, and administrators while
+              Seamlessly connect clients, surveyors, GIS Experts and administrators while
               enhancing transparency, speed, and trust in land service delivery.
             </p>
           </div>

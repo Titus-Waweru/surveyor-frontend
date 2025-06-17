@@ -27,7 +27,7 @@ export default function Signup() {
     setError,
   } = useForm({
     resolver: zodResolver(signupSchema),
-    defaultValues: { role: "client" },  // changed from "" to "client" for select default
+    defaultValues: { role: "client" },
   });
 
   const role = watch("role");
@@ -83,6 +83,9 @@ export default function Signup() {
     }
   };
 
+  const inputClass =
+    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-200";
+
   return (
     <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10 font-manrope">
       <motion.div
@@ -103,17 +106,14 @@ export default function Signup() {
         >
           {/* Name */}
           <div>
-            <label
-              htmlFor="name"
-              className="block mb-2 font-medium text-gray-700"
-            >
+            <label htmlFor="name" className="block mb-2 font-medium text-gray-700">
               Full Name
             </label>
             <input
               id="name"
               {...register("name")}
               type="text"
-              className="input"
+              className={inputClass}
               placeholder="Your Full Name"
               autoComplete="name"
             />
@@ -124,17 +124,14 @@ export default function Signup() {
 
           {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="block mb-2 font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block mb-2 font-medium text-gray-700">
               Email Address
             </label>
             <input
               id="email"
               {...register("email")}
               type="email"
-              className="input"
+              className={inputClass}
               placeholder="you@example.com"
               autoComplete="email"
             />
@@ -145,17 +142,14 @@ export default function Signup() {
 
           {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block mb-2 font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block mb-2 font-medium text-gray-700">
               Password
             </label>
             <input
               id="password"
               {...register("password")}
               type="password"
-              className="input"
+              className={inputClass}
               placeholder="Create a strong password"
               autoComplete="new-password"
             />
@@ -163,25 +157,16 @@ export default function Signup() {
               <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
             )}
             <p className="text-sm text-gray-500 mt-1">
-              Use at least 6 characters with a mix of letters, numbers, and
-              symbols.
+              Use at least 6 characters with a mix of letters, numbers, and symbols.
             </p>
           </div>
 
           {/* Role Selection */}
           <div>
-            <label
-              htmlFor="role"
-              className="block mb-2 font-medium text-gray-700"
-            >
+            <label htmlFor="role" className="block mb-2 font-medium text-gray-700">
               Select Role
             </label>
-            <select
-              id="role"
-              {...register("role")}
-              className="input cursor-pointer"
-              // Removed defaultValue here to let react-hook-form manage it
-            >
+            <select id="role" {...register("role")} className={inputClass}>
               <option value="" disabled>
                 -- Choose a role --
               </option>
@@ -198,39 +183,27 @@ export default function Signup() {
           {(role === "surveyor" || role === "gis") && (
             <fieldset className="border border-yellow-300 rounded-lg p-5 mt-2 space-y-5">
               <legend className="font-semibold text-yellow-600">
-                {role === "gis"
-                  ? "GIS Expert Details"
-                  : "Surveyor Details"}
+                {role === "gis" ? "GIS Expert Details" : "Surveyor Details"}
               </legend>
 
-              {/* ISK Number */}
               <div>
-                <label
-                  htmlFor="iskNumber"
-                  className="block mb-2 font-medium text-gray-700"
-                >
+                <label htmlFor="iskNumber" className="block mb-2 font-medium text-gray-700">
                   ISK Number
                 </label>
                 <input
                   id="iskNumber"
                   {...register("iskNumber")}
                   type="text"
-                  className="input"
-                  placeholder="Enter your ISK number(optional)"
+                  className={inputClass}
+                  placeholder="Enter your ISK number (optional)"
                 />
                 {errors.iskNumber && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.iskNumber.message}
-                  </p>
+                  <p className="text-red-600 text-sm mt-1">{errors.iskNumber.message}</p>
                 )}
               </div>
 
-              {/* ID Card */}
               <div>
-                <label
-                  htmlFor="idCard"
-                  className="block mb-2 font-medium text-gray-700"
-                >
+                <label htmlFor="idCard" className="block mb-2 font-medium text-gray-700">
                   Upload ID Card{" "}
                   <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
                 </label>
@@ -239,21 +212,15 @@ export default function Signup() {
                   {...register("idCard")}
                   type="file"
                   accept=".jpg,.jpeg,.png,.pdf"
-                  className="input file:cursor-pointer"
+                  className={`${inputClass} file:cursor-pointer`}
                 />
                 {errors.idCard && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.idCard.message}
-                  </p>
+                  <p className="text-red-600 text-sm mt-1">{errors.idCard.message}</p>
                 )}
               </div>
 
-              {/* Certificate */}
               <div>
-                <label
-                  htmlFor="certificate"
-                  className="block mb-2 font-medium text-gray-700"
-                >
+                <label htmlFor="certificate" className="block mb-2 font-medium text-gray-700">
                   Upload Certificate{" "}
                   <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
                 </label>
@@ -262,12 +229,10 @@ export default function Signup() {
                   {...register("certificate")}
                   type="file"
                   accept=".jpg,.jpeg,.png,.pdf"
-                  className="input file:cursor-pointer"
+                  className={`${inputClass} file:cursor-pointer`}
                 />
                 {errors.certificate && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.certificate.message}
-                  </p>
+                  <p className="text-red-600 text-sm mt-1">{errors.certificate.message}</p>
                 )}
               </div>
             </fieldset>
@@ -285,10 +250,7 @@ export default function Signup() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-yellow-600 hover:underline font-semibold"
-          >
+          <Link to="/login" className="text-yellow-600 hover:underline font-semibold">
             <strong>Log in here</strong>
           </Link>
         </p>

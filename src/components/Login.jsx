@@ -35,15 +35,10 @@ export default function Login({ onSubmit }) {
     resolver: zodResolver(loginSchema),
   });
 
-  /* ---------- Check current block / attempt status ---------- */
   function checkLoginStatus() {
     const now = Date.now();
-    const blockedUntil = parseInt(
-      localStorage.getItem("loginBlockedUntil") || "0",
-      10
-    );
+    const blockedUntil = parseInt(localStorage.getItem("loginBlockedUntil") || "0", 10);
 
-    // Still blocked?
     if (blockedUntil && now < blockedUntil) {
       setIsBlocked(true);
       setRetryAfter(Math.ceil((blockedUntil - now) / 1000));
@@ -51,7 +46,6 @@ export default function Login({ onSubmit }) {
       return;
     }
 
-    // Not blocked -> clear flag & attempts if 24h passed
     if (blockedUntil && now >= blockedUntil) {
       localStorage.removeItem("loginBlockedUntil");
       localStorage.removeItem("loginAttempts");
@@ -61,7 +55,6 @@ export default function Login({ onSubmit }) {
     setRetryAfter(0);
   }
 
-  /* ---------- Start 1-second countdown updater ---------- */
   function startCountdown(initialMs) {
     let remaining = initialMs;
     const interval = setInterval(() => {
@@ -78,14 +71,12 @@ export default function Login({ onSubmit }) {
     }, 1000);
   }
 
-  /* ---------- Record failed attempt ---------- */
   function recordFailedAttempt() {
     const attempts = JSON.parse(localStorage.getItem("loginAttempts") || "[]");
     attempts.push(Date.now());
     localStorage.setItem("loginAttempts", JSON.stringify(attempts));
 
     if (attempts.length >= MAX_ATTEMPTS) {
-      // Block for 24h
       const blockedUntil = Date.now() + BLOCK_DURATION_MS;
       localStorage.setItem("loginBlockedUntil", blockedUntil.toString());
       localStorage.removeItem("loginAttempts");
@@ -95,19 +86,15 @@ export default function Login({ onSubmit }) {
     }
   }
 
-  /* ---------- Clear attempts ---------- */
   function clearAttempts() {
     localStorage.removeItem("loginAttempts");
     localStorage.removeItem("loginBlockedUntil");
   }
 
-  /* ---------- Submit wrapper ---------- */
   const onSubmitWrapper = async (formData) => {
     if (isBlocked) {
       setFormError(
-        `Too many failed logins. Please try again in ${Math.ceil(
-          retryAfter / 60
-        )} mins`
+        `Too many failed logins. Please try again in ${Math.ceil(retryAfter / 60)} mins`
       );
       return;
     }
@@ -131,7 +118,6 @@ export default function Login({ onSubmit }) {
       >
         {/* Left Section */}
         <div className="bg-yellow-500 text-white p-10 md:p-12 flex flex-col items-center justify-center">
-          {/* Wrap logo in white rounded container */}
           <div className="bg-white p-3 rounded-full mb-6">
             <img
               src={logo}
@@ -139,7 +125,6 @@ export default function Login({ onSubmit }) {
               className="h-[100px] w-auto max-w-[220px] object-contain"
             />
           </div>
-
           <h1 className="text-3xl font-bold font-poppins mb-2 text-center">
             LandLink Platform
           </h1>
@@ -154,14 +139,13 @@ export default function Login({ onSubmit }) {
           </ul>
         </div>
 
-        {/* Right Section - Login Form */}
+        {/* Right Section */}
         <div className="p-10 md:p-14 bg-white">
           <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">
             Login
           </h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
-            Welcome back! Please enter your credentials to access your
-            dashboard.
+            Welcome back! Please enter your credentials to access your dashboard.
           </p>
 
           <form
@@ -171,10 +155,7 @@ export default function Login({ onSubmit }) {
           >
             {/* Email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
               </label>
               <input
@@ -183,7 +164,7 @@ export default function Login({ onSubmit }) {
                 placeholder="you@example.com"
                 autoComplete="email"
                 {...register("email")}
-                className="input"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition duration-200"
                 aria-invalid={!!errors.email}
                 aria-describedby="email-error"
               />
@@ -205,10 +186,7 @@ export default function Login({ onSubmit }) {
 
             {/* Password */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
               <input
@@ -217,7 +195,7 @@ export default function Login({ onSubmit }) {
                 placeholder="********"
                 autoComplete="current-password"
                 {...register("password")}
-                className="input"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition duration-200"
                 aria-invalid={!!errors.password}
                 aria-describedby="password-error"
               />
@@ -237,7 +215,7 @@ export default function Login({ onSubmit }) {
               </AnimatePresence>
             </div>
 
-            {/* Error message from server */}
+            {/* Error message */}
             {formError && (
               <motion.p
                 className="text-red-600 text-sm"
