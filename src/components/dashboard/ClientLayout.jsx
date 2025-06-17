@@ -27,7 +27,7 @@ export default function ClientLayout({ user, onLogout }) {
     <div className="flex h-screen bg-gray-100 font-[Manrope] relative">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 overflow-hidden transform bg-blue-100 transition-transform duration-300 ease-in-out
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-blue-100 transition-transform duration-300 ease-in-out
           lg:relative lg:translate-x-0 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
@@ -53,7 +53,7 @@ export default function ClientLayout({ user, onLogout }) {
       </button>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden lg:pl-64">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar user={user} onLogout={onLogout} />
 
         <main className="flex-1 overflow-y-auto px-2 sm:px-4 md:px-6 py-4 bg-gray-50">
