@@ -117,13 +117,13 @@ export default function ClientOverview({ user }) {
 
       {total > 0 && (
         <div
-          className="w-full max-w-6xl mx-auto grid md:grid-cols-2 gap-8 mt-10"
+          className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 mt-10"
           data-aos="fade-up"
         >
           {/* Pie Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
+          <div className="bg-white p-6 rounded-2xl shadow-lg w-full min-h-[360px] overflow-visible">
             <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
-              Booking Distribution
+              <strong>Booking Distribution</strong>
             </h2>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -148,7 +148,7 @@ export default function ClientOverview({ user }) {
           </div>
 
           {/* Bar Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
+          <div className="bg-white p-6 rounded-2xl shadow-lg w-full min-h-[360px] overflow-visible">
             <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
               Booking Status Overview
             </h2>
