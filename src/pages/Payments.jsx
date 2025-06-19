@@ -93,8 +93,11 @@ export default function Payments({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] px-6 py-8 font-manrope">
-      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-10 md:p-14" data-aos="fade-up">
+    <div className="min-h-screen bg-[#fff6e5] py-12 px-2 sm:px-4 font-manrope flex justify-center items-start overflow-x-hidden">
+      <div
+        className="w-full max-w-5xl bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-8 mx-auto"
+        data-aos="fade-up"
+      >
         <h1 className="text-3xl font-bold text-yellow-600 mb-6 text-center font-poppins">
           Payments
         </h1>
@@ -102,7 +105,7 @@ export default function Payments({ user }) {
         {message && (
           <div
             aria-live="polite"
-            className={`mb-6 px-4 py-2 rounded text-center ${
+            className={`mb-6 px-4 py-2 rounded text-center font-medium ${
               message.type === "error"
                 ? "bg-red-100 text-red-700"
                 : "bg-green-100 text-green-700"
@@ -124,7 +127,7 @@ export default function Payments({ user }) {
               step="any"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               placeholder="Enter amount to pay"
               required
             />
@@ -138,7 +141,7 @@ export default function Payments({ user }) {
               id="paymentMethod"
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               <option value="paystack">Paystack</option>
               <option value="mpesa">Mpesa</option>
@@ -155,7 +158,7 @@ export default function Payments({ user }) {
                 id="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 placeholder="e.g. 254712345678"
                 required
               />
@@ -187,7 +190,7 @@ export default function Payments({ user }) {
           <button
             type="submit"
             disabled={loading}
-            className="bg-yellow-400 text-white font-semibold px-6 py-2 rounded hover:bg-yellow-500 disabled:opacity-60"
+            className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-xl shadow-md disabled:opacity-60 transition duration-200"
           >
             {loading ? "Processing..." : "Make Payment"}
           </button>
@@ -198,27 +201,27 @@ export default function Payments({ user }) {
           {payments.length === 0 ? (
             <p className="text-gray-600">No payments found.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-gray-200">
+            <div className="overflow-x-auto rounded-lg border border-gray-200">
+              <table className="w-full border-collapse text-sm">
                 <thead>
-                  <tr className="bg-yellow-50">
-                    <th className="border border-gray-300 px-4 py-2 text-left">Date</th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">Amount (KES)</th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">Method</th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+                  <tr className="bg-yellow-50 text-left">
+                    <th className="px-4 py-2 border border-gray-200">Date</th>
+                    <th className="px-4 py-2 border border-gray-200">Amount (KES)</th>
+                    <th className="px-4 py-2 border border-gray-200">Method</th>
+                    <th className="px-4 py-2 border border-gray-200">Status</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="bg-white">
                   {payments.map((p) => (
-                    <tr key={p.id} className="hover:bg-yellow-100">
-                      <td className="border border-gray-300 px-4 py-2">
+                    <tr key={p.id} className="hover:bg-yellow-100 transition">
+                      <td className="px-4 py-2 border border-gray-200">
                         {new Date(p.createdAt).toLocaleString()}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="px-4 py-2 border border-gray-200">
                         {(p.amount / (p.method === "paystack" ? 100 : 1)).toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 capitalize">{p.method}</td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td className="px-4 py-2 border border-gray-200 capitalize">{p.method}</td>
+                      <td className="px-4 py-2 border border-gray-200">
                         <span
                           className={`font-semibold ${
                             p.status === "success"

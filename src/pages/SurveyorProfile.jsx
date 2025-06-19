@@ -56,9 +56,9 @@ export default function ClientProfile({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-6 px-0.5 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] py-12 px-2 sm:px-4 font-manrope flex justify-center items-start overflow-x-hidden">
       <div
-        className="w-full bg-white rounded-xl shadow-md px-3 sm:px-5 py-6 sm:py-8 border border-yellow-200"
+        className="w-full max-w-3xl bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-8 mx-auto"
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold text-yellow-600 mb-8 text-center font-poppins tracking-wide">
