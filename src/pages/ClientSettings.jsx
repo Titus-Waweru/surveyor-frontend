@@ -72,7 +72,7 @@ export default function ClientSettings({ user, onLogout }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4">
+    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4 font-manrope">
       <div
         className="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-10 md:p-14"
         data-aos="fade-up"
@@ -81,9 +81,9 @@ export default function ClientSettings({ user, onLogout }) {
           Settings
         </h1>
 
-        <div className="space-y-10 font-manrope">
+        <div className="space-y-10">
           {/* Account Info */}
-          <section className="bg-gray-50 p-6 rounded-xl shadow-md">
+          <section className="bg-yellow-50 p-6 rounded-xl shadow-sm">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">Account Info</h2>
             <p className="mb-2">
               <strong>Role:</strong> {settings.role}
@@ -94,9 +94,9 @@ export default function ClientSettings({ user, onLogout }) {
           </section>
 
           {/* Notifications */}
-          <section className="bg-gray-50 p-6 rounded-xl shadow-md">
+          <section className="bg-yellow-50 p-6 rounded-xl shadow-sm">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">Notifications</h2>
-            <label className="flex items-center space-x-3">
+            <label className="flex items-center space-x-3 text-gray-700">
               <input
                 type="checkbox"
                 checked={settings.notificationsEnabled}
@@ -108,7 +108,7 @@ export default function ClientSettings({ user, onLogout }) {
           </section>
 
           {/* Change Password */}
-          <section className="bg-gray-50 p-6 rounded-xl shadow-md">
+          <section className="bg-yellow-50 p-6 rounded-xl shadow-sm">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">Change Password</h2>
             <input
               type="password"

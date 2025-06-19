@@ -58,7 +58,7 @@ export default function ClientProfile({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4">
+    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4 font-manrope">
       <div
         className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-10 md:p-14"
         data-aos="fade-up"
@@ -68,7 +68,7 @@ export default function ClientProfile({ user }) {
         </h1>
 
         {profile ? (
-          <form onSubmit={handleUpdate} className="space-y-6 font-manrope">
+          <form onSubmit={handleUpdate} className="space-y-6">
             {/* Email (read-only) */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -117,12 +117,10 @@ export default function ClientProfile({ user }) {
                   }}
                 />
               )}
-
-              {/* Custom Upload Button */}
               <div className="relative inline-block">
                 <label
                   htmlFor="profile-upload"
-                  className="cursor-pointer inline-block bg-yellow-100 text-yellow-700 hover:bg-yellow-200 font-semibold py-2 px-4 rounded-md text-sm"
+                  className="cursor-pointer inline-block bg-yellow-100 text-yellow-700 hover:bg-yellow-200 font-semibold py-2 px-4 rounded-md text-sm transition"
                 >
                   {image ? "Change Photo" : "Upload Photo"}
                 </label>
