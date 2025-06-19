@@ -28,7 +28,7 @@ export default function MpesaIntegration() {
           </h1>
           <p className="text-sm text-gray-500">May 20,2025 • 4-min read</p>
           <img
-            src="/assets/mpesa-hero.jpg"
+            src="/assets/Mpesa.png"
             alt="Mobile payment illustration"
             className="w-full h-56 sm:h-72 md:h-80 object-cover rounded-xl mt-6 shadow"
           />

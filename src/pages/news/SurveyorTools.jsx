@@ -27,7 +27,7 @@ export default function SurveyorTools() {
           </h1>
           <p className="text-sm text-gray-500">April 25, 2025 • 4-min read</p>
           <img
-            src="/assets/surveyor-tools.jpg"
+            src="/assets/surveyor-tools.png"
             alt="Surveyor dashboard screenshot"
             className="w-full h-56 sm:h-72 md:h-80 object-cover rounded-xl mt-6 shadow"
           />

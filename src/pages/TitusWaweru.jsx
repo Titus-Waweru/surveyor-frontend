@@ -43,9 +43,10 @@ export default function TitusWaweru() {
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 text-center">
               {[
-                ["12+", "Years in Tech"],
-                ["5", "Products Launched"],
+                ["4+", "Years in Tech"],
+                ["3", "Products Launched"],
                 ["3", "Industry Awards"],
+                ["6084", "Isk no, GIS Chapter"]
               ].map(([stat, label]) => (
                 <div key={label}>
                   <p className="text-2xl font-bold text-yellow-600">{stat}</p>
@@ -80,6 +81,7 @@ export default function TitusWaweru() {
             <li>Geospatial system architecture &amp; GIS integrations</li>
             <li>Full‑stack development (React, Node, PostgreSQL)</li>
             <li>Product strategy &amp; startup leadership</li>
+            <li>Isk No: 6084 &amp; startup leadership</li>
           </ul>
         </section>
       </div>
