@@ -58,7 +58,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
       setStatus({ type: "success", msg: "Booking submitted successfully." });
       reset();
       setCoords({ latitude: null, longitude: null });
-      onNewBooking?.(); // just fire callback – no redirect
+      onNewBooking?.(); // just trigger parent callback
     } catch (err) {
       setStatus({
         type: "error",
@@ -67,7 +67,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     }
   };
 
-  /* ---------- set up leaflet map ---------- */
+  /* ---------- Leaflet map setup ---------- */
   useEffect(() => {
     if (!mapRef.current) return;
 
@@ -124,8 +124,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
+      ({ coords: { latitude, longitude } }) => {
         setCoords({ latitude, longitude });
 
         if (mapInstance.current) {
@@ -141,8 +140,8 @@ export default function BookingForm({ userEmail, onNewBooking }) {
           }
         }
       },
-      (error) => {
-        console.error("Geolocation error:", error);
+      (err) => {
+        console.error("Geolocation error:", err);
         alert("Unable to retrieve your location.");
       }
     );
@@ -169,11 +168,19 @@ export default function BookingForm({ userEmail, onNewBooking }) {
 
         <div>
           <label className="block font-medium">Survey Type</label>
-          <input
+          {/* ------ New dropdown ------ */}
+          <select
             {...register("surveyType")}
-            className="w-full mt-1 p-2 border rounded"
-            placeholder="e.g., Topographical, Boundary"
-          />
+            className="w-full mt-1 p-2 border rounded bg-white"
+          >
+            <option value="">Select a survey type</option>
+            <option value="Land Survey">Land Survey</option>
+            <option value="GIS Mapping">GIS Mapping</option>
+            <option value="Boundary Survey">Boundary Survey</option>
+            <option value="Topographical Survey">Topographical Survey</option>
+            <option value="Subdivision">Subdivision</option>
+            <option value="Title Deed Assistance">Title Deed Assistance</option>
+          </select>
           {errors.surveyType && (
             <p className="text-red-600 text-sm">{errors.surveyType.message}</p>
           )}
@@ -186,7 +193,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             className="w-full mt-1 p-2 border rounded"
             rows="4"
             placeholder="Describe the purpose of the survey"
-          ></textarea>
+          />
           {errors.description && (
             <p className="text-red-600 text-sm">
               {errors.description.message}
@@ -214,7 +221,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             ref={mapRef}
             className="rounded shadow border"
             style={{ height: "256px", width: "100%" }}
-          ></div>
+          />
           <p className="text-sm text-gray-600 mt-1">
             <strong>
               Click on the map or use the search to select your property's
