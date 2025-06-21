@@ -8,9 +8,9 @@ import SurveyMap from "../components/map/SurveyMap";
 import "leaflet/dist/leaflet.css";
 
 export default function ClientBookings({ user }) {
-  const [bookings, setBookings]   = useState([]);
-  const [loading,  setLoading]    = useState(true);
-  const [error,    setError]      = useState(null);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [lastBookingId, setLastBookingId] = useState(null);
@@ -49,23 +49,15 @@ export default function ClientBookings({ user }) {
   };
 
   /* -------------- handle new booking -------------- */
-  const handleNewBooking = async (newBookingData) => {
-    // Call original fetchBookings to refresh list
+  const handleNewBooking = async () => {
     await fetchBookings();
-
-    // Find the newly added booking by matching some criteria
-    // (assuming backend returns the created booking or we can rely on latest booking)
-    // Here, as a safe bet, pick the booking with the newest createdAt timestamp
-    const newestBooking = bookings.reduce((latest, current) => {
-      if (!latest) return current;
-      return new Date(current.createdAt) > new Date(latest.createdAt)
-        ? current
-        : latest;
-    }, null);
-
-    // Set the lastBookingId for redirect & show modal
-    if (newestBooking) {
-      setLastBookingId(newestBooking.id);
+    const newest = bookings.reduce((latest, cur) =>
+      !latest || new Date(cur.createdAt) > new Date(latest.createdAt)
+        ? cur
+        : latest,
+    null);
+    if (newest) {
+      setLastBookingId(newest.id);
       setShowModal(true);
     }
   };
@@ -78,14 +70,11 @@ export default function ClientBookings({ user }) {
   const handlePayNow = () => {
     setShowModal(false);
     if (lastBookingId) {
-      // Redirect to payment page with bookingId as query param
       window.location.href = `/payments?bookingId=${lastBookingId}`;
     }
   };
 
-  const handlePayLater = () => {
-    setShowModal(false);
-  };
+  const handlePayLater = () => setShowModal(false);
 
   /* ---------------- ui ---------------- */
   return (
@@ -109,7 +98,8 @@ export default function ClientBookings({ user }) {
             <p className="text-center text-sm text-red-600">{error}</p>
           ) : bookings.length === 0 ? (
             <p className="text-center text-sm text-gray-600">
-              You haven’t made any bookings yet. Use the form below to get started.
+              You haven’t made any bookings yet. Use the form below to get
+              started.
             </p>
           ) : (
             <>
@@ -149,22 +139,11 @@ export default function ClientBookings({ user }) {
                 </div>
               )}
 
-              {/* table in its own scroll area */}
+              {/* table */}
               <div className="overflow-x-auto rounded-xl shadow-md">
-                {/* give the table room to breathe; if it’s wider than the card, it scrolls  */}
                 <div className="min-w-[700px] bg-white rounded-xl">
                   <BookingsTable bookings={bookings} />
                 </div>
-              </div>
-
-              {/* review button */}
-              <div className="text-center mt-6">
-                <a
-                  href="/review"
-                  className="inline-block w-full sm:w-auto px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition"
-                >
-                  Leave a Review
-                </a>
               </div>
             </>
           )}
@@ -178,7 +157,6 @@ export default function ClientBookings({ user }) {
           <h2 className="text-xl font-semibold text-gray-700 mb-4 font-poppins">
             Create New Booking
           </h2>
-          {/* Pass the new handler here */}
           <BookingForm userEmail={user.email} onNewBooking={handleNewBooking} />
         </section>
       </div>
@@ -190,7 +168,9 @@ export default function ClientBookings({ user }) {
             <h3 className="text-xl font-semibold mb-4 font-poppins">
               Booking Created!
             </h3>
-            <p className="mb-6">Would you like to pay for your booking now?</p>
+            <p className="mb-6">
+              Would you like to pay for your booking now?
+            </p>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={handlePayLater}
