@@ -12,6 +12,8 @@ export default function ClientBookings({ user }) {
   const [loading,  setLoading]    = useState(true);
   const [error,    setError]      = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [lastBookingId, setLastBookingId] = useState(null);
 
   const [showMap, setShowMap] = useState(() => {
     const saved = localStorage.getItem("showMap");
@@ -46,9 +48,44 @@ export default function ClientBookings({ user }) {
     }
   };
 
+  /* -------------- handle new booking -------------- */
+  const handleNewBooking = async (newBookingData) => {
+    // Call original fetchBookings to refresh list
+    await fetchBookings();
+
+    // Find the newly added booking by matching some criteria
+    // (assuming backend returns the created booking or we can rely on latest booking)
+    // Here, as a safe bet, pick the booking with the newest createdAt timestamp
+    const newestBooking = bookings.reduce((latest, current) => {
+      if (!latest) return current;
+      return new Date(current.createdAt) > new Date(latest.createdAt)
+        ? current
+        : latest;
+    }, null);
+
+    // Set the lastBookingId for redirect & show modal
+    if (newestBooking) {
+      setLastBookingId(newestBooking.id);
+      setShowModal(true);
+    }
+  };
+
   const bookingsWithCoordinates = bookings.filter(
     (b) => b.latitude && b.longitude
   );
+
+  /* ----------- Modal actions ----------- */
+  const handlePayNow = () => {
+    setShowModal(false);
+    if (lastBookingId) {
+      // Redirect to payment page with bookingId as query param
+      window.location.href = `/payments?bookingId=${lastBookingId}`;
+    }
+  };
+
+  const handlePayLater = () => {
+    setShowModal(false);
+  };
 
   /* ---------------- ui ---------------- */
   return (
@@ -141,9 +178,36 @@ export default function ClientBookings({ user }) {
           <h2 className="text-xl font-semibold text-gray-700 mb-4 font-poppins">
             Create New Booking
           </h2>
-          <BookingForm userEmail={user.email} onNewBooking={fetchBookings} />
+          {/* Pass the new handler here */}
+          <BookingForm userEmail={user.email} onNewBooking={handleNewBooking} />
         </section>
       </div>
+
+      {/* --- Modal --- */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <h3 className="text-xl font-semibold mb-4 font-poppins">
+              Booking Created!
+            </h3>
+            <p className="mb-6">Would you like to pay for your booking now?</p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={handlePayLater}
+                className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
+              >
+                Pay Later
+              </button>
+              <button
+                onClick={handlePayNow}
+                className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 transition"
+              >
+                Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
