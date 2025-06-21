@@ -64,6 +64,30 @@ export default function ClientOverview({ user }) {
 
   const COLORS = ["#facc15", "#a78bfa", "#4ade80"];
 
+  const downloadCSV = () => {
+    const headers = ["ID", "Location", "Survey Type", "Status", "Preferred Date", "Created At"];
+    const rows = bookings.map((b) => [
+      b.id,
+      `"${b.location}"`,
+      b.surveyType,
+      b.status,
+      b.preferredDate,
+      new Date(b.createdAt).toLocaleString(),
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((row) => row.join(","))].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "LandLink_Bookings_Report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center font-manrope">
@@ -115,9 +139,21 @@ export default function ClientOverview({ user }) {
         )}
       </div>
 
+      {/* ✅ Download Reports Button */}
+      {total > 0 && (
+        <div className="max-w-5xl mx-auto mt-6 mb-2 flex justify-end">
+          <button
+            onClick={downloadCSV}
+            className="bg-indigo-600 text-white font-medium px-4 py-2 rounded hover:bg-indigo-700 transition"
+          >
+            📥 Download Report (CSV)
+          </button>
+        </div>
+      )}
+
       {total > 0 && (
         <div
-          className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 mt-10"
+          className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 mt-6"
           data-aos="fade-up"
         >
           {/* Pie Chart */}
