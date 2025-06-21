@@ -53,9 +53,12 @@ export default function ClientLayout({ user, onLogout }) {
       </button>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div
+        className={`flex-1 flex flex-col overflow-hidden transition duration-300 ease-in-out ${
+          isSidebarOpen ? "blur-sm lg:blur-0 pointer-events-none lg:pointer-events-auto" : ""
+        }`}
+      >
         <Navbar user={user} onLogout={onLogout} />
-
         <main className="flex-1 overflow-y-auto px-2 sm:px-4 md:px-6 py-4 bg-gray-50">
           <Outlet />
         </main>
