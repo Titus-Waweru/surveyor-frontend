@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
@@ -32,7 +31,6 @@ export default function BookingForm({ userEmail, onNewBooking }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markerRef = useRef(null);
-  const navigate = useNavigate();
 
   const {
     register,
@@ -60,12 +58,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
       setStatus({ type: "success", msg: "Booking submitted successfully." });
       reset();
       setCoords({ latitude: null, longitude: null });
-      onNewBooking?.();
-
-      // ✅ Redirect after 2 seconds
-      setTimeout(() => {
-        navigate("/review");
-      }, 2000);
+      onNewBooking?.(); // just fire callback – no redirect
     } catch (err) {
       setStatus({
         type: "error",
@@ -74,6 +67,7 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     }
   };
 
+  /* ---------- set up leaflet map ---------- */
   useEffect(() => {
     if (!mapRef.current) return;
 
@@ -84,12 +78,10 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     });
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; OpenStreetMap contributors',
+      attribution: "&copy; OpenStreetMap contributors",
     }).addTo(mapInstance.current);
 
-    L.Control.geocoder({
-      defaultMarkGeocode: false,
-    })
+    L.Control.geocoder({ defaultMarkGeocode: false })
       .on("markgeocode", function (e) {
         const { center } = e.geocode;
         mapInstance.current.setView(center, 15);
@@ -120,13 +112,9 @@ export default function BookingForm({ userEmail, onNewBooking }) {
       }
     });
 
-    setTimeout(() => {
-      mapInstance.current.invalidateSize();
-    }, 300);
+    setTimeout(() => mapInstance.current.invalidateSize(), 300);
 
-    return () => {
-      mapInstance.current.remove();
-    };
+    return () => mapInstance.current.remove();
   }, []);
 
   const handleUseMyLocation = () => {
@@ -174,7 +162,9 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             className="w-full mt-1 p-2 border rounded"
             placeholder="Enter description of location"
           />
-          {errors.location && <p className="text-red-600 text-sm">{errors.location.message}</p>}
+          {errors.location && (
+            <p className="text-red-600 text-sm">{errors.location.message}</p>
+          )}
         </div>
 
         <div>
@@ -184,7 +174,9 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             className="w-full mt-1 p-2 border rounded"
             placeholder="e.g., Topographical, Boundary"
           />
-          {errors.surveyType && <p className="text-red-600 text-sm">{errors.surveyType.message}</p>}
+          {errors.surveyType && (
+            <p className="text-red-600 text-sm">{errors.surveyType.message}</p>
+          )}
         </div>
 
         <div>
@@ -196,7 +188,9 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             placeholder="Describe the purpose of the survey"
           ></textarea>
           {errors.description && (
-            <p className="text-red-600 text-sm">{errors.description.message}</p>
+            <p className="text-red-600 text-sm">
+              {errors.description.message}
+            </p>
           )}
         </div>
 
@@ -208,7 +202,9 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             className="w-full mt-1 p-2 border rounded"
           />
           {errors.preferredDate && (
-            <p className="text-red-600 text-sm">{errors.preferredDate.message}</p>
+            <p className="text-red-600 text-sm">
+              {errors.preferredDate.message}
+            </p>
           )}
         </div>
 
@@ -220,11 +216,15 @@ export default function BookingForm({ userEmail, onNewBooking }) {
             style={{ height: "256px", width: "100%" }}
           ></div>
           <p className="text-sm text-gray-600 mt-1">
-            <strong>Click on the map or use the search to select your property's location.</strong>
+            <strong>
+              Click on the map or use the search to select your property's
+              location.
+            </strong>
           </p>
           {coords.latitude && (
             <p className="text-green-600 text-sm mt-1">
-              <b>Selected Coordinates</b>: {coords.latitude.toFixed(5)}, {coords.longitude.toFixed(5)}
+              <b>Selected Coordinates</b>: {coords.latitude.toFixed(5)},{" "}
+              {coords.longitude.toFixed(5)}
             </p>
           )}
           <button
