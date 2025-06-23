@@ -529,18 +529,41 @@ export default function LandingPage() {
       </section>
 
       {/* ────────────────── Final Call to Action ───────────────────── */}
-      <section className="text-center py-16 bg-yellow-400 text-white" data-aos="fade-up">
-        <h2 className="text-3xl font-bold mb-4">Ready to simplify your operations?</h2>
-        <p className="mb-6">Start your free trial today — no credit card required.</p>
-        <Link to="/signup">
-          <button
-            aria-label="Get Started Free"
-            className="bg-white text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
-          >
-            <b>Get Started Free</b>
-          </button>
-        </Link>
-      </section>
+<section className="text-center py-16 bg-yellow-400 text-white" data-aos="fade-up">
+  <h2 className="text-3xl font-bold mb-4">Ready to simplify your operations?</h2>
+  <p className="mb-6">Start your free trial today — no credit card required.</p>
+  <Link to="/signup">
+    <button
+      aria-label="Get Started Free"
+      className="bg-white text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
+    >
+      <b>Get Started Free</b>
+    </button>
+  </Link>
+
+  {/* Social & Hours Block */}
+  <div className="mt-10 bg-white bg-opacity-10 rounded-xl px-6 py-8 max-w-2xl mx-auto text-sm text-white">
+    {/* Social Media */}
+    <div className="mb-4">
+      <p className="font-semibold text-lg mb-2">📱 Follow Us:</p>
+      <div className="flex justify-center gap-4 flex-wrap">
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">Facebook</a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">X (Twitter)</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">Instagram</a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">LinkedIn</a>
+      </div>
+    </div>
+
+    {/* Working Hours */}
+    <div>
+      <p className="font-semibold text-lg mb-2">🕒 Working Hours:</p>
+      <p>Monday – Friday: 8:00 AM – 6:00 PM</p>
+      <p>Saturday: 9:00 AM – 1:00 PM</p>
+      <p>Sunday & Public Holidays: Closed</p>
+    </div>
+  </div>
+</section>
+
 
       {/* ───────────────────────── Footer ─────────────────────────── */}
       <footer className="bg-white py-6 px-4 sm:px-8 md:px-20 text-center text-sm text-gray-500">
