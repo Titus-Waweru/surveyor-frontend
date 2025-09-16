@@ -278,47 +278,63 @@ export default function LandingPage() {
 <section
   className="flex flex-col md:flex-row items-center justify-between
              px-4 sm:px-8 md:px-20 pt-8 sm:pt-10 pb-16 sm:pb-20
-             overflow-x-hidden"    /* 👈 keep overflow clipped just here too */
+             overflow-x-hidden bg-gradient-to-r from-green-50 via-white to-green-50"
 >
   {/* Text column */}
   <div className="md:w-1/2 w-full space-y-6" data-aos="fade-up">
-    <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
-      <strong>
-        LandLink: Connect, Book &amp; Manage Land Services in One Place
-      </strong>
+    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+      LandLink: <span className="text-green-600">Connect, Book &amp; Manage</span> Land Services in One Place
     </h1>
 
-    <p className="text-lg text-gray-700">
-      From real estate surveyors to inspection teams, LandLink gives you a
-    powerful dashboard, automated bookings OTP-secured logins, and
-
-      instant payments -in minutes.
+    <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+      From real estate surveyors to inspection teams, LandLink gives you a 
+      powerful dashboard, automated bookings, OTP-secured logins, and 
+      instant mobile payments — all in minutes.
     </p>
 
+    {/* CTA buttons */}
     <div className="flex flex-wrap gap-4">
       <Link to="/signup">
         <button
           aria-label="Click here to Signup/Login"
           className="bg-yellow-400 hover:bg-yellow-500 text-white
-                     font-semibold px-6 py-3 rounded-2xl shadow w-full
-                     sm:w-auto"
+                     font-semibold px-6 py-3 rounded-2xl shadow-md w-full
+                     sm:w-auto transition duration-300"
         >
-          <b>Signup/Login</b>
+          <b>Get Started</b>
         </button>
       </Link>
 
-      <Link to="/book-demo">
+      <Link to="/login">
         <button
           aria-label="Book a Demo"
           className="border border-yellow-400 text-yellow-500
-                     font-semibold px-6 py-3 rounded-2xl shadow w-full
-                     sm:w-auto"
+                     font-semibold px-6 py-3 rounded-2xl shadow-md w-full
+                     sm:w-auto hover:bg-yellow-50 transition duration-300"
         >
-          <b>Book a Demo</b>
+          <b>Watch Demo</b>
         </button>
       </Link>
     </div>
+
+    {/* Proof Points */}
+    <div className="flex items-center gap-6 pt-6">
+      <div>
+        <h3 className="text-xl font-bold text-gray-800">100+</h3>
+        <p className="text-sm text-gray-500">Surveyors Verified</p>
+      </div>
+      <div>
+        <h3 className="text-xl font-bold text-gray-800">500+</h3>
+        <p className="text-sm text-gray-500">Bookings Made</p>
+      </div>
+      <div>
+        <h3 className="text-xl font-bold text-gray-800">2025</h3>
+        <p className="text-sm text-gray-500">Pilot Counties</p>
+      </div>
+    </div>
   </div>
+
+
 
   {/* Swiper / image column */}
   <div
