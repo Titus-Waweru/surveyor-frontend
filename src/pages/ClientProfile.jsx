@@ -13,11 +13,21 @@ export default function ClientProfile({ user }) {
   });
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    AOS.init({ duration: 1000 });
-    if (user?.email) fetchProfile();
+    if (user?.email) {
+      AOS.init({ duration: 1000 });
+      fetchProfile();
+    }
   }, [user?.email]);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const fetchProfile = async () => {
     try {
@@ -31,7 +41,10 @@ export default function ClientProfile({ user }) {
       });
     } catch (err) {
       console.error("❌ Profile fetch error:", err);
-      alert("Failed to load profile. Please try again.");
+      setMessage({
+        type: "error",
+        text: "Failed to load profile. Please try again.",
+      });
     }
   };
 
@@ -47,72 +60,100 @@ export default function ClientProfile({ user }) {
     setLoading(true);
     try {
       const res = await axios.put(`${API_BASE_URL}/profile`, formData);
-      alert("✅ Profile updated successfully.");
       setProfile(res.data.user);
+      setMessage({
+        type: "success",
+        text: "Profile updated successfully ✅",
+      });
     } catch (err) {
       console.error("❌ Update error:", err);
-      alert("Failed to update profile. Please try again.");
+      setMessage({
+        type: "error",
+        text: "Failed to update profile. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 px-4 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] p-2 sm:p-4 font-manrope flex justify-center items-start overflow-x-hidden">
       <div
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-10 md:p-14"
+        className="w-full bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-8"
         data-aos="fade-up"
       >
-        <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins">
+        <h1 className="text-3xl font-bold text-yellow-600 mb-6 text-center font-poppins">
           My Profile
         </h1>
+
+        {message && (
+          <div
+            aria-live="polite"
+            className={`mb-6 px-4 py-2 rounded text-center font-medium ${
+              message.type === "error"
+                ? "bg-red-100 text-red-700"
+                : "bg-green-100 text-green-700"
+            }`}
+          >
+            {message.text}
+          </div>
+        )}
 
         {profile ? (
           <form onSubmit={handleUpdate} className="space-y-6">
             {/* Email (read-only) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block font-medium mb-1" htmlFor="email">
+                Email
+              </label>
               <input
                 type="email"
+                id="email"
                 value={user.email}
                 readOnly
-                className="w-full border border-gray-300 rounded px-4 py-2 bg-gray-100 cursor-not-allowed"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-100 cursor-not-allowed"
               />
             </div>
 
             {/* Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="block font-medium mb-1" htmlFor="name">
+                Name
+              </label>
               <input
                 type="text"
+                id="name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>
 
             {/* Phone Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <label className="block font-medium mb-1" htmlFor="phone">
+                Phone Number
+              </label>
               <input
                 type="text"
+                id="phone"
                 value={form.phoneNumber}
                 onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>
 
             {/* Profile Image Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+              <label className="block font-medium mb-2">Profile Image</label>
               {profile.profileImageUrl && (
                 <img
                   src={`${API_BASE_URL.replace("/api", "")}${profile.profileImageUrl}`}
                   alt="Profile"
                   className="rounded-full border shadow-sm mb-3"
                   style={{
-                    width: "60px",
-                    height: "60px",
+                    width: "70px",
+                    height: "70px",
                     objectFit: "cover",
                   }}
                 />
@@ -138,7 +179,7 @@ export default function ClientProfile({ user }) {
             <button
               type="submit"
               disabled={loading}
-              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 rounded shadow disabled:opacity-60 transition duration-200"
+              className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-xl shadow-md disabled:opacity-60 transition duration-200"
             >
               {loading ? "Updating..." : "Update Profile"}
             </button>
