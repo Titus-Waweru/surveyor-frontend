@@ -72,9 +72,9 @@ export default function ClientSettings({ user, onLogout }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex justify-center items-start py-10 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] px-2 sm:px-4 py-10 font-manrope">
       <div
-        className="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-6 sm:p-10 md:p-14 mx-2 sm:mx-4"
+        className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto bg-white rounded-3xl shadow-xl p-6 sm:p-10 md:p-14"
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold text-yellow-600 mb-10 text-center font-poppins">
