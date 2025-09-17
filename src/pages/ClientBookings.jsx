@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; 
 import axios from "axios";
 import BookingsTable from "../components/dashboard/BookingsTable";
 import BookingForm from "../components/dashboard/BookingForm";
@@ -51,11 +51,13 @@ export default function ClientBookings({ user }) {
   /* -------------- handle new booking -------------- */
   const handleNewBooking = async () => {
     await fetchBookings();
-    const newest = bookings.reduce((latest, cur) =>
-      !latest || new Date(cur.createdAt) > new Date(latest.createdAt)
-        ? cur
-        : latest,
-    null);
+    const newest = bookings.reduce(
+      (latest, cur) =>
+        !latest || new Date(cur.createdAt) > new Date(latest.createdAt)
+          ? cur
+          : latest,
+      null
+    );
     if (newest) {
       setLastBookingId(newest.id);
       setShowModal(true);
@@ -78,9 +80,9 @@ export default function ClientBookings({ user }) {
 
   /* ---------------- ui ---------------- */
   return (
-    <div className="min-h-screen bg-[#fff6e5] px-4 py-10 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] py-12 px-2 sm:px-4 font-manrope flex justify-center items-start overflow-x-hidden">
       <div
-        className="w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-6 md:p-10"
+        className="w-full max-w-5xl bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-8 mx-auto"
         data-aos="fade-up"
       >
         {/* title */}
