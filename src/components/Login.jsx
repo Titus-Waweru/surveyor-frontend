@@ -141,7 +141,7 @@ export default function Login({ onSubmit }) {
 
         {/* Right Section */}
         <div className="p-10 md:p-14 bg-white">
-          <h2 className="text-3xl font-bold text-yellow-600 mb-3 font-poppins">
+          <h2 className="text-3xl font-bold text-green-600 mb-3 font-poppins">
             Login
           </h2>
           <p className="text-sm text-gray-600 mb-6 font-manrope">
@@ -230,7 +230,7 @@ export default function Login({ onSubmit }) {
             <div className="flex justify-end">
               <Link
                 to="/forgot-password"
-                className="text-sm text-yellow-600 hover:underline font-medium"
+                className="text-sm text-blue-600 hover:underline font-medium"
               >
                 <strong>Forgot password?</strong>
               </Link>
