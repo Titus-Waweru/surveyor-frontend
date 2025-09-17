@@ -65,7 +65,7 @@ export default function LandingPage() {
         className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg mt-16 mb-20"
         data-aos="fade-up"
       >
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
           Estimate Your Survey Cost in Seconds
         </h2>
 
@@ -109,7 +109,7 @@ export default function LandingPage() {
               step="0.01"
               value={landSize}
               onChange={(e) => setLandSize(e.target.value)}
-              placeholder="Enter size"
+              placeholder="Enter size of land"
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-yellow-400"
               required
             />
@@ -173,7 +173,7 @@ export default function LandingPage() {
                 type="button"
                 className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-8 py-3 rounded-2xl shadow transition"
                 aria-label="Proceed to booking"
-                onClick={() => alert("You can integrate booking flow here")}
+                onClick={() => alert("SignUp to get an account")}
               >
                 Proceed to Book
               </button>
@@ -320,11 +320,11 @@ export default function LandingPage() {
     {/* Proof Points */}
     <div className="flex items-center gap-6 pt-6">
       <div>
-        <h3 className="text-xl font-bold text-gray-800">100+</h3>
+        <h3 className="text-xl font-bold text-green-800">100+</h3>
         <p className="text-sm text-gray-500">Surveyors Verified</p>
       </div>
       <div>
-        <h3 className="text-xl font-bold text-gray-800">500+</h3>
+        <h3 className="text-xl font-bold text-blue-800">500+</h3>
         <p className="text-sm text-gray-500">Bookings Made</p>
       </div>
       <div>
@@ -344,7 +344,7 @@ export default function LandingPage() {
     <Swiper
       modules={[Autoplay, Pagination]}
       spaceBetween={30}
-      pagination={{ clickable: true }}
+      pagination={{ clickable: false }}
       autoplay={{ delay: 8000 }}
       loop={true}
       className="w-full overflow-hidden rounded-xl shadow-lg"
@@ -377,28 +377,28 @@ export default function LandingPage() {
         className="px-4 sm:px-8 md:px-20 py-16 bg-white"
         data-aos="fade-up"
       >
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+        <h2 className="text-3xl font-bold text-center mb-12 text-blue-800">
           Our Vision, Mission & Goals
         </h2>
         <div className="grid md:grid-cols-3 gap-10">
           <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Vision</h3>
+            <h3 className="text-xl font-semibold text-green-800 mb-2">Vision</h3>
             <p className="text-gray-600">
-              To be the leading digital infrastructure for land service automation
-              across Africa.
+              -To be the leading digital infrastructure for land service automation
+              across kenya and Africa.
             </p>
           </div>
           <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Mission</h3>
+            <h3 className="text-xl font-semibold text-green-800 mb-2">Mission</h3>
             <p className="text-gray-600">
-              To empower individuals and organizations with easy-to-use tools for
+              -To empower individuals and organizations with easy-to-use tools for
               booking, managing, and completing land-related services.
             </p>
           </div>
           <div className="bg-[#fff6e5] p-6 rounded-2xl shadow">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Our Goal</h3>
+            <h3 className="text-xl font-semibold text-green-800 mb-2">Our Goal</h3>
             <p className="text-gray-600">
-              Seamlessly connect clients, surveyors, GIS Experts and administrators while
+              -Seamlessly connect clients, surveyors, GIS Experts and administrators while
               enhancing transparency, speed, and trust in land service delivery.
             </p>
           </div>
@@ -410,7 +410,7 @@ export default function LandingPage() {
         className="px-4 sm:px-8 md:px-20 py-16 bg-[#fff6e5]"
         data-aos="fade-up"
       >
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+        <h2 className="text-3xl font-bold text-center mb-12 text-blue-800">
           What We Offer
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -485,7 +485,7 @@ export default function LandingPage() {
         className="px-4 sm:px-8 md:px-20 py-16 bg-white"
         data-aos="fade-up"
       >
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+        <h2 className="text-3xl font-bold text-center mb-12 text-blue-800">
           Why Teams Love LandLink
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
