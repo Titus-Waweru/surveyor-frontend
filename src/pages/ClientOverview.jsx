@@ -26,7 +26,9 @@ export default function ClientOverview({ user }) {
     async function fetchBookings() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(user.email)}`,
+          `${import.meta.env.VITE_API_URL}/bookings?userEmail=${encodeURIComponent(
+            user.email
+          )}`,
           {
             credentials: "include",
             headers: { "Content-Type": "application/json" },
@@ -105,9 +107,9 @@ export default function ClientOverview({ user }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] px-4 py-10 font-manrope">
+    <div className="min-h-screen bg-[#fff6e5] py-12 px-2 sm:px-4 font-manrope">
       <div
-        className="w-full max-w-5xl mx-auto bg-white shadow-xl rounded-3xl p-6 md:p-10"
+        className="w-full max-w-5xl mx-auto bg-white shadow-xl rounded-3xl px-4 sm:px-6 md:px-10 py-8"
         data-aos="fade-up"
       >
         <h1 className="text-3xl font-bold text-yellow-600 text-center mb-8 font-poppins">
@@ -139,72 +141,61 @@ export default function ClientOverview({ user }) {
         )}
       </div>
 
-      {/* ✅ Download Reports Button */}
       {total > 0 && (
-        <div className="max-w-5xl mx-auto mt-6 mb-2 flex justify-end">
-          <button
-            onClick={downloadCSV}
-            className="bg-indigo-600 text-white font-medium px-4 py-2 rounded hover:bg-indigo-700 transition"
+        <>
+          {/* ✅ Download Reports Button */}
+          <div className="max-w-5xl mx-auto mt-6 mb-2 flex justify-end px-2 sm:px-4">
+            <button
+              onClick={downloadCSV}
+              className="bg-indigo-600 text-white font-medium px-4 py-2 rounded hover:bg-indigo-700 transition"
+            >
+              📥 Download Report (CSV)
+            </button>
+          </div>
+
+          {/* Charts */}
+          <div
+            className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 mt-6 px-2 sm:px-4"
+            data-aos="fade-up"
           >
-            📥 Download Report (CSV)
-          </button>
-        </div>
-      )}
+            {/* Pie Chart */}
+            <div className="bg-white px-4 sm:px-6 py-6 rounded-2xl shadow-lg w-full min-h-[360px]">
+              <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
+                <strong>Booking Distribution</strong>
+              </h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie data={chartData} dataKey="value" nameKey="name" outerRadius={100} label>
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Legend />
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
 
-      {total > 0 && (
-        <div
-          className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 mt-6"
-          data-aos="fade-up"
-        >
-          {/* Pie Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg w-full min-h-[360px] overflow-visible">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
-              <strong>Booking Distribution</strong>
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={100}
-                  label
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Legend />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            {/* Bar Chart */}
+            <div className="bg-white px-4 sm:px-6 py-6 rounded-2xl shadow-lg w-full min-h-[360px]">
+              <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
+                Booking Status Overview
+              </h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <XAxis dataKey="name" />
+                  <YAxis allowDecimals={false} />
+                  <Tooltip />
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                    {chartData.map((entry, index) => (
+                      <Cell key={`bar-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-
-          {/* Bar Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg w-full min-h-[360px] overflow-visible">
-            <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
-              Booking Status Overview
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`bar-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );
