@@ -11,16 +11,8 @@ export default function AboutUs() {
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins text-gray-800">
       <div className="px-4 sm:px-8 md:px-20 py-16">
-        {/* Back to Landing Page */}
-        <Link
-          to="/"
-          className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6"
-        >
-          ← Back
-        </Link>
-
         <h1
-          className="text-4xl md:text-5xl font-bold mb-10 text-center"
+          className="text-4xl md:text-5xl font-bold mb-10 text-center text-grey-600"
           data-aos="fade-down"
         >
           About LandLink
@@ -56,7 +48,7 @@ export default function AboutUs() {
           <div className="bg-white p-6 rounded-2xl shadow">
             <h2 className="text-xl font-semibold mb-2">Our Values</h2>
             <p>
-              Integrity, Innovation, Transparency, and Accessibility. We’re
+              Integrity, Innovation, Transparency, and Accessibility. We're
               committed to transforming how land services are delivered — one
               booking at a time.
             </p>
@@ -111,7 +103,7 @@ export default function AboutUs() {
                   className="w-[150px] h-[150px] mx-auto mb-3 rounded-full object-cover"
                 />
                 <h3 className="font-bold text-xl">{member.name}</h3>
-                <p className="text-gray-600">{member.title}</p>
+                <p className="text-blue-600">{member.title}</p>
                 <Link
                   to={member.link}
                   className="text-sm text-yellow-500 hover:underline mt-2 inline-block"
@@ -130,11 +122,11 @@ export default function AboutUs() {
             We're on a mission to redefine land services in Africa. Be part of
             this transformation.
           </p>
-          <a href="/signup">
+          <Link to="/signup">
             <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-2xl shadow">
               Get Started
             </button>
-          </a>
+          </Link>
         </section>
       </div>
     </div>

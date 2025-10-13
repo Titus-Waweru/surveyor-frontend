@@ -12,13 +12,6 @@ export default function MichaelOtieno() {
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins text-gray-800">
       <div className="px-4 sm:px-8 md:px-20 py-16">
-        <Link
-          to="/about"
-          className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6"
-        >
-          ← Back to About Us
-        </Link>
-
         <div
           className="flex flex-col md:flex-row items-center gap-10 bg-white rounded-2xl shadow p-8"
           data-aos="fade-up"

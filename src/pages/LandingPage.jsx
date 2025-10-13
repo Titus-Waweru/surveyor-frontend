@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,15 +7,10 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-
 export default function LandingPage() {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
-
-  const handleLinkClick = () => setIsNavOpen(false);
 
   // New PriceEstimator component inside LandingPage file for simplicity
   function PriceEstimator() {
@@ -188,186 +182,97 @@ export default function LandingPage() {
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-poppins">
-      {/* ───────────────────────── Header ───────────────────────── */}
-      <header className="px-4 sm:px-8 md:px-20 py-2 sm:py-3 bg-[#fff6e5] relative z-30">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/">
-            <img
-              src="/assets/logo.png"
-              alt="LandLink Logo"
-              className="h-[80px] md:h-[120px] w-auto object-contain"
-            />
-          </Link>
+      {/* ──────────────────────── Hero Section ─────────────────────── */}
+      <section
+        className="flex flex-col md:flex-row items-center justify-between
+                   px-4 sm:px-8 md:px-20 pt-8 sm:pt-10 pb-16 sm:pb-20
+                   overflow-x-hidden bg-gradient-to-r from-green-50 via-white to-green-50"
+      >
+        {/* Text column */}
+        <div className="md:w-1/2 w-full space-y-6" data-aos="fade-up">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+            LandLink: <span className="text-green-600">Connect, Book &amp; Manage</span> Land Services in One Place
+          </h1>
 
-          {/* Desktop links */}
-          <nav className="hidden md:flex gap-6 items-center">
-            <Link
-              to="/home"
-              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
-            >
-              Home
-            </Link>
-            <Link
-              to="/contact"
-              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
-            >
-              Contact&nbsp;Us
-            </Link>
-            <Link
-              to="/news"
-              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
-            >
-              News
-            </Link>
-            <Link
-              to="/about"
-              className="font-bold text-black hover:text-[#7B4F24] transition-transform hover:scale-105"
-            >
-              About&nbsp;Us
-            </Link>
-          </nav>
+          <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+            From real estate surveyors to inspection teams, LandLink gives you a 
+            powerful dashboard, automated bookings, OTP-secured logins, and 
+            instant mobile payments — all in minutes.
+          </p>
 
-          {/* Mobile toggle */}
-          <button
-            aria-label="Toggle navigation menu"
-            className="md:hidden p-2 rounded-md hover:bg-yellow-400/20 transition-colors"
-            onClick={() => setIsNavOpen((prev) => !prev)}
-          >
-            <Menu size={28} />
-          </button>
-        </div>
+          {/* CTA buttons */}
+          <div className="flex flex-wrap gap-4">
+            <Link to="/signup">
+              <button
+                aria-label="Click here to Signup/Login"
+                className="bg-yellow-400 hover:bg-yellow-500 text-white
+                           font-semibold px-6 py-3 rounded-2xl shadow-md w-full
+                           sm:w-auto transition duration-300"
+              >
+                <b>Get Started</b>
+              </button>
+            </Link>
 
-        {/* Mobile menu */}
-
-        {isNavOpen && (
-          <div className="md:hidden mt-4 bg-white shadow rounded-lg p-4">
-            <Link
-              to="/home"
-              onClick={handleLinkClick}
-              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
-            >
-              Home
-            </Link>
-            <Link
-              to="/contact"
-              onClick={handleLinkClick}
-              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
-            >
-              Contact&nbsp;Us
-            </Link>
-            <Link
-              to="/news"
-              onClick={handleLinkClick}
-              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
-            >
-              News
-            </Link>
-            <Link
-              to="/about"
-              onClick={handleLinkClick}
-              className="block py-2 font-bold text-black hover:text-[#7B4F24]"
-            >
-              About&nbsp;Us
+            <Link to="/login">
+              <button
+                aria-label="Book a Demo"
+                className="border border-yellow-400 text-yellow-500
+                           font-semibold px-6 py-3 rounded-2xl shadow-md w-full
+                           sm:w-auto hover:bg-yellow-50 transition duration-300"
+              >
+                <b>Watch Demo</b>
+              </button>
             </Link>
           </div>
-        )}
-      </header>
 
-{/* ──────────────────────── Hero Section ─────────────────────── */}
-<section
-  className="flex flex-col md:flex-row items-center justify-between
-             px-4 sm:px-8 md:px-20 pt-8 sm:pt-10 pb-16 sm:pb-20
-             overflow-x-hidden bg-gradient-to-r from-green-50 via-white to-green-50"
->
-  {/* Text column */}
-  <div className="md:w-1/2 w-full space-y-6" data-aos="fade-up">
-    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-      LandLink: <span className="text-green-600">Connect, Book &amp; Manage</span> Land Services in One Place
-    </h1>
+          {/* Proof Points */}
+          <div className="flex items-center gap-6 pt-6">
+            <div>
+              <h3 className="text-xl font-bold text-green-800">100+</h3>
+              <p className="text-sm text-gray-500">Surveyors Verified</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-blue-800">500+</h3>
+              <p className="text-sm text-gray-500">Bookings Made</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">2025</h3>
+              <p className="text-sm text-gray-500">Pilot Counties</p>
+            </div>
+          </div>
+        </div>
 
-    <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-      From real estate surveyors to inspection teams, LandLink gives you a 
-      powerful dashboard, automated bookings, OTP-secured logins, and 
-      instant mobile payments — all in minutes.
-    </p>
-
-    {/* CTA buttons */}
-    <div className="flex flex-wrap gap-4">
-      <Link to="/signup">
-        <button
-          aria-label="Click here to Signup/Login"
-          className="bg-yellow-400 hover:bg-yellow-500 text-white
-                     font-semibold px-6 py-3 rounded-2xl shadow-md w-full
-                     sm:w-auto transition duration-300"
+        {/* Swiper / image column */}
+        <div
+          className="md:w-1/2 w-full mt-12 md:mt-0"
+          data-aos="zoom-in"
         >
-          <b>Get Started</b>
-        </button>
-      </Link>
-
-      <Link to="/login">
-        <button
-          aria-label="Book a Demo"
-          className="border border-yellow-400 text-yellow-500
-                     font-semibold px-6 py-3 rounded-2xl shadow-md w-full
-                     sm:w-auto hover:bg-yellow-50 transition duration-300"
-        >
-          <b>Watch Demo</b>
-        </button>
-      </Link>
-    </div>
-
-    {/* Proof Points */}
-    <div className="flex items-center gap-6 pt-6">
-      <div>
-        <h3 className="text-xl font-bold text-green-800">100+</h3>
-        <p className="text-sm text-gray-500">Surveyors Verified</p>
-      </div>
-      <div>
-        <h3 className="text-xl font-bold text-blue-800">500+</h3>
-        <p className="text-sm text-gray-500">Bookings Made</p>
-      </div>
-      <div>
-        <h3 className="text-xl font-bold text-gray-800">2025</h3>
-        <p className="text-sm text-gray-500">Pilot Counties</p>
-      </div>
-    </div>
-  </div>
-
-
-
-  {/* Swiper / image column */}
-  <div
-    className="md:w-1/2 w-full mt-12 md:mt-0"
-    data-aos="zoom-in"
-  >
-    <Swiper
-      modules={[Autoplay, Pagination]}
-      spaceBetween={30}
-      pagination={{ clickable: false }}
-      autoplay={{ delay: 8000 }}
-      loop={true}
-      className="w-full overflow-hidden rounded-xl shadow-lg"
-    >
-      {[
-        "/assets/hero-image.jpg",
-        "/assets/hero-image2.jpg",
-        "/assets/hero-image3.jpg",
-        "/assets/hero-image4.jpg",
-        "/assets/hero-image5.jpg",
-      ].map((src, i) => (
-        <SwiperSlide key={i}>
-          <img
-            src={src}
-            alt={`Slide ${i + 1}`}
-            className="w-full h-64 sm:h-80 md:h-[400px] object-cover"
-          />
-        </SwiperSlide>
-      ))}
-    </Swiper>
-  </div>
-</section>
-
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            spaceBetween={30}
+            pagination={{ clickable: false }}
+            autoplay={{ delay: 8000 }}
+            loop={true}
+            className="w-full overflow-hidden rounded-xl shadow-lg"
+          >
+            {[
+              "/assets/hero-image.jpg",
+              "/assets/hero-image2.jpg",
+              "/assets/hero-image3.jpg",
+              "/assets/hero-image4.jpg",
+              "/assets/hero-image5.jpg",
+            ].map((src, i) => (
+              <SwiperSlide key={i}>
+                <img
+                  src={src}
+                  alt={`Slide ${i + 1}`}
+                  className="w-full h-64 sm:h-80 md:h-[400px] object-cover"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </section>
 
       {/* Insert PriceEstimator component here */}
       <PriceEstimator />
@@ -439,7 +344,7 @@ export default function LandingPage() {
               {
                 name: "Real-Time Job Monitoring",
                 desc:
-                  "Track every job’s progress, location, and status in real time — no more guesswork or delays.",
+                  "Track every job's progress, location, and status in real time — no more guesswork or delays.",
               },
               {
                 name: "Mobile OTP-Verified Access",
@@ -540,57 +445,45 @@ export default function LandingPage() {
             <p className="mt-4 font-semibold text-gray-800">
               — Sarah M., Real Estate Ops Lead
             </p>
-         </div>
+          </div>
         </div>
       </section>
 
       {/* ────────────────── Final Call to Action ───────────────────── */}
-<section className="text-center py-16 bg-yellow-400 text-white" data-aos="fade-up">
-  <h2 className="text-3xl font-bold mb-4">Ready to simplify your operations?</h2>
-  <p className="mb-6">Start your free trial today — no credit card required.</p>
-  <Link to="/signup">
-    <button
-      aria-label="Get Started Free"
-      className="bg-white text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
-    >
-      <b>Get Started Free</b>
-    </button>
-  </Link>
+      <section className="text-center py-16 bg-yellow-400 text-white" data-aos="fade-up">
+        <h2 className="text-3xl font-bold mb-4">Ready to simplify your operations?</h2>
+        <p className="mb-6">Start your free trial today — no credit card required.</p>
+        <Link to="/signup">
+          <button
+            aria-label="Get Started Free"
+            className="bg-white text-yellow-500 font-semibold px-6 py-3 rounded-2xl shadow"
+          >
+            <b>Get Started Free</b>
+          </button>
+        </Link>
 
-  {/* Social & Hours Block */}
-  <div className="mt-10 bg-white bg-opacity-10 rounded-xl px-6 py-8 max-w-2xl mx-auto text-sm text-white">
-    {/* Social Media */}
-    <div className="mb-4">
-      <p className="font-semibold text-lg mb-2">📱 Follow Us:</p>
-      <div className="flex justify-center gap-4 flex-wrap">
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">Facebook</a>
-        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">X (Twitter)</a>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">Instagram</a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">LinkedIn</a>
-      </div>
-    </div>
+        {/* Social & Hours Block */}
+        <div className="mt-10 bg-white bg-opacity-10 rounded-xl px-6 py-8 max-w-2xl mx-auto text-sm text-white">
+          {/* Social Media */}
+          <div className="mb-4">
+            <p className="font-semibold text-lg mb-2">📱 Follow Us:</p>
+            <div className="flex justify-center gap-4 flex-wrap">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">Facebook</a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">X (Twitter)</a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">Instagram</a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-100">LinkedIn</a>
+            </div>
+          </div>
 
-    {/* Working Hours */}
-    <div>
-      <p className="font-semibold text-lg mb-2">🕒 Working Hours:</p>
-      <p>Monday – Friday: 8:00 AM – 6:00 PM</p>
-      <p>Saturday: 9:00 AM – 1:00 PM</p>
-      <p>Sunday & Public Holidays: Closed</p>
-    </div>
-  </div>
-</section>
-
-
-      {/* ───────────────────────── Footer ─────────────────────────── */}
-      <footer className="bg-white py-6 px-4 sm:px-8 md:px-20 text-center text-sm text-gray-500">
-        <p>
-          © {new Date().getFullYear()} LandLink. All rights reserved.{" "}
-          <Link to="/terms" className="text-yellow-600 hover:underline ml-1">
-            Terms &amp; Privacy Policy
-          </Link>
-        </p>
-      </footer>
+          {/* Working Hours */}
+          <div>
+            <p className="font-semibold text-lg mb-2">🕒 Working Hours:</p>
+            <p>Monday – Friday: 8:00 AM – 6:00 PM</p>
+            <p>Saturday: 9:00 AM – 1:00 PM</p>
+            <p>Sunday & Public Holidays: Closed</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
-

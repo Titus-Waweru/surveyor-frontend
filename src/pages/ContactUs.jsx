@@ -11,20 +11,12 @@ export default function ContactUs() {
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
-      {/* Back to Landing Page */}
-      <Link
-        to="/"
-        className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6"
-      >
-        ← Back
-      </Link>
-
       {/* Header */}
       <div className="text-center mb-12" data-aos="fade-up">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Get in Touch</h1>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          We’re here to help you with bookings, payments, support or general
-          inquiries. Reach out through any of the channels below and we’ll get
+          We're here to help you with bookings, payments, support or general
+          inquiries. Reach out through any of the channels below and we'll get
           back to you promptly.
         </p>
       </div>

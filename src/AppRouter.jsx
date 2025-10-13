@@ -74,6 +74,9 @@ import TitusWaweru from "./pages/TitusWaweru";
 import SarahMwangi from "./pages/SarahMwangi";
 import MichaelOtieno from "./pages/MichaelOtieno";
 
+// ✅ PUBLIC LAYOUT COMPONENT
+import PublicLayout from "./components/PublicLayout";
+
 function getDefaultDashboard(role) {
   switch (role) {
     case "client":
@@ -164,7 +167,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
 
   return (
     <Routes>
-      {/* AUTH ROUTES */}
+      {/* AUTH ROUTES - No PublicLayout wrapper */}
       <Route
         path="/login"
         element={
@@ -180,7 +183,7 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* ADMIN AUTH */}
+      {/* ADMIN AUTH - No PublicLayout wrapper */}
       <Route path="/admin/auth" element={<AdminAuth setUser={setUser} />} />
       <Route path="/admin/login" element={<AdminLogin setUser={setUser} />} />
       <Route path="/admin/signup" element={<AdminSignup />} />
@@ -250,33 +253,126 @@ function AppRoutes({ user, setUser, onLogin, onLogout }) {
         <Route path="settings" element={<GISSettings user={user} />} />
       </Route>
 
-      {/* PUBLIC ROUTES */}
+      {/* PUBLIC ROUTES - With PublicLayout wrapper */}
       <Route
         path="/"
         element={
           user ? (
             <Navigate to={getDefaultDashboard(user.role)} replace />
           ) : (
-            <LandingPage />
+            <PublicLayout>
+              <LandingPage />
+            </PublicLayout>
           )
         }
       />
-      <Route path="/book-demo" element={<BookDemo />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/contact" element={<ContactUs />} />
-      <Route path="/news" element={<News />} />
-      <Route path="/news/mpesa-integration" element={<MpesaIntegration />} />
-      <Route path="/news/land-regulations" element={<LandRegulations />} />
-      <Route path="/news/surveyor-tools" element={<SurveyorTools />} />
-      <Route path="/about" element={<AboutUs />} />
+      <Route 
+        path="/book-demo" 
+        element={
+          <PublicLayout>
+            <BookDemo />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/home" 
+        element={
+          <PublicLayout>
+            <Home />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/contact" 
+        element={
+          <PublicLayout>
+            <ContactUs />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/news" 
+        element={
+          <PublicLayout>
+            <News />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/news/mpesa-integration" 
+        element={
+          <PublicLayout>
+            <MpesaIntegration />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/news/land-regulations" 
+        element={
+          <PublicLayout>
+            <LandRegulations />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/news/surveyor-tools" 
+        element={
+          <PublicLayout>
+            <SurveyorTools />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/about" 
+        element={
+          <PublicLayout>
+            <AboutUs />
+          </PublicLayout>
+        } 
+      />
 
       {/* ✅ TEAM MEMBER PAGES */}
-      <Route path="/about/titus-waweru" element={<TitusWaweru />} />
-      <Route path="/about/sarah-mwangi" element={<SarahMwangi />} />
-      <Route path="/about/michael-otieno" element={<MichaelOtieno />} />
+      <Route 
+        path="/about/titus-waweru" 
+        element={
+          <PublicLayout>
+            <TitusWaweru />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/about/sarah-mwangi" 
+        element={
+          <PublicLayout>
+            <SarahMwangi />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/about/michael-otieno" 
+        element={
+          <PublicLayout>
+            <MichaelOtieno />
+          </PublicLayout>
+        } 
+      />
 
-      <Route path="/terms" element={<TermsAndPrivacy />} />
-      <Route path="/review" element={<ReviewForm />} />
+      <Route 
+        path="/terms" 
+        element={
+          <PublicLayout>
+            <TermsAndPrivacy />
+          </PublicLayout>
+        } 
+      />
+      <Route 
+        path="/review" 
+        element={
+          <PublicLayout>
+            <ReviewForm />
+          </PublicLayout>
+        } 
+      />
 
       {/* CATCH-ALL */}
       <Route path="*" element={<Navigate to="/" replace />} />

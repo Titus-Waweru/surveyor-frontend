@@ -11,16 +11,6 @@ export default function SurveyorTools() {
 
   return (
     <div className="bg-[#fff6e5] min-h-screen font-manrope px-6 py-16">
-      {/* Breadcrumb */}
-      <nav className="max-w-3xl mx-auto">
-        <Link
-          to="/news"
-          className="inline-flex items-center text-yellow-600 hover:text-yellow-700 transition text-sm font-medium"
-        >
-          ← Back to News
-        </Link>
-      </nav>
-
       {/* Article */}
       <article
         data-aos="fade-up"
@@ -46,7 +36,7 @@ export default function SurveyorTools() {
         <section className="leading-relaxed text-lg text-gray-700 space-y-6">
           {/* Intro */}
           <p>
-            Fieldwork just got easier. LandLink’s latest release lets surveyors
+            Fieldwork just got easier. LandLink's latest release lets surveyors
             upload{" "}
             <strong className="text-yellow-600">geo-tagged reports</strong>{" "}
             directly from the job site—speeding up documentation and boosting
@@ -81,7 +71,7 @@ export default function SurveyorTools() {
           <ol className="list-decimal list-inside space-y-2 pl-1 text-gray-700">
             <li>
               Open the job card and tap{" "}
-              <em className="text-yellow-600">“Add Report”</em>.
+              <em className="text-yellow-600">"Add Report"</em>.
             </li>
             <li>
               Snap photos or attach documents—GPS tags are captured
@@ -95,8 +85,8 @@ export default function SurveyorTools() {
 
           {/* Testimonial */}
           <blockquote className="border-l-4 border-yellow-400 pl-4 italic text-gray-600 my-10">
-            “The geo-tagged uploads cut our paperwork time by 40%. Clients love
-            the transparency.”
+            "The geo-tagged uploads cut our paperwork time by 40%. Clients love
+            the transparency."
             <br />
             <span className="not-italic font-semibold text-gray-800">
               — Peter M., Registered Surveyor
@@ -106,7 +96,7 @@ export default function SurveyorTools() {
           {/* Closing Paragraph */}
           <p>
             These tools exemplify our commitment to empower professionals across
-            Kenya’s land service ecosystem. Expect even more workflow
+            Kenya's land service ecosystem. Expect even more workflow
             automations soon.
           </p>
 

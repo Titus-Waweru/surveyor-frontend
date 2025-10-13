@@ -54,14 +54,9 @@ export default function Home() {
         </script>
       </Helmet>
 
-      <div className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
-        {/* Back to Landing Page Link */}
-        <Link to="/" className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6">
-          ← Back
-        </Link>
-
+      <div className="bg-[#fff6e5] min-h-screen font-manrope">
         {/* Welcome Header */}
-        <div className="text-center mb-16" data-aos="fade-up">
+        <div className="text-center pt-16 pb-16 px-4 sm:px-8 md:px-20" data-aos="fade-up">
           <h1 className="text-5xl font-extrabold text-gray-800 mb-4 leading-tight">
             Welcome to <span className="text-yellow-600">LandLink</span>
           </h1>
@@ -74,7 +69,7 @@ export default function Home() {
 
         {/* Hero Section */}
         <div
-          className="flex flex-col lg:flex-row items-center gap-10 mb-20"
+          className="flex flex-col lg:flex-row items-center gap-10 mb-20 px-4 sm:px-8 md:px-20"
           data-aos="fade-up"
           data-aos-delay="100"
         >
@@ -92,16 +87,16 @@ export default function Home() {
               surveyors, track progress, and manage land data — all from a
               modern digital dashboard.
             </p>
-            <a href="/signup">
+            <Link to="/signup">
               <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-2xl shadow">
                 Get Started
               </button>
-            </a>
+            </Link>
           </div>
         </div>
 
         {/* Key Features */}
-        <section className="mb-20" data-aos="fade-up">
+        <section className="mb-20 px-4 sm:px-8 md:px-20" data-aos="fade-up">
           <h2 className="text-2xl font-bold text-center mb-10">
             What Makes LandLink Stand Out?
           </h2>
@@ -157,7 +152,7 @@ export default function Home() {
         </section>
 
         {/* Call to Action */}
-        <section className="text-center" data-aos="fade-up">
+        <section className="text-center px-4 sm:px-8 md:px-20 pb-20" data-aos="fade-up">
           <h2 className="text-3xl font-bold mb-4">
             Join thousands redefining land services
           </h2>
@@ -165,11 +160,11 @@ export default function Home() {
             Create your LandLink account and enjoy seamless, professional land
             solutions today.
           </p>
-          <a href="/signup">
+          <Link to="/signup">
             <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-8 py-3 rounded-2xl shadow-lg">
               Sign Up Now
             </button>
-          </a>
+          </Link>
         </section>
       </div>
     </>

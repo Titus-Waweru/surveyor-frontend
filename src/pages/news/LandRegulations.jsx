@@ -11,15 +11,6 @@ export default function LandRegulations() {
 
   return (
     <main className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
-      {/* Back Link */}
-      <Link
-        to="/news"
-        className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6"
-        aria-label="Go back to News"
-      >
-        ← Back to News
-      </Link>
-
       {/* Article */}
       <article
         data-aos="fade-up"
@@ -28,7 +19,7 @@ export default function LandRegulations() {
         {/* Header */}
         <header className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 leading-tight mb-3">
-            Kenya’s New Land Survey Regulations: What You Must Know
+            Kenya's New Land Survey Regulations: What You Must Know
           </h1>
           <p className="text-sm text-gray-500 mb-6">
             May 5, 2025 • 5-min read
@@ -48,7 +39,7 @@ export default function LandRegulations() {
             The Ministry of Lands has announced new survey regulations aimed at
             enhancing land boundary accuracy, curbing fraudulent titles, and
             strengthening public trust in land transactions. These reforms mark
-            a critical shift in Kenya’s approach to land governance.
+            a critical shift in Kenya's approach to land governance.
           </p>
 
           {/* Key Highlights */}
@@ -76,9 +67,9 @@ export default function LandRegulations() {
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            “This is a major leap toward eliminating the guesswork in Kenya’s
+            "This is a major leap toward eliminating the guesswork in Kenya's
             land sector. It will benefit buyers, landowners, and professionals
-            alike.”
+            alike."
             <br />
             <span className="not-italic font-semibold text-gray-800 block mt-2">
               — Dr. Mercy Kariuki, Commissioner of Lands
@@ -95,7 +86,7 @@ export default function LandRegulations() {
           </h2>
           <p>
             All registered surveyors on LandLink are now expected to align with
-            the Ministry’s new guidelines. Our platform will provide clear
+            the Ministry's new guidelines. Our platform will provide clear
             checklists, training materials, and updated submission workflows to
             support this transition.
           </p>

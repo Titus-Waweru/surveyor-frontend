@@ -50,7 +50,7 @@ export default function News() {
       title: "M-Pesa Integration: Pay in Seconds",
       date: "May 20, 2025",
       summary:
-        "We’ve officially launched M-Pesa for fast, secure transactions. Say goodbye to delays and hello to convenience.",
+        "We've officially launched M-Pesa for fast, secure transactions. Say goodbye to delays and hello to convenience.",
       link: "/news/mpesa-integration",
     },
     {
@@ -58,7 +58,7 @@ export default function News() {
       title: "New Government Survey Laws Explained",
       date: "May 5, 2025",
       summary:
-        "The Ministry of Lands introduced critical new guidelines. Understand what’s changed and how it affects you.",
+        "The Ministry of Lands introduced critical new guidelines. Understand what's changed and how it affects you.",
       link: "/news/land-regulations",
     },
     {
@@ -66,22 +66,13 @@ export default function News() {
       title: "Smart Tools for Smart Surveyors",
       date: "April 25, 2025",
       summary:
-        "We’ve rolled out powerful dashboard features. Learn how to use real-time uploads to boost your credibility.",
+        "We've rolled out powerful dashboard features. Learn how to use real-time uploads to boost your credibility.",
       link: "/news/surveyor-tools",
     },
   ];
 
   return (
     <main className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
-      {/* Back to Home */}
-      <Link
-        to="/"
-        className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6"
-        aria-label="Go back to homepage"
-      >
-        ← Back to Home
-      </Link>
-
       {/* Info Alert */}
       <InfoAlert />
 
@@ -95,7 +86,7 @@ export default function News() {
           News & Insights
         </h1>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          Stay ahead in the world of land and property. Here’s what’s new,
+          Stay ahead in the world of land and property. Here's what's new,
           changing, and worth your attention at{" "}
           <span className="text-yellow-600 font-semibold">LandLink</span>.
         </p>

@@ -11,15 +11,6 @@ export default function MpesaIntegration() {
 
   return (
     <main className="bg-[#fff6e5] min-h-screen font-manrope px-4 sm:px-8 md:px-20 py-16">
-      {/* Breadcrumb */}
-      <Link
-        to="/news"
-        className="inline-flex items-center text-sm text-yellow-600 hover:underline mb-6"
-        aria-label="Back to News"
-      >
-        ← Back to News
-      </Link>
-
       {/* Article */}
       <article
         data-aos="fade-up"
@@ -47,7 +38,7 @@ export default function MpesaIntegration() {
           {/* Introduction */}
           <p>
             <strong className="text-yellow-600">
-              Today we’re closing the payment gap.
+              Today we're closing the payment gap.
             </strong>{" "}
             By integrating M-Pesa—the most trusted mobile wallet in East
             Africa—LandLink now lets clients confirm bookings in seconds,
@@ -69,7 +60,7 @@ export default function MpesaIntegration() {
                 leaving LandLink.
               </li>
               <li>
-                <b>Trust by default:</b> Clients know—and love—M-Pesa’s
+                <b>Trust by default:</b> Clients know—and love—M-Pesa's
                 security.
               </li>
               <li>
@@ -90,7 +81,7 @@ export default function MpesaIntegration() {
           <ol className="list-decimal list-inside space-y-2 pl-1">
             <li>
               Choose your service and tap{" "}
-              <em className="text-yellow-700">“Pay with M-Pesa”</em>.
+              <em className="text-yellow-700">"Pay with M-Pesa"</em>.
             </li>
             <li>Enter your phone number; a prompt appears instantly.</li>
             <li>
@@ -104,8 +95,8 @@ export default function MpesaIntegration() {
             data-aos="fade-up"
             data-aos-delay="300"
           >
-            “Mobile money transformed Kenyan commerce. LandLink’s M-Pesa
-            integration now brings that speed and trust to land services.”
+            "Mobile money transformed Kenyan commerce. LandLink's M-Pesa
+            integration now brings that speed and trust to land services."
             <br />
             <span className="not-italic font-semibold text-gray-800 block mt-2">
               — Jane K., Real-Estate Analyst
