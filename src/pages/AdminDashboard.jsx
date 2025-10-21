@@ -20,7 +20,7 @@ export default function AdminDashboard({ user, setUser }) {
       try {
         const bookingsRes = await axios.get(`${API_BASE}/bookings/all`);
         const usersRes = await axios.get(`${API_BASE}/users/surveyors`);
-        const adminsRes = await axios.get(`${API_BASE}/admins/all`); // ✅ CORRECTED ENDPOINT
+        const adminsRes = await axios.get(`${API_BASE}/admins/all`);
         setBookings(bookingsRes.data);
         setSurveyors(usersRes.data);
         setAdmins(adminsRes.data);
@@ -47,6 +47,30 @@ export default function AdminDashboard({ user, setUser }) {
     } catch (err) {
       console.error(err);
       alert("Failed to assign surveyor.");
+    }
+  };
+
+  // ✅ NEW: Simple online status simulation (you can replace with real logic)
+  const getOnlineStatus = (adminId) => {
+    // For demo - randomly assign online status
+    // In real app, you'd track login sessions or last activity
+    const statuses = ['online', 'offline', 'away'];
+    return statuses[adminId % 3];
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'online': return 'bg-green-100 text-green-800';
+      case 'away': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusDot = (status) => {
+    switch (status) {
+      case 'online': return '🟢';
+      case 'away': return '🟡';
+      default: return '⚫';
     }
   };
 
@@ -94,7 +118,7 @@ export default function AdminDashboard({ user, setUser }) {
         <p className="text-red-600 font-manrope">{error}</p>
       ) : (
         <>
-          {/* Bookings Tab */}
+          {/* Bookings Tab - UNCHANGED */}
           {activeTab === "bookings" && (
             <div className="grid gap-4 font-manrope">
               {bookings.length === 0 ? (
@@ -143,56 +167,86 @@ export default function AdminDashboard({ user, setUser }) {
             </div>
           )}
 
-          {/* Admins Tab */}
+          {/* ✅ UPDATED: Admins Tab with Beautiful Table */}
           {activeTab === "admins" && (
-            <div className="bg-white border rounded-lg shadow">
-              <div className="p-4 border-b">
-                <h2 className="text-lg font-semibold">Registered Administrators</h2>
+            <div className="bg-white border rounded-lg shadow overflow-hidden">
+              <div className="p-4 border-b bg-gray-50">
+                <h2 className="text-lg font-semibold">Administrators Management</h2>
                 <p className="text-sm text-gray-600 mt-1">
-                  Total {admins.length} admin{admins.length !== 1 ? 's' : ''}
+                  Total {admins.length} administrator{admins.length !== 1 ? 's' : ''}
                 </p>
               </div>
-              <div className="divide-y">
-                {admins.length === 0 ? (
-                  <p className="p-4 text-gray-600">No administrators found.</p>
-                ) : (
-                  admins.map((admin) => (
-                    <div key={admin.id} className="p-4">
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-3">
-                          {admin.profileImageUrl ? (
-                            <img 
-                              src={admin.profileImageUrl} 
-                              alt={admin.name}
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                              <span className="text-blue-600 font-semibold text-sm">
-                                {admin.name.charAt(0).toUpperCase()}
+              
+              {admins.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-gray-500">No administrators found.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="text-left p-4 font-semibold text-gray-700">Admin</th>
+                        <th className="text-left p-4 font-semibold text-gray-700">Contact</th>
+                        <th className="text-left p-4 font-semibold text-gray-700">Status</th>
+                        <th className="text-left p-4 font-semibold text-gray-700">Last Active</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {admins.map((admin) => {
+                        const status = getOnlineStatus(admin.id);
+                        return (
+                          <tr key={admin.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="p-4">
+                              <div className="flex items-center space-x-3">
+                                {admin.profileImageUrl ? (
+                                  <img 
+                                    src={admin.profileImageUrl} 
+                                    alt={admin.name}
+                                    className="w-10 h-10 rounded-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span className="text-blue-600 font-semibold text-sm">
+                                      {admin.name.charAt(0).toUpperCase()}
+                                    </span>
+                                  </div>
+                                )}
+                                <div>
+                                  <h3 className="font-semibold text-gray-900">{admin.name}</h3>
+                                  <p className="text-xs text-gray-500">ID: {admin.id}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <p className="text-sm text-gray-900">{admin.email}</p>
+                              {admin.phoneNumber && (
+                                <p className="text-sm text-gray-600">{admin.phoneNumber}</p>
+                              )}
+                            </td>
+                            <td className="p-4">
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(status)}`}>
+                                <span className="mr-1">{getStatusDot(status)}</span>
+                                {status.charAt(0).toUpperCase() + status.slice(1)}
                               </span>
-                            </div>
-                          )}
-                          <div>
-                            <h3 className="font-semibold">{admin.name}</h3>
-                            <p className="text-sm text-gray-600">{admin.email}</p>
-                            {admin.phoneNumber && (
-                              <p className="text-xs text-gray-500">Phone: {admin.phoneNumber}</p>
-                            )}
-                          </div>
-                        </div>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                          Admin
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
+                            </td>
+                            <td className="p-4">
+                              <p className="text-sm text-gray-600">
+                                {status === 'online' ? 'Now' : 
+                                 status === 'away' ? '2 hours ago' : 'Yesterday'}
+                              </p>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Surveyors Tab */}
+          {/* Surveyors Tab - UNCHANGED */}
           {activeTab === "surveyors" && (
             <div className="bg-white border rounded-lg shadow">
               <div className="p-4 border-b">
