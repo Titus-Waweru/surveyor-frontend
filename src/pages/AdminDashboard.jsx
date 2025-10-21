@@ -21,6 +21,7 @@ export default function AdminDashboard({ user, setUser }) {
         const bookingsRes = await axios.get(`${API_BASE}/bookings/all`);
         const usersRes = await axios.get(`${API_BASE}/users/surveyors`);
         const adminsRes = await axios.get(`${API_BASE}/admins/all`);
+        
         setBookings(bookingsRes.data);
         setSurveyors(usersRes.data);
         setAdmins(adminsRes.data);
@@ -50,10 +51,8 @@ export default function AdminDashboard({ user, setUser }) {
     }
   };
 
-  // ✅ NEW: Simple online status simulation (you can replace with real logic)
+  // Online status simulation
   const getOnlineStatus = (adminId) => {
-    // For demo - randomly assign online status
-    // In real app, you'd track login sessions or last activity
     const statuses = ['online', 'offline', 'away'];
     return statuses[adminId % 3];
   };
@@ -118,7 +117,7 @@ export default function AdminDashboard({ user, setUser }) {
         <p className="text-red-600 font-manrope">{error}</p>
       ) : (
         <>
-          {/* Bookings Tab - UNCHANGED */}
+          {/* Bookings Tab */}
           {activeTab === "bookings" && (
             <div className="grid gap-4 font-manrope">
               {bookings.length === 0 ? (
@@ -167,7 +166,7 @@ export default function AdminDashboard({ user, setUser }) {
             </div>
           )}
 
-          {/* ✅ UPDATED: Admins Tab with Beautiful Table */}
+          {/* Admins Tab */}
           {activeTab === "admins" && (
             <div className="bg-white border rounded-lg shadow overflow-hidden">
               <div className="p-4 border-b bg-gray-50">
@@ -179,7 +178,25 @@ export default function AdminDashboard({ user, setUser }) {
               
               {admins.length === 0 ? (
                 <div className="p-8 text-center">
-                  <p className="text-gray-500">No administrators found.</p>
+                  <div className="max-w-md mx-auto">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">👨‍💼</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No Administrators Found</h3>
+                    <p className="text-gray-600 mb-4">
+                      There are no admin accounts registered in the system yet.
+                    </p>
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left">
+                      <p className="text-sm text-yellow-800">
+                        <strong>To fix this:</strong>
+                      </p>
+                      <ul className="text-sm text-yellow-700 mt-2 space-y-1">
+                        <li>• Create admin accounts using the admin signup endpoint</li>
+                        <li>• Check if users have role = "admin" in your database</li>
+                        <li>• Verify the API endpoint: {API_BASE}/admins/all</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -246,7 +263,7 @@ export default function AdminDashboard({ user, setUser }) {
             </div>
           )}
 
-          {/* Surveyors Tab - UNCHANGED */}
+          {/* Surveyors Tab */}
           {activeTab === "surveyors" && (
             <div className="bg-white border rounded-lg shadow">
               <div className="p-4 border-b">
