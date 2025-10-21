@@ -12,7 +12,7 @@ export default function AdminSettings() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [notificationPref, setNotificationPref] = useState(true);
   const [status, setStatus] = useState("");
-  const [activeTab, setActiveTab] = useState("security"); // ✅ NEW: Tab system
+  const [activeTab, setActiveTab] = useState("security");
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -34,6 +34,7 @@ export default function AdminSettings() {
     }
   };
 
+  // ✅ FIXED: Password change with correct endpoint
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (!adminId) return;
@@ -42,33 +43,43 @@ export default function AdminSettings() {
     }
 
     try {
-      await axios.put(`${baseUrl}/admin/update-password/${adminId}`, {
-        password: newPassword,
+      // ✅ CORRECT ENDPOINT: Use the existing backend endpoint
+      await axios.put(`${baseUrl}/admin/change-password/${adminId}`, {
+        newPassword: newPassword, // ✅ Match backend parameter name
       });
       setStatus("✅ Password updated successfully!");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err) {
       console.error("Password update failed:", err);
-      setStatus("❌ Failed to update password.");
+      if (err.response?.status === 404) {
+        setStatus("❌ Password update service unavailable. Please contact support.");
+      } else {
+        setStatus("❌ Failed to update password. Please try again.");
+      }
     }
   };
 
+  // ✅ FIXED: Notifications toggle with correct endpoint
   const handleNotificationsToggle = async () => {
     const updatedPref = !notificationPref;
     setNotificationPref(updatedPref);
 
     try {
-      await axios.put(`${baseUrl}/admin/notification/${adminId}`, {
+      // ✅ CORRECT ENDPOINT: Use profile update endpoint
+      await axios.put(`${baseUrl}/admin/profile/${adminId}`, {
         notificationsEnabled: updatedPref,
       });
       setStatus(`✅ Notifications ${updatedPref ? 'enabled' : 'disabled'}`);
     } catch (err) {
       console.error("Notification update failed:", err);
       setStatus("❌ Failed to update notifications");
+      // Revert on error
+      setNotificationPref(!updatedPref);
     }
   };
 
+  // ✅ FIXED: Account deletion with correct endpoint
   const handleDeleteAccount = async () => {
     if (!adminId) return;
 
@@ -76,13 +87,14 @@ export default function AdminSettings() {
       confirm("⚠️ Are you absolutely sure you want to delete your account? This action cannot be undone and will permanently remove all your data.")
     ) {
       try {
-        await axios.delete(`${baseUrl}/admin/delete/${adminId}`);
+        // ✅ CORRECT ENDPOINT: Use the users endpoint for deletion
+        await axios.delete(`${baseUrl}/users/${adminId}`);
         alert("Your account has been deleted.");
         localStorage.removeItem("user");
         window.location.href = "/login";
       } catch (err) {
         console.error("Account deletion failed:", err);
-        alert("❌ Failed to delete account.");
+        alert("❌ Failed to delete account. Please contact support.");
       }
     }
   };
@@ -90,7 +102,7 @@ export default function AdminSettings() {
   return (
     <div className="min-h-screen bg-[#fff6e5] py-10 px-4 font-manrope">
       <div className="max-w-6xl mx-auto">
-        {/* ✅ NEW: Header Section */}
+        {/* Header Section */}
         <div className="text-center mb-8" data-aos="fade-down">
           <h1 className="text-4xl font-bold text-yellow-600 font-poppins mb-2">
             Administrator Settings
@@ -101,7 +113,7 @@ export default function AdminSettings() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* ✅ NEW: Sidebar Navigation */}
+          {/* Sidebar Navigation */}
           <div className="lg:col-span-1" data-aos="fade-right">
             <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 sticky top-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Settings</h3>
@@ -138,7 +150,7 @@ export default function AdminSettings() {
                 </button>
               </nav>
 
-              {/* ✅ NEW: Account Info Card */}
+              {/* Account Info Card */}
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <h4 className="font-semibold text-gray-700 mb-3">Account Information</h4>
                 <div className="space-y-2 text-sm text-gray-600">
@@ -159,7 +171,7 @@ export default function AdminSettings() {
             </div>
           </div>
 
-          {/* ✅ UPDATED: Main Content Area */}
+          {/* Main Content Area */}
           <div className="lg:col-span-3">
             <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-100" data-aos="fade-up">
               
@@ -195,6 +207,7 @@ export default function AdminSettings() {
                               value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
                               required
+                              minLength="6"
                             />
                           </div>
                           <div>
@@ -208,6 +221,7 @@ export default function AdminSettings() {
                               value={confirmPassword}
                               onChange={(e) => setConfirmPassword(e.target.value)}
                               required
+                              minLength="6"
                             />
                           </div>
                         </div>
