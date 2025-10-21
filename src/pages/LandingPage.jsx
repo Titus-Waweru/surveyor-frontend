@@ -12,7 +12,7 @@ export default function LandingPage() {
     AOS.init({ duration: 800, once: true });
   }, []);
 
-  // New PriceEstimator component inside LandingPage file for simplicity
+  // Updated PriceEstimator component with disclaimer
   function PriceEstimator() {
     const [location, setLocation] = useState("urban");
     const [landSize, setLandSize] = useState("");
@@ -20,7 +20,7 @@ export default function LandingPage() {
     const [urgency, setUrgency] = useState("normal");
     const [estimate, setEstimate] = useState(null);
 
-    // Pricing config (example base fees, modifiers)
+    // Pricing config (example base fees, modifiers) - UNCHANGED
     const basePrices = {
       boundary: 5000,
       topographic: 8000,
@@ -37,7 +37,7 @@ export default function LandingPage() {
       express: 1.5,
     };
 
-    // Calculate price dynamically
+    // Calculate price dynamically - UNCHANGED LOGIC
     useEffect(() => {
       const sizeNum = parseFloat(landSize);
       if (!sizeNum || sizeNum <= 0) {
@@ -59,16 +59,20 @@ export default function LandingPage() {
         className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg mt-16 mb-20"
         data-aos="fade-up"
       >
-        <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
-          Estimate Your Survey Cost in Seconds
+        {/* UPDATED TITLE & SUBTITLE */}
+        <h2 className="text-3xl font-bold text-blue-800 mb-4 text-center">
+          Get a Rough Budget Estimate
         </h2>
+        <p className="text-gray-600 text-center mb-6 max-w-2xl mx-auto">
+          Use this calculator to get an approximate budget range. Final pricing depends on actual site conditions and surveyor assessment.
+        </p>
 
         <form
           onSubmit={(e) => e.preventDefault()}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
           aria-label="Price estimator form"
         >
-          {/* Location */}
+          {/* Location - UNCHANGED */}
           <div>
             <label
               htmlFor="location"
@@ -88,7 +92,7 @@ export default function LandingPage() {
             </select>
           </div>
 
-          {/* Land Size */}
+          {/* Land Size - UNCHANGED */}
           <div>
             <label
               htmlFor="landSize"
@@ -109,7 +113,7 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* Service Type */}
+          {/* Service Type - UNCHANGED */}
           <div>
             <label
               htmlFor="service"
@@ -130,7 +134,7 @@ export default function LandingPage() {
             </select>
           </div>
 
-          {/* Urgency */}
+          {/* Urgency - UNCHANGED */}
           <div>
             <label
               htmlFor="urgency"
@@ -150,26 +154,39 @@ export default function LandingPage() {
           </div>
         </form>
 
-        {/* Estimate Display */}
+        {/* UPDATED Estimate Display with Disclaimer */}
         <div className="mt-8 text-center">
           {estimate !== null ? (
             <>
               <p className="text-xl font-semibold text-gray-800 mb-2">
-                Estimated Price:
+                Estimated Budget Range:
               </p>
-              <p className="text-4xl font-bold text-yellow-500 mb-4">
-                KES {estimate.toLocaleString(undefined, {
+              <p className="text-4xl font-bold text-yellow-500 mb-2">
+                KES {(estimate * 0.7).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })} - {(estimate * 1.5).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
               </p>
+              
+              {/* ADDED DISCLAIMER BOX */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4 mb-6 max-w-2xl mx-auto">
+                <p className="text-sm text-yellow-800 text-center">
+                  💡 <strong>Important:</strong> Final pricing depends on terrain difficulty, 
+                  parcel accessibility, local registry fees, and surveyor expertise. 
+                  This is a rough estimate - you'll receive exact quotes from verified surveyors.
+                </p>
+              </div>
+
               <button
                 type="button"
                 className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-8 py-3 rounded-2xl shadow transition"
                 aria-label="Proceed to booking"
                 onClick={() => alert("SignUp to get an account")}
               >
-                Proceed to Book
+                Proceed to Get Exact Quotes
               </button>
             </>
           ) : (
@@ -274,7 +291,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Insert PriceEstimator component here */}
+      {/* Insert Updated PriceEstimator component here */}
       <PriceEstimator />
 
       {/* ─────────────── Vision, Mission, Goal Section ─────────────── */}

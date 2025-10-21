@@ -18,8 +18,34 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+// Kenya counties data
+const kenyaCounties = [
+  { name: "Nairobi", code: "047" },
+  { name: "Kiambu", code: "022" },
+  { name: "Nakuru", code: "032" },
+  { name: "Mombasa", code: "001" },
+  { name: "Kisumu", code: "042" },
+  { name: "Uasin Gishu", code: "027" },
+  { name: "Meru", code: "012" },
+  { name: "Machakos", code: "016" },
+  { name: "Kakamega", code: "037" },
+  { name: "Bungoma", code: "039" },
+  { name: "Nyeri", code: "019" },
+  { name: "Kilifi", code: "003" },
+  { name: "Murang'a", code: "021" },
+  { name: "Kitui", code: "015" },
+  { name: "Embu", code: "014" },
+  { name: "Kericho", code: "035" },
+  { name: "Laikipia", code: "031" },
+  { name: "Nandi", code: "029" },
+  { name: "Bomet", code: "036" },
+  { name: "Kirinyaga", code: "020" },
+  { name: "Other", code: "000" }
+];
+
 const bookingSchema = z.object({
   location: z.string().min(3, "Location is required"),
+  county: z.string().min(1, "Please select a county"), // NEW: Added county validation
   surveyType: z.string().min(3, "Survey type is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   preferredDate: z.string().min(1, "Preferred date is required"),
@@ -28,6 +54,7 @@ const bookingSchema = z.object({
 export default function BookingForm({ userEmail, onNewBooking }) {
   const [status, setStatus] = useState(null);
   const [coords, setCoords] = useState({ latitude: null, longitude: null });
+  const [selectedCounty, setSelectedCounty] = useState("");
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markerRef = useRef(null);
@@ -36,10 +63,21 @@ export default function BookingForm({ userEmail, onNewBooking }) {
     register,
     handleSubmit,
     reset,
+    watch, // Removed setValue since it's not used
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(bookingSchema),
   });
+
+  // Watch county field
+  const countyWatch = watch("county");
+
+  // Update selectedCounty when form county changes
+  useEffect(() => {
+    if (countyWatch) {
+      setSelectedCounty(countyWatch);
+    }
+  }, [countyWatch]);
 
   const onSubmit = async (data) => {
     if (!coords.latitude || !coords.longitude) {
@@ -58,7 +96,8 @@ export default function BookingForm({ userEmail, onNewBooking }) {
       setStatus({ type: "success", msg: "Booking submitted successfully." });
       reset();
       setCoords({ latitude: null, longitude: null });
-      onNewBooking?.(); // just trigger parent callback
+      setSelectedCounty("");
+      onNewBooking?.();
     } catch (err) {
       setStatus({
         type: "error",
@@ -166,9 +205,32 @@ export default function BookingForm({ userEmail, onNewBooking }) {
           )}
         </div>
 
+        {/* NEW: County Selection Field */}
+        <div>
+          <label className="block font-medium">County *</label>
+          <select
+            {...register("county")}
+            className="w-full mt-1 p-2 border rounded bg-white"
+          >
+            <option value="">Select your county</option>
+            {kenyaCounties.map((county) => (
+              <option key={county.code} value={county.name}>
+                {county.name} County
+              </option>
+            ))}
+          </select>
+          {errors.county && (
+            <p className="text-red-600 text-sm">{errors.county.message}</p>
+          )}
+          {selectedCounty && (
+            <p className="text-green-600 text-sm mt-1">
+              <b>Selected:</b> {selectedCounty} County
+            </p>
+          )}
+        </div>
+
         <div>
           <label className="block font-medium">Survey Type</label>
-          {/* ------ New dropdown ------ */}
           <select
             {...register("surveyType")}
             className="w-full mt-1 p-2 border rounded bg-white"
