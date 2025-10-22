@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const signupSchema = z.object({
   name: z.string().min(4, "Name must be at least 4 characters"),
@@ -83,20 +83,35 @@ export default function Signup() {
     }
   };
 
-  const inputClass =
-    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-200";
+  const inputClass = "w-full px-4 py-3.5 border border-slate-200 rounded-xl shadow-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all duration-300 bg-white/50 backdrop-blur-sm";
 
   return (
-    <div className="min-h-screen bg-[#fff6e5] flex items-center justify-center px-4 py-10 font-manrope">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-slate-50 flex items-center justify-center px-4 py-8 font-inter">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full max-w-2xl bg-white p-8 md:p-12 rounded-3xl shadow-xl ring-1 ring-yellow-200"
+        className="w-full max-w-2xl bg-white/80 backdrop-blur-sm p-8 lg:p-12 rounded-3xl shadow-2xl border border-white/20"
       >
-        <h2 className="text-3xl font-bold text-yellow-600 mb-6 text-center font-poppins">
-          Create Account With Us
-        </h2>
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <motion.h2 
+            className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent font-poppins mb-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            Join LandLink Today
+          </motion.h2>
+          <motion.p 
+            className="text-slate-600 text-sm font-medium"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            Create your account and start connecting with surveying professionals
+          </motion.p>
+        </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -104,9 +119,9 @@ export default function Signup() {
           noValidate
           className="space-y-6"
         >
-          {/* Name */}
+          {/* Name Field */}
           <div>
-            <label htmlFor="name" className="block mb-2 font-medium text-gray-700">
+            <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-2">
               Full Name
             </label>
             <input
@@ -114,17 +129,29 @@ export default function Signup() {
               {...register("name")}
               type="text"
               className={inputClass}
-              placeholder="Your Full Name"
+              placeholder="Enter your full name"
               autoComplete="name"
             />
-            {errors.name && (
-              <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
-            )}
+            <AnimatePresence>
+              {errors.name && (
+                <motion.p
+                  className="text-red-600 mt-2 text-sm font-medium flex items-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {errors.name.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Email */}
+          {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block mb-2 font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">
               Email Address
             </label>
             <input
@@ -135,14 +162,26 @@ export default function Signup() {
               placeholder="you@example.com"
               autoComplete="email"
             />
-            {errors.email && (
-              <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
-            )}
+            <AnimatePresence>
+              {errors.email && (
+                <motion.p
+                  className="text-red-600 mt-2 text-sm font-medium flex items-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {errors.email.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Password */}
+          {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block mb-2 font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-2">
               Password
             </label>
             <input
@@ -150,110 +189,204 @@ export default function Signup() {
               {...register("password")}
               type="password"
               className={inputClass}
-              placeholder="Create a strong password"
+              placeholder="Create a secure password"
               autoComplete="new-password"
             />
-            {errors.password && (
-              <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
-            )}
-            <p className="text-sm text-gray-500 mt-1">
-              Use at least 6 characters with a mix of letters, numbers, and symbols.
+            <AnimatePresence>
+              {errors.password && (
+                <motion.p
+                  className="text-red-600 mt-2 text-sm font-medium flex items-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {errors.password.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
+            <p className="text-xs text-slate-500 mt-2 font-medium">
+              Use at least 6 characters with a mix of letters, numbers, and symbols
             </p>
           </div>
 
           {/* Role Selection */}
           <div>
-            <label htmlFor="role" className="block mb-2 font-medium text-gray-700">
-              Select Role
+            <label htmlFor="role" className="block text-sm font-semibold text-slate-700 mb-2">
+              Select Your Role
             </label>
-            <select id="role" {...register("role")} className={inputClass}>
-              <option value="" disabled>
-                -- Choose a role --
-              </option>
+            <select 
+              id="role" 
+              {...register("role")} 
+              className={`${inputClass} cursor-pointer`}
+            >
               <option value="client">Landlink Client</option>
               <option value="surveyor">Landlink Surveyor</option>
               <option value="gis">Landlink GIS Expert</option>
             </select>
-            {errors.role && (
-              <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>
-            )}
+            <AnimatePresence>
+              {errors.role && (
+                <motion.p
+                  className="text-red-600 mt-2 text-sm font-medium flex items-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {errors.role.message}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Surveyor or GIS Expert Fields */}
-          {(role === "surveyor" || role === "gis") && (
-            <fieldset className="border border-yellow-300 rounded-lg p-5 mt-2 space-y-5">
-              <legend className="font-semibold text-yellow-600">
-                {role === "gis" ? "GIS Expert Details" : "Surveyor Details"}
-              </legend>
+          {/* Professional Fields */}
+          <AnimatePresence>
+            {(role === "surveyor" || role === "gis") && (
+              <motion.fieldset 
+                className="border border-amber-200 rounded-2xl p-6 mt-2 space-y-6 bg-amber-50/50 backdrop-blur-sm"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <legend className="font-semibold text-amber-700 px-3 text-sm">
+                  {role === "gis" ? "GIS Expert Verification" : "Surveyor Verification"}
+                </legend>
 
-              <div>
-                <label htmlFor="iskNumber" className="block mb-2 font-medium text-gray-700">
-                  ISK Number
-                </label>
-                <input
-                  id="iskNumber"
-                  {...register("iskNumber")}
-                  type="text"
-                  className={inputClass}
-                  placeholder="Enter your ISK number (optional)"
-                />
-                {errors.iskNumber && (
-                  <p className="text-red-600 text-sm mt-1">{errors.iskNumber.message}</p>
-                )}
-              </div>
+                {/* ISK Number */}
+                <div>
+                  <label htmlFor="iskNumber" className="block text-sm font-semibold text-slate-700 mb-2">
+                    ISK Number <span className="text-amber-600">*</span>
+                  </label>
+                  <input
+                    id="iskNumber"
+                    {...register("iskNumber")}
+                    type="text"
+                    className={inputClass}
+                    placeholder="Enter your ISK registration number"
+                  />
+                  <AnimatePresence>
+                    {errors.iskNumber && (
+                      <motion.p
+                        className="text-red-600 mt-2 text-sm font-medium flex items-center"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {errors.iskNumber.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-              <div>
-                <label htmlFor="idCard" className="block mb-2 font-medium text-gray-700">
-                  Upload ID Card{" "}
-                  <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
-                </label>
-                <input
-                  id="idCard"
-                  {...register("idCard")}
-                  type="file"
-                  accept=".jpg,.jpeg,.png,.pdf"
-                  className={`${inputClass} file:cursor-pointer`}
-                />
-                {errors.idCard && (
-                  <p className="text-red-600 text-sm mt-1">{errors.idCard.message}</p>
-                )}
-              </div>
+                {/* ID Card Upload */}
+                <div>
+                  <label htmlFor="idCard" className="block text-sm font-semibold text-slate-700 mb-2">
+                    Upload ID Card <span className="text-amber-600">*</span>
+                    <span className="text-xs text-slate-500 font-normal ml-2">(JPG, PNG, PDF - max 5MB)</span>
+                  </label>
+                  <input
+                    id="idCard"
+                    {...register("idCard")}
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    className={`${inputClass} file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer`}
+                  />
+                  <AnimatePresence>
+                    {errors.idCard && (
+                      <motion.p
+                        className="text-red-600 mt-2 text-sm font-medium flex items-center"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {errors.idCard.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-              <div>
-                <label htmlFor="certificate" className="block mb-2 font-medium text-gray-700">
-                  Upload Certificate{" "}
-                  <span className="text-xs text-gray-500">(jpg, png, pdf)</span>
-                </label>
-                <input
-                  id="certificate"
-                  {...register("certificate")}
-                  type="file"
-                  accept=".jpg,.jpeg,.png,.pdf"
-                  className={`${inputClass} file:cursor-pointer`}
-                />
-                {errors.certificate && (
-                  <p className="text-red-600 text-sm mt-1">{errors.certificate.message}</p>
-                )}
-              </div>
-            </fieldset>
-          )}
+                {/* Certificate Upload */}
+                <div>
+                  <label htmlFor="certificate" className="block text-sm font-semibold text-slate-700 mb-2">
+                    Upload Professional Certificate <span className="text-amber-600">*</span>
+                    <span className="text-xs text-slate-500 font-normal ml-2">(JPG, PNG, PDF - max 5MB)</span>
+                  </label>
+                  <input
+                    id="certificate"
+                    {...register("certificate")}
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    className={`${inputClass} file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer`}
+                  />
+                  <AnimatePresence>
+                    {errors.certificate && (
+                      <motion.p
+                        className="text-red-600 mt-2 text-sm font-medium flex items-center"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <svg className="w-4 h-4 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {errors.certificate.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.fieldset>
+            )}
+          </AnimatePresence>
 
-          {/* Submit */}
-          <button
+          {/* Submit Button */}
+          <motion.button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-lg transition duration-300 disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            whileTap={{ scale: 0.98 }}
           >
-            {isSubmitting ? "Registering..." : "Sign Up"}
-          </button>
+            {isSubmitting ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating Account...
+              </span>
+            ) : (
+              "Create Account"
+            )}
+          </motion.button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-yellow-600 hover:underline font-semibold">
-            <strong>Log in here</strong>
-          </Link>
-        </p>
+        {/* Login Prompt */}
+        <motion.div 
+          className="text-center mt-8 pt-6 border-t border-slate-200"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <p className="text-slate-600 text-sm font-medium">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-amber-600 hover:text-amber-700 font-semibold transition-colors duration-200"
+            >
+              Sign in here
+            </Link>
+          </p>
+        </motion.div>
       </motion.div>
     </div>
   );
